@@ -40,17 +40,17 @@
 
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <input type="search" id="idConsulta" class="form-control" placeholder="N° de Cédula o de Cliente" aria-label="Buscar" maxlength="15" validationgroup="grupoNumeroEntero" onkeypress="return soloNumeros(event);">
+                                        <input type="search" id="idConsulta" class="form-control" placeholder="N° de Cédula o de Cliente" aria-label="Buscar" maxlength="15" validationgroup="grupoNumeroEntero" onkeypress="return soloNumeros(event);" runat="server">
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCedula">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCedula" runat="server">
                                             <label class="form-check-label" for="rbCedula">
                                                 Por N° Cédula
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCliente" checked>
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCliente" checked runat="server">
                                             <label class="form-check-label" for="rbCliente">
                                                 Por N° Cliente
                                             </label>
@@ -60,38 +60,31 @@
                                         <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-outline-success" Text="Buscar" OnClick="btnBuscar_Click" />
                                     </div>
                                 </div>
-
-
                             </div>
                         </nav>
-
                     </div>
-
-
 
                     <!-- DataTales Example -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Préstamos:</h6>
                         </div>
-
                         <nav class="card-body">
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
-                                            <asp:GridView ID="GridView1" runat="server">
+                                            <asp:GridView class="table table-striped table-hover" ID="gvPrestamos" runat="server">
                                             </asp:GridView>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </nav>
-
                     </div>
 
                     <!-- DataTales Example -->
-                    <div class="card shadow mb-4">
+                    <div class="card shadow mb-4" id="divTramitePrestamo" runat="server">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Trámite Préstamo en Demanda Judicial:</h6>
                         </div>
