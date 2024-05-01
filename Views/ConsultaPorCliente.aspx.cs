@@ -106,11 +106,27 @@ namespace MonitorJudicial
             if (rbCedula.Checked)  // Verificar si el radio button 'rbCedula' está seleccionado
             {
                 LlenarGridViewCedula(idConsulta.Value);  // Ejecutar el método solo si 'rbCedula' está seleccionado
-                divTramitePrestamo.Visible = true;
+                //divTramitePrestamo.Visible = true;
             }
             else
             {
                 LlenarGridViewCliente(idConsulta.Value);
+            }
+        }
+
+        protected void gvPrestamos_RowCommand(object sender, GridViewCommandEventArgs e)
+        {
+            if (e.CommandName == "Select")
+            {
+                // Obtener el índice de la fila seleccionada
+                int index = Convert.ToInt32(e.CommandArgument);
+
+                // Obtener el valor de la columna deseada de la fila seleccionada (si es necesario)
+                string valor = gvPrestamos.Rows[index].Cells[1].Text; // Por ejemplo, aquí obtengo el valor de la primera celda
+
+                // Llamar al método Consultar() y pasar el valor necesario (si es necesario)
+                divTramitePrestamo.Visible = true;
+                numPretamo.Value = valor;
             }
         }
 

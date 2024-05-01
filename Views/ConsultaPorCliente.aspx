@@ -44,13 +44,13 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCedula" runat="server">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCedula"  checked runat="server">
                                             <label class="form-check-label" for="rbCedula">
                                                 Por N° Cédula
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCliente" checked runat="server">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCliente" runat="server">
                                             <label class="form-check-label" for="rbCliente">
                                                 Por N° Cliente
                                             </label>
@@ -74,7 +74,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
-                                            <asp:GridView class="table table-striped table-hover" ID="gvPrestamos" runat="server">
+                                            <asp:GridView class="table table-striped table-hover" ID="gvPrestamos" runat="server" AutoGenerateColumns="true" AutoGenerateSelectButton="true" OnRowCommand="gvPrestamos_RowCommand">
                                             </asp:GridView>
                                         </div>
                                     </div>
