@@ -7,6 +7,7 @@ using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using MonitorJudicial.Controllers;
 
 namespace MonitorJudicial
 {
@@ -14,12 +15,6 @@ namespace MonitorJudicial
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-            //if (!IsPostBack)
-            //{
-            //    // Llama al método para llenar el GridView solo si no es una solicitud de postback
-            //    //LlenarGridView();
-            //}
-
             if (!IsPostBack)
             {
                 divTramitePrestamo.Visible = false;
@@ -28,85 +23,19 @@ namespace MonitorJudicial
 
         protected void LlenarGridViewCliente(string numeroCliente)
         {
-            // Cadena de conexión a la base de datos
-            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-
-            // Consulta SQL
-            string query = @"
-                SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° Préstamo],
-                tp.NOMBRE AS [Tipo],
-                p.DEUDAINICIAL AS [Deuda Inicial],
-                p.SALDOACTUAL AS [Saldo],
-                CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [Adjudicado],
-                CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [Vencimiento],
-                e.NOMBRE AS [Estado]
-                FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
-                JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
-                JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
-                JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
-                JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
-                WHERE p.CODIGOESTADOPRESTAMO='J' AND cli.NUMEROCLIENTE='" + numeroCliente + @"'
-                ORDER BY p.SECUENCIAL DESC";
-
-            // Establecer conexión y ejecutar la consulta
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataTable dataTable = new DataTable();
-
-                adapter.Fill(dataTable);
-
-                // Asignar datos a la GridView
-                gvPrestamos.DataSource = dataTable;
-                gvPrestamos.DataBind();
-            }
+            Controllers.PrestamosController.LlenarGridViewCliente(numeroCliente, gvPrestamos);
         }
 
         protected void LlenarGridViewCedula(string numeroCedula)
         {
-            // Cadena de conexión a la base de datos
-            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-
-            // Consulta SQL
-            string query = @"
-                SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° Préstamo],
-                tp.NOMBRE AS [Tipo],
-                p.DEUDAINICIAL AS [Deuda Inicial],
-                p.SALDOACTUAL AS [Saldo],
-                CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [Adjudicado],
-                CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [Vencimiento],
-                e.NOMBRE AS [Estado]
-                FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
-                JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
-                JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
-                JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
-                JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
-                WHERE p.CODIGOESTADOPRESTAMO='J' AND PER.IDENTIFICACION='" + numeroCedula + @"'
-                ORDER BY p.SECUENCIAL DESC";
-
-            // Establecer conexión y ejecutar la consulta
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataTable dataTable = new DataTable();
-
-                adapter.Fill(dataTable);
-
-                // Asignar datos a la GridView
-                gvPrestamos.DataSource = dataTable;
-                gvPrestamos.DataBind();
-            }
-
+            Controllers.PrestamosController.LlenarGridViewCedula(numeroCedula, gvPrestamos);
         }
 
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
             if (rbCedula.Checked)  // Verificar si el radio button 'rbCedula' está seleccionado
             {
-                LlenarGridViewCedula(idConsulta.Value);  // Ejecutar el método solo si 'rbCedula' está seleccionado
-                //divTramitePrestamo.Visible = true;
+                LlenarGridViewCedula(idConsulta.Value); 
             }
             else
             {
@@ -122,14 +51,21 @@ namespace MonitorJudicial
                 int index = Convert.ToInt32(e.CommandArgument);
 
                 // Obtener el valor de la columna deseada de la fila seleccionada (si es necesario)
-                string valor = gvPrestamos.Rows[index].Cells[1].Text; // Por ejemplo, aquí obtengo el valor de la primera celda
+                string numPretamoVar = gvPrestamos.Rows[index].Cells[1].Text; // Por ejemplo, aquí obtengo el valor de la primera celda
+                string tipoVar = gvPrestamos.Rows[index].Cells[2].Text;
+                string deudaInicialVar = gvPrestamos.Rows[index].Cells[3].Text;
+                string saldoVar = gvPrestamos.Rows[index].Cells[4].Text;
+                string adjudicadoPretamoVar = gvPrestamos.Rows[index].Cells[5].Text;
+                string vencimientoVar = gvPrestamos.Rows[index].Cells[6].Text;
+                string estadoVar = gvPrestamos.Rows[index].Cells[7].Text;
 
                 // Llamar al método Consultar() y pasar el valor necesario (si es necesario)
                 divTramitePrestamo.Visible = true;
-                numPretamo.Value = valor;
+                numPretamo.Value = numPretamoVar;
+                tipo.Value = tipoVar;
+                deudaInicial.Value = deudaInicialVar;
+                saldoActual.Value = saldoVar;
             }
         }
-
-
     }
 }

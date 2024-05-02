@@ -110,7 +110,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="tipo" class="form-label">Tipo:</label>
-                                        <input type="text" class="form-control" id="tipo">
+                                        <input type="text" class="form-control" id="tipo" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="adjudicado" class="form-label">Adjudicado:</label>
@@ -126,11 +126,11 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="deudaInicial" class="form-label">Deuda Inicial:</label>
-                                        <input type="text" class="form-control" id="deudaInicial" inputmode="decimal">
+                                        <input type="text" class="form-control" id="deudaInicial" inputmode="decimal" runat="server">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="saldoActual" class="form-label">Saldo Actual:</label>
-                                        <input type="text" class="form-control" id="saldoActual" inputmode="decimal">
+                                        <input type="text" class="form-control" id="saldoActual" inputmode="decimal" runat="server">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="transferido" class="form-label">Saldo Transferido a Judicial:</label>
