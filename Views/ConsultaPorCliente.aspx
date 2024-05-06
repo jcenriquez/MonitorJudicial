@@ -98,15 +98,15 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="causa" class="form-label">N° Causa:</label>
-                                        <input type="text" class="form-control" id="causa">
+                                        <input type="text" class="form-control" id="causa" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="oficina" class="form-label">Oficina:</label>
-                                        <input type="text" class="form-control" id="oficina">
+                                        <input type="text" class="form-control" id="oficina" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="oficial" class="form-label">Oficial:</label>
-                                        <input type="text" class="form-control" id="oficial">
+                                        <input type="text" class="form-control" id="oficial" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="tipo" class="form-label">Tipo:</label>
@@ -114,15 +114,15 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="adjudicado" class="form-label">Adjudicado:</label>
-                                        <input type="text" class="form-control" id="adjudicado">
+                                        <input type="text" class="form-control" id="adjudicado" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="ultimoPago" class="form-label">Último Pago:</label>
-                                        <input type="text" class="form-control" id="ultimoPago">
+                                        <input type="text" class="form-control" id="ultimoPago" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="proxVencimiento" class="form-label">Próximo Vencimiento:</label>
-                                        <input type="text" class="form-control" id="proxVencimiento">
+                                        <input type="text" class="form-control" id="proxVencimiento" runat="server">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="deudaInicial" class="form-label">Deuda Inicial:</label>
@@ -134,15 +134,12 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label for="transferido" class="form-label">Saldo Transferido a Judicial:</label>
-                                        <input type="text" class="form-control" id="transferido">
+                                        <input type="text" class="form-control" id="transferido" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="inlineAbogado" class="form-label">Abogado:</label>
-                                        <select class="form-control" id="inlineAbogado">
+                                        <select class="form-control" id="inlineAbogado" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
@@ -183,30 +180,27 @@
                                     </div>
                                     <div class="col-md-12">
                                         <label for="descripcion" class="form-label">Descripción:</label>
-                                        <input type="text" class="form-control" id="descripcion">
+                                        <input type="text" class="form-control" id="descripcion" runat="server">
                                     </div>
                                     <div class="col-md-12">
                                         <label for="inlineAccion" class="form-label">Acción Desarrollada:</label>
-                                        <select class="form-control" id="inlineAccion">
+                                        <select class="form-control" id="inlineAccion" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-floating">
-                                            <label for="floatingTextarea">Commentario:</label>
-                                            <textarea class="form-control" placeholder="Comentario..." id="floatingTextarea"></textarea>
+                                            <label for="floatingTextarea">Comentario:</label>
+                                            <textarea class="form-control" placeholder="Comentario..." id="txtComentario" runat="server"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="fechaIngreso" class="form-label">Fecha Ingreso:</label>
-                                        <input type="date" class="form-control" id="fechaIngreso">
+                                        <input type="date" class="form-control" id="fechaIngreso" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="fechaSistema" class="form-label">Fecha Sistema:</label>
-                                        <input type="date" class="form-control" id="fechaSistema">
+                                        <input type="date" class="form-control" id="fechaSistema" runat="server">
                                     </div>
                                     <div class="col-12">
                                         <div class="form-check">
