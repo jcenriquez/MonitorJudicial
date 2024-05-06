@@ -146,6 +146,18 @@ namespace MonitorJudicial
                     if (reader.Read()) // Verificar si hay filas en el resultado
                     {
                         abogado = reader["ABOGADO"].ToString();
+                        ListItem selectedAbogado = inlineAbogado.Items.FindByText(abogado);
+                        if (selectedAbogado != null)
+                        {
+                            // Limpiar cualquier selección previa
+                            foreach (ListItem item in inlineAbogado.Items)
+                            {
+                                item.Selected = false;
+                            }
+
+                            // Establecer la nueva selección
+                            selectedAbogado.Selected = true;
+                        }
                         oficialV = reader["OFICIAL"].ToString();
                         oficinaV = reader["OFICINA"].ToString();
                         adjudicadoV = reader["ADJUDICADO"].ToString();
@@ -171,6 +183,8 @@ namespace MonitorJudicial
                 txtComentario.Value = comentarioV;
                 fechaIngreso.Value = fechaMaquinaV;
                 fechaSistema.Value = fechaSistemaV;
+
+                
 
                 divTramitePrestamo.Visible = true;
                 numPretamo.Value = numPretamoVar;
