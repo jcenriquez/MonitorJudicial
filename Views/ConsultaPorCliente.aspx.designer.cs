@@ -177,6 +177,42 @@ namespace MonitorJudicial
         protected global::System.Web.UI.HtmlControls.HtmlSelect inlineAbogado;
 
         /// <summary>
+        /// Control inlineTramite.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect inlineTramite;
+
+        /// <summary>
+        /// Control inlineMateria.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect inlineMateria;
+
+        /// <summary>
+        /// Control inlineMedidaCautelar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect inlineMedidaCautelar;
+
+        /// <summary>
+        /// Control inlineJudicatura.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect inlineJudicatura;
+
+        /// <summary>
         /// Control descripcion.
         /// </summary>
         /// <remarks>

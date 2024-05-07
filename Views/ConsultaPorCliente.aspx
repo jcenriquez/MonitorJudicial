@@ -144,38 +144,26 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="inlineTramite" class="form-label">Trámite:</label>
-                                        <select class="form-control" id="inlineTramite">
+                                        <select class="form-control" id="inlineTramite" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="inlineMateria" class="form-label">Materia:</label>
-                                        <select class="form-control" id="inlineMateria">
+                                        <select class="form-control" id="inlineMateria" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="inlineMedidaCautelar" class="form-label">Medida Cautelar:</label>
-                                        <select class="form-control" id="inlineMedidaCautelar">
+                                        <select class="form-control" id="inlineMedidaCautelar" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="inlineJudicatura" class="form-label">Judicatura:</label>
-                                        <select class="form-control" id="inlineJudicatura">
+                                        <select class="form-control" id="inlineJudicatura" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-12">
