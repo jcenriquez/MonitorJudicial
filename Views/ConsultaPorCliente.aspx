@@ -44,7 +44,7 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCedula"  checked runat="server">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCedula" checked runat="server">
                                             <label class="form-check-label" for="rbCedula">
                                                 Por N° Cédula
                                             </label>
@@ -56,10 +56,15 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div >
                                         <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-outline-success" Text="Buscar" OnClick="btnBuscar_Click" />
                                     </div>
                                 </div>
+                                <div class="row">
+                                <div class="col-md-12" id="txtNombresDiv" runat="server">
+                                    <label for="txtNombres" class="form-label">Nombre completo:</label>
+                                    <input type="text" class="form-control border-bottom-info" id="txtNombres" runat="server" readonly="readonly">
+                                </div></div>
                             </div>
                         </nav>
                     </div>

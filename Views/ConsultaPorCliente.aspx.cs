@@ -19,6 +19,7 @@ namespace MonitorJudicial
             if (!IsPostBack)
             {
                 divTramitePrestamo.Visible = false;
+                txtNombresDiv.Visible = false;
                 CargarFormulario();
             }
         }
@@ -130,14 +131,17 @@ namespace MonitorJudicial
                 }
             }
         }
+
         protected void LlenarGridViewCliente(string numeroCliente)
         {
-            Controllers.PrestamosController.LlenarGridViewCliente(numeroCliente, gvPrestamos);
+            txtNombresDiv.Visible = true;
+            Controllers.PrestamosController.LlenarGridViewCliente(numeroCliente, gvPrestamos,txtNombres);
         }
 
         protected void LlenarGridViewCedula(string numeroCedula)
         {
-            Controllers.PrestamosController.LlenarGridViewCedula(numeroCedula, gvPrestamos);
+            txtNombresDiv.Visible = true;
+            Controllers.PrestamosController.LlenarGridViewCedula(numeroCedula, gvPrestamos, txtNombres);
         }
 
         protected void btnBuscar_Click(object sender, EventArgs e)
@@ -168,6 +172,24 @@ namespace MonitorJudicial
                 string adjudicadoPretamoVar = gvPrestamos.Rows[index].Cells[5].Text;
                 string vencimientoVar = gvPrestamos.Rows[index].Cells[6].Text;
                 string estadoVar = gvPrestamos.Rows[index].Cells[7].Text;
+                string abogado = ""; // Inicializar la variable abogado
+                string oficinaV = "";
+                string oficialV = "";
+                string adjudicadoV = "";
+                string proVencimientoV = "";
+                string saldoTransferidoV = "";
+                string descripcionV = "";
+                string comentarioV = "";
+                string fechaMaquinaV = "";
+                string fechaSistemaV = "";
+                string tramiteV = "";
+                string materiaV = "";
+                string medidaCautelarV = "";
+                string judicaturaV = "";
+                string estadoTramiteV = "";
+                string secuencialPrestamoV = "";
+                string ultimoPagoV = "";
+                string numCausaV = "";
 
                 string query = @"
                     SELECT 
@@ -187,7 +209,8 @@ namespace MonitorJudicial
                         CONVERT(VARCHAR, pi.FECHAPROXIMOPAGO, 23) AS [PRO VENCIMIENTO],
                         tj.NOMBRE AS [JUDICATURA], 
                         ej.NOMBRE AS [ACCIÓN DESARROLLADA], 
-                        pa.SALDOTRANSFERIDO AS [SALDO TRANSFERIDO]
+                        pa.SALDOTRANSFERIDO AS [SALDO TRANSFERIDO],
+                        pm.SECUENCIAL AS [SECUENCIAL PRESTAMO]
                     FROM 
                         [FBS_COBRANZAS].[ABOGADO] ab
                     JOIN 
@@ -221,22 +244,6 @@ namespace MonitorJudicial
                         AND ab.SECUENCIALEMPRESA = pm.SECUENCIALEMPRESA
                         AND ao.SECUENCIALOFICINA = pm.SECUENCIALOFICINA";
 
-                string abogado = ""; // Inicializar la variable abogado
-                string oficinaV = "";
-                string oficialV = "";
-                string adjudicadoV = "";
-                string proVencimientoV = "";
-                string saldoTransferidoV = "";
-                string descripcionV = "";
-                string comentarioV = "";
-                string fechaMaquinaV = "";
-                string fechaSistemaV = "";
-                string tramiteV = "";
-                string materiaV = "";
-                string medidaCautelarV = "";
-                string judicaturaV = "";
-                string estadoTramiteV = "";
-
                 // Tu código para conectar a la base de datos y ejecutar la consulta
                 using (SqlConnection connection = new SqlConnection(connectionString))
                 {
@@ -247,7 +254,7 @@ namespace MonitorJudicial
                     if (reader.Read()) // Verificar si hay filas en el resultado
                     {
                         abogado = reader["ABOGADO"].ToString();
-                        ListItem selectedAbogado = inlineAbogado.Items.FindByText(abogado);                        
+                        ListItem selectedAbogado = inlineAbogado.Items.FindByText(abogado);
 
                         if (selectedAbogado != null)
                         {
@@ -260,18 +267,15 @@ namespace MonitorJudicial
                             // Establecer la nueva selección
                             selectedAbogado.Selected = true;
                         }
-                        //[TRAMITE]
                         tramiteV = reader["TRAMITE"].ToString();
                         ListItem selectedTramite = inlineTramite.Items.FindByText(tramiteV);
                         if (selectedTramite != null)
                         {
-                            // Limpiar cualquier selección previa
                             foreach (ListItem item in inlineTramite.Items)
                             {
                                 item.Selected = false;
                             }
 
-                            // Establecer la nueva selección
                             selectedTramite.Selected = true;
                         }
 
@@ -279,13 +283,11 @@ namespace MonitorJudicial
                         ListItem selectedMateria = inlineMateria.Items.FindByText(materiaV);
                         if (selectedMateria != null)
                         {
-                            // Limpiar cualquier selección previa
                             foreach (ListItem item in inlineMateria.Items)
                             {
                                 item.Selected = false;
                             }
 
-                            // Establecer la nueva selección
                             selectedMateria.Selected = true;
                         }
 
@@ -293,13 +295,11 @@ namespace MonitorJudicial
                         ListItem selectedMedidaCautelar = inlineMedidaCautelar.Items.FindByText(medidaCautelarV);
                         if (selectedMedidaCautelar != null)
                         {
-                            // Limpiar cualquier selección previa
                             foreach (ListItem item in inlineMedidaCautelar.Items)
                             {
                                 item.Selected = false;
                             }
 
-                            // Establecer la nueva selección
                             selectedMedidaCautelar.Selected = true;
                         }
 
@@ -307,13 +307,11 @@ namespace MonitorJudicial
                         ListItem selectedJudicatura = inlineJudicatura.Items.FindByText(judicaturaV);
                         if (selectedJudicatura != null)
                         {
-                            // Limpiar cualquier selección previa
                             foreach (ListItem item in inlineJudicatura.Items)
                             {
                                 item.Selected = false;
                             }
 
-                            // Establecer la nueva selección
                             selectedJudicatura.Selected = true;
                         }
 
@@ -321,17 +319,15 @@ namespace MonitorJudicial
                         ListItem selectedEstadoTramite = inlineAccion.Items.FindByText(estadoTramiteV);
                         if (selectedEstadoTramite != null)
                         {
-                            // Limpiar cualquier selección previa
                             foreach (ListItem item in inlineAccion.Items)
                             {
                                 item.Selected = false;
                             }
 
-                            // Establecer la nueva selección
                             selectedEstadoTramite.Selected = true;
                         }
 
-
+                        secuencialPrestamoV = reader["SECUENCIAL PRESTAMO"].ToString();
                         oficialV = reader["OFICIAL"].ToString();
                         oficinaV = reader["OFICINA"].ToString();
                         adjudicadoV = reader["ADJUDICADO"].ToString();
@@ -346,8 +342,50 @@ namespace MonitorJudicial
                     reader.Close();
                 }
 
+                string queryUltimoPago = @"
+                    SELECT CONVERT(VARCHAR, MAX(m.FECHA), 23) AS [FECHA]
+                    FROM [FBS_CARTERA].[MOVIMIENTOPRESTAMOCOMP_CAR] mpcf
+                    INNER JOIN [FBS_NEGOCIOSFINANCIEROS].[MOVIMIENTODETALLE] md ON mpcf.SECUENCIALMOVIMIENTODETALLE = md.SECUENCIAL
+                    INNER JOIN [FBS_NEGOCIOSFINANCIEROS].[MOVIMIENTO] m ON md.SECUENCIALMOVIMIENTO = m.SECUENCIAL
+                    INNER JOIN [FBS_NEGOCIOSFINANCIEROS].[TRANSACCION] t ON md.SECUENCIALTRANSACCION = t.SECUENCIAL
+                    WHERE t.ESDEBITO = 'false'
+                    AND mpcf.SECUENCIALPRESTAMO ='" + secuencialPrestamoV + @"'";
 
-                // Llamar al método Consultar() y pasar el valor necesario (si es necesario)
+                string queryNumCausa = @"
+                    SELECT pai.NUMEROCAUSA AS [NUM CAUSA] FROM [FBS_COBRANZAS].[PRESTAMOABOGADO] pa
+                    JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai
+                    ON pa.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
+                    WHERE pa.SECUENCIALPRESTAMO ='" + secuencialPrestamoV + @"'";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(queryUltimoPago, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read()) // Verificar si hay filas en el resultado
+                    {
+                        ultimoPagoV = reader["FECHA"].ToString();
+                    }
+
+                    reader.Close();
+                }
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(queryNumCausa, connection);
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        numCausaV = reader["NUM CAUSA"].ToString();
+                    }
+
+                    reader.Close();
+                }
+
+                causa.Value = numCausaV;
                 oficial.Value = oficialV;
                 oficina.Value = oficinaV;
                 adjudicado.Value = adjudicadoV;
@@ -357,9 +395,7 @@ namespace MonitorJudicial
                 txtComentario.Value = comentarioV;
                 fechaIngreso.Value = fechaMaquinaV;
                 fechaSistema.Value = fechaSistemaV;
-
-                
-
+                ultimoPago.Value = ultimoPagoV;
                 divTramitePrestamo.Visible = true;
                 numPretamo.Value = numPretamoVar;
                 tipo.Value = tipoVar;
