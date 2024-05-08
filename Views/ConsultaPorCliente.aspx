@@ -44,22 +44,27 @@
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCedula" runat="server">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCedula" checked runat="server">
                                             <label class="form-check-label" for="rbCedula">
                                                 Por N° Cédula
                                             </label>
                                         </div>
                                         <div class="form-check">
-                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCliente" checked runat="server">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCliente" runat="server">
                                             <label class="form-check-label" for="rbCliente">
                                                 Por N° Cliente
                                             </label>
                                         </div>
                                     </div>
-                                    <div class="col-md-2">
+                                    <div >
                                         <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-outline-success" Text="Buscar" OnClick="btnBuscar_Click" />
                                     </div>
                                 </div>
+                                <div class="row">
+                                <div class="col-md-12" id="txtNombresDiv" runat="server">
+                                    <label for="txtNombres" class="form-label">Nombre completo:</label>
+                                    <input type="text" class="form-control border-bottom-info" id="txtNombres" runat="server" readonly="readonly">
+                                </div></div>
                             </div>
                         </nav>
                     </div>
@@ -74,7 +79,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
-                                            <asp:GridView class="table table-striped table-hover" ID="gvPrestamos" runat="server">
+                                            <asp:GridView class="table table-striped table-hover" ID="gvPrestamos" runat="server" AutoGenerateColumns="true" AutoGenerateSelectButton="true" OnRowCommand="gvPrestamos_RowCommand">
                                             </asp:GridView>
                                         </div>
                                     </div>
@@ -98,115 +103,97 @@
                                     </div>
                                     <div class="col-md-6">
                                         <label for="causa" class="form-label">N° Causa:</label>
-                                        <input type="text" class="form-control" id="causa">
+                                        <input type="text" class="form-control" id="causa" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="oficina" class="form-label">Oficina:</label>
-                                        <input type="text" class="form-control" id="oficina">
+                                        <input type="text" class="form-control" id="oficina" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="oficial" class="form-label">Oficial:</label>
-                                        <input type="text" class="form-control" id="oficial">
+                                        <input type="text" class="form-control" id="oficial" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="tipo" class="form-label">Tipo:</label>
-                                        <input type="text" class="form-control" id="tipo">
+                                        <input type="text" class="form-control" id="tipo" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="adjudicado" class="form-label">Adjudicado:</label>
-                                        <input type="text" class="form-control" id="adjudicado">
+                                        <input type="text" class="form-control" id="adjudicado" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="ultimoPago" class="form-label">Último Pago:</label>
-                                        <input type="text" class="form-control" id="ultimoPago">
+                                        <input type="text" class="form-control" id="ultimoPago" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="proxVencimiento" class="form-label">Próximo Vencimiento:</label>
-                                        <input type="text" class="form-control" id="proxVencimiento">
+                                        <input type="text" class="form-control" id="proxVencimiento" runat="server">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="deudaInicial" class="form-label">Deuda Inicial:</label>
-                                        <input type="text" class="form-control" id="deudaInicial" inputmode="decimal">
+                                        <input type="text" class="form-control" id="deudaInicial" inputmode="decimal" runat="server">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="saldoActual" class="form-label">Saldo Actual:</label>
-                                        <input type="text" class="form-control" id="saldoActual" inputmode="decimal">
+                                        <input type="text" class="form-control" id="saldoActual" inputmode="decimal" runat="server">
                                     </div>
                                     <div class="col-md-4">
                                         <label for="transferido" class="form-label">Saldo Transferido a Judicial:</label>
-                                        <input type="text" class="form-control" id="transferido">
+                                        <input type="text" class="form-control" id="transferido" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="inlineAbogado" class="form-label">Abogado:</label>
-                                        <select class="form-control" id="inlineAbogado">
+                                        <select class="form-control" id="inlineAbogado" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="inlineTramite" class="form-label">Trámite:</label>
-                                        <select class="form-control" id="inlineTramite">
+                                        <select class="form-control" id="inlineTramite" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="inlineMateria" class="form-label">Materia:</label>
-                                        <select class="form-control" id="inlineMateria">
+                                        <select class="form-control" id="inlineMateria" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="inlineMedidaCautelar" class="form-label">Medida Cautelar:</label>
-                                        <select class="form-control" id="inlineMedidaCautelar">
+                                        <select class="form-control" id="inlineMedidaCautelar" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="inlineJudicatura" class="form-label">Judicatura:</label>
-                                        <select class="form-control" id="inlineJudicatura">
+                                        <select class="form-control" id="inlineJudicatura" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-12">
                                         <label for="descripcion" class="form-label">Descripción:</label>
-                                        <input type="text" class="form-control" id="descripcion">
+                                        <input type="text" class="form-control" id="descripcion" runat="server">
                                     </div>
                                     <div class="col-md-12">
                                         <label for="inlineAccion" class="form-label">Acción Desarrollada:</label>
-                                        <select class="form-control" id="inlineAccion">
+                                        <select class="form-control" id="inlineAccion" runat="server">
                                             <option selected>Seleccione...</option>
-                                            <option value="1">One</option>
-                                            <option value="2">Two</option>
-                                            <option value="3">Three</option>
                                         </select>
                                     </div>
                                     <div class="col-md-12">
                                         <div class="form-floating">
-                                            <label for="floatingTextarea">Commentario:</label>
-                                            <textarea class="form-control" placeholder="Comentario..." id="floatingTextarea"></textarea>
+                                            <label for="floatingTextarea">Comentario:</label>
+                                            <textarea class="form-control" placeholder="Comentario..." id="txtComentario" runat="server"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <label for="fechaIngreso" class="form-label">Fecha Ingreso:</label>
-                                        <input type="date" class="form-control" id="fechaIngreso">
+                                        <input type="date" class="form-control" id="fechaIngreso" runat="server">
                                     </div>
                                     <div class="col-md-6">
                                         <label for="fechaSistema" class="form-label">Fecha Sistema:</label>
-                                        <input type="date" class="form-control" id="fechaSistema">
+                                        <input type="date" class="form-control" id="fechaSistema" runat="server">
                                     </div>
                                     <div class="col-12">
                                         <div class="form-check">
