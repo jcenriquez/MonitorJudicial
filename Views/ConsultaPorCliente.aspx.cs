@@ -238,7 +238,7 @@ namespace MonitorJudicial
                     LEFT JOIN 
                         [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] pt ON pm.SECUENCIAL = pt.SECUENCIALPRESTAMO
                     JOIN 
-                        [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ej ON pa.CODIGOTIPOJUDICATURA = ej.CODIGO
+                        [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ej ON pt.CODIGOESTADOTRAMITEDEMJUD = ej.CODIGO
                     WHERE 
                         pm.NUMEROPRESTAMO ='" + numPretamoVar + @"'
                         AND ab.SECUENCIALEMPRESA = pm.SECUENCIALEMPRESA
