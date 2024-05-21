@@ -21,7 +21,7 @@
     <link href="/Content/css/sb-admin-2.min.css" rel="stylesheet">
     <link href="/Content/css/sb-admin-2.css" rel="stylesheet">
     <!-- Custom styles for this page -->
-    <link href="vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+    <link href="/Content/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
 
 
 </head>
@@ -29,7 +29,7 @@
     <form runat="server">
         <div id="wrapper">
             <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="Dafault.html">
                     <div class="sidebar-brand-icon">
                         <img src="/Content/img/logoJudicial-svg.svg" alt="Logo Judicial" style="max-width: 100%;">
                     </div>
@@ -37,7 +37,7 @@
                 <hr class="sidebar-divider my-0" />
                 <!-- Nav Item - Tablero -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="index.html">
+                    <a class="nav-link" href="Default.html">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Tablero</span>
                     </a>
@@ -57,7 +57,7 @@
                     <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Estado de Casos:</h6>
-                            <a class="collapse-item" href="Views/CasosEnTramite.aspx">En Trámite</a>
+                            <a class="collapse-item" href="/Views/CasosEnTramite.aspx">En Trámite</a>
                             <a class="collapse-item" href="cards.html">En Revisión Legal</a>
                         </div>
                     </div>
@@ -94,7 +94,7 @@
                     <div id="collapseThree" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                         <div class="bg-white py-2 collapse-inner rounded">
                             <h6 class="collapse-header">Préstamos:</h6>
-                            <a class="collapse-item" href="Views/ConsultaPorCliente.aspx">Por Cliente</a>
+                            <a class="collapse-item" href="/Views/ConsultaPorCliente.aspx">Por Cliente</a>
                             <a class="collapse-item" href="cards.html">Por Número</a>
                         </div>
                     </div>
@@ -120,12 +120,12 @@
                     </div>
                 </li>
                 <!-- Nav Item - Charts -->
-                <li class="nav-item">
+               <%-- <li class="nav-item">
                     <a class="nav-link" href="charts.html">
                         <i class="fas fa-fw fa-chart-area"></i>
                         <span>Charts</span>
                     </a>
-                </li>
+                </li>--%>
                 <!-- Nav Item - Tables -->
                 <li class="nav-item">
                     <a class="nav-link" href="tables.html">

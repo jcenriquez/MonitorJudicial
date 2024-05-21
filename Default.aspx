@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="Home Page" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="MonitorJudicial._Default" %>
 
+
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
     <!-- Page Wrapper -->
@@ -206,236 +208,267 @@
                                 <div class="card-body">
                                     <h4 class="small font-weight-bold">Abandono <span class="float-right"><%: abandono.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: abandono.ToString("0.00") %>%"
-                                            aria-valuenow="<%: abandono.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: <%= (int)abandono %>%">
+    <%= abandono %>%
+</div>
                                     </div>
 
                                     <h4 class="small font-weight-bold">Abstención de Trámite por Parte Del Juez <span class="float-right"><%: abstencionTrmiteParteJuez.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: abstencionTrmiteParteJuez.ToString("0.00") %>%"
-                                            aria-valuenow="<%: abstencionTrmiteParteJuez.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: <%= (int)abstencionTrmiteParteJuez %>%">
+    <%= abstencionTrmiteParteJuez %>%
+</div>
                                     </div>
-
                                     <h4 class="small font-weight-bold">Adjudicación <span class="float-right"><%: adjudicacion.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: adjudicacion.ToString("0.00") %>%"
-                                            aria-valuenow="<%: adjudicacion.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: <%= (int)adjudicacion %>%">
+    <%= adjudicacion %>%
+</div>
                                     </div>
-
                                     <h4 class="small font-weight-bold">Alegatos <span class="float-right"><%: alegatos.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: alegatos.ToString("0.00") %>%"
-                                            aria-valuenow="<%: alegatos.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: <%= (int)alegatos %>%">
+    <%= alegatos %>%
+</div>
                                     </div>
-
                                     <h4 class="small font-weight-bold">Apelación <span class="float-right"><%: apelacion.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: apelacion.ToString("0.00") %>%"
-                                            aria-valuenow="<%: apelacion.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: <%= (int)apelacion %>%">
+    <%= apelacion %>%
+</div>
                                     </div>
-
-                                    <h4 class="small font-weight-bold">Avaluó de Bienes <span class="float-right"><%: avaluoBienes.ToString("0.00") %>%</span></h4>
+                                    <h4 class="small font-weight-bold">Avaluó de Bienes <span class="float-right">0.44%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: avaluoBienes.ToString("0.00")  %>%"
-                                            aria-valuenow="<%: avaluoBienes.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: 0.44%">
+                                            <%= avaluoBienes %>% 
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: <%= (int)avaluoBienes %>%">
+    <%= avaluoBienes %>%
+</div>
                                     </div>
-
                                     <h4 class="small font-weight-bold">Calificación Demanda <span class="float-right"><%: calificacionDemanda.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: calificacionDemanda.ToString("0.00") %>%"
-                                            aria-valuenow="<%: calificacionDemanda.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: <%= (int)calificacionDemanda %>%">
+    <%= calificacionDemanda %>%
+</div>
                                     </div>
-
                                     <h4 class="small font-weight-bold">Cambio de Casillero Judicial <span class="float-right"><%: cambioCasilleroJudicial.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: cambioCasilleroJudicial.ToString("0.00") %>%"
-                                            aria-valuenow="<%: cambioCasilleroJudicial.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: <%= (int)cambioCasilleroJudicial %>%">
+    <%= cambioCasilleroJudicial %>%
+</div>
                                     </div>
-
-                                    
                                     <h4 class="small font-weight-bold">Citación a los Demandados <span class="float-right"><%: citacionDemandados.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: citacionDemandados.ToString("0.00") %>%"
-                                            aria-valuenow="<%: citacionDemandados.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: 2.62%">
+    <%= citacionDemandados %>%
+</div>
                                     </div>
-                                    
-                                    <h4 class="small font-weight-bold">Contestación Demanda <span class="float-right"><%: contestaciónDemanda.ToString("0.00") %>%</span></h4>
+                                    <h4 class="small font-weight-bold">Contestación Demanda <span class="float-right"><%: contestacionDemanda.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: contestaciónDemanda.ToString("0.00") %>%"
-                                            aria-valuenow="<%: contestaciónDemanda.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: <%= (int)contestacionDemanda %>%">
+    <%= contestacionDemanda %>%
+</div>
                                     </div>
-                                    
                                     <h4 class="small font-weight-bold">Desistimiento <span class="float-right"><%: desistimiento.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: desistimiento.ToString("0.00") %>%"
-                                            aria-valuenow="<%: desistimiento.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: <%= (int)desistimiento %>%">
+    <%= desistimiento %>%
+</div>
                                     </div>
-                                    
                                     <h4 class="small font-weight-bold">Embargo <span class="float-right"><%: embargo.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: embargo.ToString("0.00") %>%"
-                                            aria-valuenow="<%: embargo.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                    </div>
-                                    
+
+
+
+
+    <div class="progress-bar bg-danger" role="progressbar"
+        style="width: 0.44%">
+        <%= embargo %>%
+    </div>
+
+
+
+</div>
                                     <h4 class="small font-weight-bold">Junta de Conciliación <span class="float-right"><%: juntaConciliacion.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: juntaConciliacion.ToString("0.00") %>%"
-                                            aria-valuenow="<%: juntaConciliacion.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= juntaConciliacion %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= juntaConciliacion %>%">
+                                            <%= juntaConciliacion %>% 
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: 0%">
+    <%= ninguno %>%
+</div>
                                     </div>
-                                    
                                     <h4 class="small font-weight-bold">Liquidación <span class="float-right"><%: liquidacion.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: liquidacion.ToString("0.00") %>%"
-                                            aria-valuenow="<%: liquidacion.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= liquidacion %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: 0.87%">
+                                            <%= liquidacion %>% 
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: 0.87%">
+    <%= ninguno %>%
+</div>
                                     </div>
-                                    
                                     <h4 class="small font-weight-bold">Mandamiento de Ejecución <span class="float-right"><%: mandamientoEjecucion.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: mandamientoEjecucion.ToString("0.00") %>%"
-                                            aria-valuenow="<%: mandamientoEjecucion.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= mandamientoEjecucion %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: 0%">
+                                            <%= mandamientoEjecucion %>% 
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar"
+    style="width: 0%">
+    <%= ninguno %>%
+</div>
                                     </div>
-                                    
                                     <h4 class="small font-weight-bold">Ninguno <span class="float-right"><%: ninguno.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: ninguno.ToString("0.00") %>%"
-                                            aria-valuenow="<%: ninguno.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
+
+
+
+
+                                        <div class="progress-bar bg-danger" role="progressbar"
+                                            style="width: <%= (int)ninguno %>%">
+                                            <%= ninguno %>%
                                         </div>
+
+
+
                                     </div>
-                                    
                                     <h4 class="small font-weight-bold">No Contesta Demanda <span class="float-right"><%: noContestaDemanda.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: noContestaDemanda.ToString("0.00") %>%"
-                                            aria-valuenow="<%: noContestaDemanda.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= noContestaDemanda %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= noContestaDemanda %>%">
+                                            <%= noContestaDemanda %>% 
                                         </div>
                                     </div>
-                                    
                                     <h4 class="small font-weight-bold">Otros <span class="float-right"><%: otros.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: otros.ToString("0.00") %>%"
-                                            aria-valuenow="<%: otros.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= otros %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= otros %>%">
+                                            <%= otros %>% 
                                         </div>
                                     </div>
-                                    
                                     <h4 class="small font-weight-bold">Presentación Demanda <span class="float-right"><%: presentacionDemanda.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: presentacionDemanda.ToString("0.00") %>%"
-                                            aria-valuenow="<%: presentacionDemanda.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= presentacionDemanda %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= presentacionDemanda %>%">
+                                            <%= presentacionDemanda %>% 
                                         </div>
                                     </div>
-                                    
                                     <h4 class="small font-weight-bold">Prueba <span class="float-right"><%: prueba.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
+
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: <%: prueba.ToString("0.00") %>%"
                                             aria-valuenow="<%: prueba.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
+                                            <%= avaluoBienes %>% 
+                                        </div>
                                     </div>
-                                    
                                     <h4 class="small font-weight-bold">Remate <span class="float-right"><%: remate.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
+
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: <%: remate.ToString("0.00") %>%"
                                             aria-valuenow="<%: remate.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
+                                            <%= avaluoBienes %>% 
+                                        </div>
                                     </div>
-                                    
-                                    
                                     <h4 class="small font-weight-bold">Sentencia <span class="float-right"><%: sentencia.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
+
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: <%: sentencia.ToString("0.00") %>%"
                                             aria-valuenow="<%: sentencia.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
+                                            <%= avaluoBienes %>% 
+                                        </div>
                                     </div>
-
-                                    
                                     <h4 class="small font-weight-bold">Suspendido por Acuerdo <span class="float-right"><%: suspendidoAcuerdo.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
+
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: <%: suspendidoAcuerdo.ToString("0.00") %>%"
                                             aria-valuenow="<%: suspendidoAcuerdo.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
+                                            <%= avaluoBienes %>% 
+                                        </div>
                                     </div>
-
-                                    
                                     <h4 class="small font-weight-bold">Terminado por Acuerdo o Pago de Obligaciones <span class="float-right"><%: terminadoAcuerdoPagoObligaciones.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
+
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: <%: terminadoAcuerdoPagoObligaciones.ToString("0.00") %>%"
                                             aria-valuenow="<%: terminadoAcuerdoPagoObligaciones.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
+                                            <%= avaluoBienes %>% 
+                                        </div>
                                     </div>
-
-                                    
                                     <h4 class="small font-weight-bold">Aprehencion Vehicular <span class="float-right"><%: aprehencionVehicular.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
+
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: <%: aprehencionVehicular.ToString("0.00") %>%"
                                             aria-valuenow="<%: aprehencionVehicular.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
+                                            <%= avaluoBienes %>% 
+                                        </div>
                                     </div>
-
-                                    
                                     <h4 class="small font-weight-bold">Audiencia <span class="float-right"><%: audiencia.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
+
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: <%: audiencia.ToString("0.00") %>%"
                                             aria-valuenow="<%: audiencia.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
+                                            <%= avaluoBienes %>% 
+                                        </div>
                                     </div>
-
-                                    
                                     <h4 class="small font-weight-bold">Razón de no Pago <span class="float-right"><%: razonNoPago.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
+
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: <%: razonNoPago.ToString("0.00") %>%"
                                             aria-valuenow="<%: razonNoPago.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
+                                            <%= avaluoBienes %>% 
+                                        </div>
                                     </div>
-
-                                    
                                     <h4 class="small font-weight-bold">Audiencia Ejecución <span class="float-right"><%: audienciaEjecucion.ToString("0.00") %>%</span></h4>
                                     <div class="progress mb-4">
-                                        <%-- También para el atributo 'style' del elemento div --%>
+
                                         <div class="progress-bar bg-danger" role="progressbar" style="width: <%: audienciaEjecucion.ToString("0.00") %>%"
                                             aria-valuenow="<%: audienciaEjecucion.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
                                         </div>
+                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
+                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
+                                            <%= avaluoBienes %>% 
+                                        </div>
                                     </div>
-
                                 </div>
                             </div>
 
@@ -527,7 +560,7 @@
                                 <div class="card-body">
                                     <div class="text-center">
                                         <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                            src="img/undraw_posting_photo.svg" alt="...">
+                                            src="/Content/img/undraw_posting_photo.svg" alt="...">
                                     </div>
                                     <p>
                                         Add some quality, svg illustrations to your project courtesy of <a

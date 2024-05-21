@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ConsultaPorCliente.aspx.cs" Inherits="MonitorJudicial.ConsultaPorCliente" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ConsultaPorCliente.aspx.cs" Inherits="MonitorJudicial.ConsultaPorCliente" MaintainScrollPositionOnPostback="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <script>
@@ -9,6 +9,7 @@
             }
             return true;
         }
+
     </script>
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -56,15 +57,16 @@
                                             </label>
                                         </div>
                                     </div>
-                                    <div >
+                                    <div>
                                         <asp:Button ID="btnBuscar" runat="server" CssClass="btn btn-outline-success" Text="Buscar" OnClick="btnBuscar_Click" />
                                     </div>
                                 </div>
                                 <div class="row">
-                                <div class="col-md-12" id="txtNombresDiv" runat="server">
-                                    <label for="txtNombres" class="form-label">Nombre completo:</label>
-                                    <input type="text" class="form-control border-bottom-info" id="txtNombres" runat="server" readonly="readonly">
-                                </div></div>
+                                    <div class="col-md-12" id="txtNombresDiv" runat="server">
+                                        <label for="txtNombres" class="form-label">Nombre completo:</label>
+                                        <input type="text" class="form-control border-left-primary border-bottom-primary" id="txtNombres" runat="server" readonly="readonly">
+                                    </div>
+                                </div>
                             </div>
                         </nav>
                     </div>
@@ -79,7 +81,7 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
-                                            <asp:GridView class="table table-striped table-hover" ID="gvPrestamos" runat="server" AutoGenerateColumns="true" AutoGenerateSelectButton="true" OnRowCommand="gvPrestamos_RowCommand">
+                                            <asp:GridView class="table table-striped table-hover border-left-primary border-bottom-primary" ID="gvPrestamos" runat="server" AutoGenerateColumns="true" AutoGenerateSelectButton="true" OnRowCommand="gvPrestamos_RowCommand">
                                             </asp:GridView>
                                         </div>
                                     </div>
@@ -89,129 +91,195 @@
                     </div>
 
                     <!-- DataTales Example -->
-                    <div class="card shadow mb-4" id="divTramitePrestamo" runat="server">
+                    <div class="card shadow mb-4" id="dvTramitePrestamo" runat="server">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Trámite Préstamo en Demanda Judicial:</h6>
                         </div>
 
                         <nav class="card-body">
+
+                            <!-- Tabla Préstamos Judiciales -->
                             <div class="container-fluid">
-                                <form class="row g-3">
-                                    <div class="col-md-6">
-                                        <label for="numPretamo" class="form-label">N° Préstamo:</label>
-                                        <input type="text" class="form-control" id="numPretamo" runat="server">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="causa" class="form-label">N° Causa:</label>
-                                        <input type="text" class="form-control" id="causa" runat="server">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="oficina" class="form-label">Oficina:</label>
-                                        <input type="text" class="form-control" id="oficina" runat="server">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="oficial" class="form-label">Oficial:</label>
-                                        <input type="text" class="form-control" id="oficial" runat="server">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="tipo" class="form-label">Tipo:</label>
-                                        <input type="text" class="form-control" id="tipo" runat="server">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="adjudicado" class="form-label">Adjudicado:</label>
-                                        <input type="text" class="form-control" id="adjudicado" runat="server">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="ultimoPago" class="form-label">Último Pago:</label>
-                                        <input type="text" class="form-control" id="ultimoPago" runat="server">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="proxVencimiento" class="form-label">Próximo Vencimiento:</label>
-                                        <input type="text" class="form-control" id="proxVencimiento" runat="server">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="deudaInicial" class="form-label">Deuda Inicial:</label>
-                                        <input type="text" class="form-control" id="deudaInicial" inputmode="decimal" runat="server">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="saldoActual" class="form-label">Saldo Actual:</label>
-                                        <input type="text" class="form-control" id="saldoActual" inputmode="decimal" runat="server">
-                                    </div>
-                                    <div class="col-md-4">
-                                        <label for="transferido" class="form-label">Saldo Transferido a Judicial:</label>
-                                        <input type="text" class="form-control" id="transferido" runat="server">
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="inlineAbogado" class="form-label">Abogado:</label>
-                                        <select class="form-control" id="inlineAbogado" runat="server">
-                                            <option selected>Seleccione...</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="inlineTramite" class="form-label">Trámite:</label>
-                                        <select class="form-control" id="inlineTramite" runat="server">
-                                            <option selected>Seleccione...</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="inlineMateria" class="form-label">Materia:</label>
-                                        <select class="form-control" id="inlineMateria" runat="server">
-                                            <option selected>Seleccione...</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="inlineMedidaCautelar" class="form-label">Medida Cautelar:</label>
-                                        <select class="form-control" id="inlineMedidaCautelar" runat="server">
-                                            <option selected>Seleccione...</option>
-                                        </select>
-                                    </div>
+                                <div class="row">
                                     <div class="col-md-12">
-                                        <label for="inlineJudicatura" class="form-label">Judicatura:</label>
-                                        <select class="form-control" id="inlineJudicatura" runat="server">
-                                            <option selected>Seleccione...</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label for="descripcion" class="form-label">Descripción:</label>
-                                        <input type="text" class="form-control" id="descripcion" runat="server">
-                                    </div>
-                                    <div class="col-md-12">
-                                        <label for="inlineAccion" class="form-label">Acción Desarrollada:</label>
-                                        <select class="form-control" id="inlineAccion" runat="server">
-                                            <option selected>Seleccione...</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <div class="form-floating">
-                                            <label for="floatingTextarea">Comentario:</label>
-                                            <textarea class="form-control" placeholder="Comentario..." id="txtComentario" runat="server"></textarea>
+                                        <div class="table-responsive">
+                                            <asp:GridView class="table table-striped table-hover border-left-info border-bottom-info" ID="gvEstadosJudiciales" runat="server" AutoGenerateColumns="true">
+                                            </asp:GridView>
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Botones -->
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-3 text-right">
+                                        <asp:Button ID="btnActualizarEstadoPrestamo" runat="server" CssClass="btn btn-primary" Text="Actualizar Estado Préstamo" OnClick="btnActualizarEstadoPrestamo_Click" />
+                                    </div>
+                                    <div class="col-md-3 text-right">
+                                    </div>
+                                    <div class="col-md-3 text-right">
+                                        <asp:Button ID="btnGuardarEstadoPrestamo" runat="server" CssClass="btn btn-success" Text="Guardar Estado Préstamo" OnClick="btnGuardarEstadoPrestamo_Click" Visible="false" AutoPostBack="false" EnableViewState="true" />
+                                    </div>
+                                    <div class="col-md-3 text-right">
+                                        <asp:Button ID="btnCancelarEstadoPrestamo" runat="server" CssClass="btn btn-dark" Text="Cancelar y Volver" Visible="false" OnClientClick="history.back(); return false;" />
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="container-fluid">
+                                <div class="row">
                                     <div class="col-md-6">
-                                        <label for="fechaIngreso" class="form-label">Fecha Ingreso:</label>
-                                        <input type="date" class="form-control" id="fechaIngreso" runat="server">
+                                        <label for="txtNumPretamo" class="form-label">N° Préstamo:</label>
+                                        <asp:TextBox ID="txtNumPretamo" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="fechaSistema" class="form-label">Fecha Sistema:</label>
-                                        <input type="date" class="form-control" id="fechaSistema" runat="server">
+                                        <label for="txtCausa" class="form-label">N° Causa:</label>
+                                        <asp:TextBox ID="txtCausa" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="txtOficina" class="form-label">Oficina:</label>
+                                        <asp:TextBox ID="txtOficina" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="txtOficial" class="form-label">Oficial:</label>
+                                        <asp:TextBox ID="txtOficial" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="txtTipo" class="form-label">Tipo:</label>
+                                        <asp:TextBox ID="txtTipo" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="dtAdjudicado" class="form-label">Adjudicado:</label>
+                                        <asp:TextBox ID="dtAdjudicado" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="dtUltimoPago" class="form-label">Último Pago:</label>
+                                        <asp:TextBox ID="dtUltimoPago" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="dtProxVencimiento" class="form-label">Próximo Vencimiento:</label>
+                                        <asp:TextBox ID="dtProxVencimiento" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <label for="txtDeudaInicial" class="form-label">Deuda Inicial:</label>
+                                        <asp:TextBox ID="txtDeudaInicial" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtSaldoActual" class="form-label">Saldo Actual:</label>
+                                        <asp:TextBox ID="txtSaldoActual" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtTransferido" class="form-label">Saldo Transferido a Judicial:</label>
+                                        <%--<input type="text" class="form-control" id="txtTransferido" runat="server" readonly>--%>
+                                        <asp:TextBox ID="txtTransferido" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="ddlAbogado" class="form-label">Abogado:</label>
+                                        <select class="form-control" id="ddlAbogado" runat="server" disabled>
+                                            <option selected>Seleccione...</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="ddlTramite" class="form-label">Trámite:</label>
+                                        <asp:DropDownList ID="ddlTramite" runat="server" CssClass="form-control" Enabled="false">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="ddlMateria" class="form-label">Materia:</label>
+                                        <select class="form-control" id="ddlMateria" runat="server" disabled>
+                                            <option selected>Seleccione...</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="ddlJudicatura" class="form-label">Judicatura:</label>
+                                        <select class="form-control" id="ddlJudicatura" runat="server" disabled>
+                                            <option selected>Seleccione...</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-12">
                                         <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" id="gridCheck">
+                                            <asp:CheckBox ID="gridCheck" runat="server" CssClass="form-check-input" Enabled="false" />
                                             <label class="form-check-label" for="gridCheck">
                                                 Está Activo
                                             </label>
                                         </div>
                                     </div>
-                                    <%--<div class="col-12">
-                                        <button type="Actualizar" class="btn btn-primary">Sign in</button>
-                                    </div>--%>
-                                </form>
+                                </div>
+
+                                <%--</div>--%>
+
+
+                                <div class="row">
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="ddlAccion" class="form-label">Acción Desarrollada:</label>
+                                        <select class="form-control" id="ddlAccion" runat="server" disabled>
+                                            <option selected>Seleccione...</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="ddlMedidaCautelar" class="form-label">Medida Cautelar:</label>
+                                        <asp:DropDownList ID="ddlMedidaCautelar" runat="server" CssClass="form-control" Enabled="false">
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label class="form-label">Descripción:</label>
+                                        <asp:TextBox ID="txtDescripcion" runat="server" CssClass="form-control" ReadOnly="true" EnableViewState="true"></asp:TextBox>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-floating">
+                                            <label for="floatingTextarea">Comentario:</label>
+                                            <asp:TextBox ID="txtComentario" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" ReadOnly="true"></asp:TextBox>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="dtFechaIngreso" class="form-label">Fecha Ingreso:</label>
+                                        <input type="date" class="form-control" id="dtFechaIngreso" runat="server" disabled>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="dtFechaSistema" class="form-label">Fecha Sistema:</label>
+                                        <input type="date" class="form-control" id="dtFechaSistema" runat="server" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="container-fluid">
+                                    <div class="row">
+                                    </div>
+                                </div>
                             </div>
+
                         </nav>
-
                     </div>
-
                 </div>
                 <!-- /.container-fluid -->
 

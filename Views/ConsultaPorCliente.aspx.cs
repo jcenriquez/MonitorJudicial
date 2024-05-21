@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -18,10 +19,11 @@ namespace MonitorJudicial
         {
             if (!IsPostBack)
             {
-                divTramitePrestamo.Visible = false;
+                dvTramitePrestamo.Visible = false;
                 txtNombresDiv.Visible = false;
-                CargarFormulario();
+                //CargarFormulario();
             }
+            
         }
 
         protected void CargarFormulario()
@@ -44,7 +46,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreAbogado = reader["NOMBRE"].ToString();
-                        inlineAbogado.Items.Add(new ListItem(nombreAbogado));
+                        ddlAbogado.Items.Add(new ListItem(nombreAbogado));
                     }
 
                     reader.Close();
@@ -60,7 +62,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreTramite = reader["NOMBRE"].ToString();
-                        inlineTramite.Items.Add(new ListItem(nombreTramite));
+                        ddlTramite.Items.Add(new ListItem(nombreTramite));
                     }
 
                     reader.Close();
@@ -76,7 +78,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreMateria = reader["NOMBRE"].ToString();
-                        inlineMateria.Items.Add(new ListItem(nombreMateria));
+                        ddlMateria.Items.Add(new ListItem(nombreMateria));
                     }
 
                     reader.Close();
@@ -92,7 +94,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreMedidaCautelar = reader["NOMBRE"].ToString();
-                        inlineMedidaCautelar.Items.Add(new ListItem(nombreMedidaCautelar));
+                        ddlMedidaCautelar.Items.Add(new ListItem(nombreMedidaCautelar));
                     }
 
                     reader.Close();
@@ -108,7 +110,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreJudicatura = reader["NOMBRE"].ToString();
-                        inlineJudicatura.Items.Add(new ListItem(nombreJudicatura));
+                        ddlJudicatura.Items.Add(new ListItem(nombreJudicatura));
                     }
 
                     reader.Close();
@@ -124,7 +126,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreEstadoTramite = reader["NOMBRE"].ToString();
-                        inlineAccion.Items.Add(new ListItem(nombreEstadoTramite));
+                        ddlAccion.Items.Add(new ListItem(nombreEstadoTramite));
                     }
 
                     reader.Close();
@@ -142,22 +144,12 @@ namespace MonitorJudicial
         {
             txtNombresDiv.Visible = true;
             Controllers.PrestamosController.LlenarGridViewCedula(numeroCedula, gvPrestamos, txtNombres);
-        }
-
-        protected void btnBuscar_Click(object sender, EventArgs e)
-        {
-            if (rbCedula.Checked)  // Verificar si el radio button 'rbCedula' está seleccionado
-            {
-                LlenarGridViewCedula(idConsulta.Value);
-            }
-            else
-            {
-                LlenarGridViewCliente(idConsulta.Value);
-            }
-        }
+        }        
 
         protected void gvPrestamos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            CargarFormulario();
+            btnActualizarEstadoPrestamo.Visible = true;
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
             if (e.CommandName == "Select")
             {
@@ -210,7 +202,8 @@ namespace MonitorJudicial
                         tj.NOMBRE AS [JUDICATURA], 
                         ej.NOMBRE AS [ACCIÓN DESARROLLADA], 
                         pa.SALDOTRANSFERIDO AS [SALDO TRANSFERIDO],
-                        pm.SECUENCIAL AS [SECUENCIAL PRESTAMO]
+                        pm.SECUENCIAL AS [SECUENCIAL PRESTAMO],
+	                    pt.ESTAACTIVO AS [ACTIVO]
                     FROM 
                         [FBS_COBRANZAS].[ABOGADO] ab
                     JOIN 
@@ -242,7 +235,9 @@ namespace MonitorJudicial
                     WHERE 
                         pm.NUMEROPRESTAMO ='" + numPretamoVar + @"'
                         AND ab.SECUENCIALEMPRESA = pm.SECUENCIALEMPRESA
-                        AND ao.SECUENCIALOFICINA = pm.SECUENCIALOFICINA";
+                        AND ao.SECUENCIALOFICINA = pm.SECUENCIALOFICINA
+                        AND pt.ESTAACTIVO='1'; ";
+
 
                 // Tu código para conectar a la base de datos y ejecutar la consulta
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -253,13 +248,16 @@ namespace MonitorJudicial
 
                     if (reader.Read()) // Verificar si hay filas en el resultado
                     {
+                        string estado = reader["ACTIVO"].ToString();
+                        gridCheck.Checked = (estado == "True");
+
                         abogado = reader["ABOGADO"].ToString();
-                        ListItem selectedAbogado = inlineAbogado.Items.FindByText(abogado);
+                        ListItem selectedAbogado = ddlAbogado.Items.FindByText(abogado);
 
                         if (selectedAbogado != null)
                         {
                             // Limpiar cualquier selección previa
-                            foreach (ListItem item in inlineAbogado.Items)
+                            foreach (ListItem item in ddlAbogado.Items)
                             {
                                 item.Selected = false;
                             }
@@ -268,10 +266,10 @@ namespace MonitorJudicial
                             selectedAbogado.Selected = true;
                         }
                         tramiteV = reader["TRAMITE"].ToString();
-                        ListItem selectedTramite = inlineTramite.Items.FindByText(tramiteV);
+                        ListItem selectedTramite = ddlTramite.Items.FindByText(tramiteV);
                         if (selectedTramite != null)
                         {
-                            foreach (ListItem item in inlineTramite.Items)
+                            foreach (ListItem item in ddlTramite.Items)
                             {
                                 item.Selected = false;
                             }
@@ -280,10 +278,10 @@ namespace MonitorJudicial
                         }
 
                         materiaV = reader["MATERIA"].ToString();
-                        ListItem selectedMateria = inlineMateria.Items.FindByText(materiaV);
+                        ListItem selectedMateria = ddlMateria.Items.FindByText(materiaV);
                         if (selectedMateria != null)
                         {
-                            foreach (ListItem item in inlineMateria.Items)
+                            foreach (ListItem item in ddlMateria.Items)
                             {
                                 item.Selected = false;
                             }
@@ -292,10 +290,10 @@ namespace MonitorJudicial
                         }
 
                         medidaCautelarV = reader["MEDIDA CAUTELAR"].ToString();
-                        ListItem selectedMedidaCautelar = inlineMedidaCautelar.Items.FindByText(medidaCautelarV);
+                        ListItem selectedMedidaCautelar = ddlMedidaCautelar.Items.FindByText(medidaCautelarV);
                         if (selectedMedidaCautelar != null)
                         {
-                            foreach (ListItem item in inlineMedidaCautelar.Items)
+                            foreach (ListItem item in ddlMedidaCautelar.Items)
                             {
                                 item.Selected = false;
                             }
@@ -304,10 +302,10 @@ namespace MonitorJudicial
                         }
 
                         judicaturaV = reader["JUDICATURA"].ToString();
-                        ListItem selectedJudicatura = inlineJudicatura.Items.FindByText(judicaturaV);
+                        ListItem selectedJudicatura = ddlJudicatura.Items.FindByText(judicaturaV);
                         if (selectedJudicatura != null)
                         {
-                            foreach (ListItem item in inlineJudicatura.Items)
+                            foreach (ListItem item in ddlJudicatura.Items)
                             {
                                 item.Selected = false;
                             }
@@ -316,10 +314,10 @@ namespace MonitorJudicial
                         }
 
                         estadoTramiteV = reader["ACCIÓN DESARROLLADA"].ToString();
-                        ListItem selectedEstadoTramite = inlineAccion.Items.FindByText(estadoTramiteV);
+                        ListItem selectedEstadoTramite = ddlAccion.Items.FindByText(estadoTramiteV);
                         if (selectedEstadoTramite != null)
                         {
-                            foreach (ListItem item in inlineAccion.Items)
+                            foreach (ListItem item in ddlAccion.Items)
                             {
                                 item.Selected = false;
                             }
@@ -385,23 +383,116 @@ namespace MonitorJudicial
                     reader.Close();
                 }
 
-                causa.Value = numCausaV;
-                oficial.Value = oficialV;
-                oficina.Value = oficinaV;
-                adjudicado.Value = adjudicadoV;
-                proxVencimiento.Value = proVencimientoV;
-                transferido.Value = saldoTransferidoV;
-                descripcion.Value = descripcionV;
-                txtComentario.Value = comentarioV;
-                fechaIngreso.Value = fechaMaquinaV;
-                fechaSistema.Value = fechaSistemaV;
-                ultimoPago.Value = ultimoPagoV;
-                divTramitePrestamo.Visible = true;
-                numPretamo.Value = numPretamoVar;
-                tipo.Value = tipoVar;
-                deudaInicial.Value = deudaInicialVar;
-                saldoActual.Value = saldoVar;
+                string queryEstados = @"
+                    	SELECT 
+                        ej.NOMBRE AS [ESTADO TRÁMITE], 
+                        pt.COMENTARIO AS [COMENTARIO], 
+                        FORMAT(pt.FECHAMAQUINA, 'yyyy-MM-dd') AS [FECHAMAQUINA], 
+                        pt.ESTAACTIVO AS [ACTIVO],
+                        ISNULL(CAST(DATEDIFF(DAY, LAG(pt.FECHAMAQUINA) OVER (PARTITION BY pt.SECUENCIALPRESTAMO ORDER BY pt.FECHAMAQUINA), pt.FECHAMAQUINA) AS VARCHAR), '') AS [DIFERENCIA DÍAS],
+                        CASE 
+                            WHEN pt.FECHAMAQUINA = (SELECT MAX(pt2.FECHAMAQUINA) 
+                                                    FROM [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] pt2 
+                                                    WHERE pt2.SECUENCIALPRESTAMO = pt.SECUENCIALPRESTAMO)
+                            THEN CAST(DATEDIFF(DAY, pt.FECHAMAQUINA, GETDATE()) AS VARCHAR)
+                            ELSE ''
+                        END AS [DÍAS HASTA HOY]
+                    FROM 
+                        [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] pt
+                        INNER JOIN [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ej 
+                            ON pt.CODIGOESTADOTRAMITEDEMJUD = ej.CODIGO
+                    WHERE 
+                        pt.SECUENCIALPRESTAMO = '" + secuencialPrestamoV + @"'
+                    ORDER BY 
+                        pt.FECHAMAQUINA";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(queryEstados, connection);
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable dataTable = new DataTable();
+
+                    adapter.Fill(dataTable);
+
+                    // Asignar datos a la GridView
+                    gvEstadosJudiciales.DataSource = dataTable;
+                    gvEstadosJudiciales.DataBind();
+                }
+
+                txtCausa.Text = numCausaV;
+                txtOficial.Text = oficialV;
+                txtOficina.Text = oficinaV;
+                dtAdjudicado.Text = adjudicadoV;
+                dtProxVencimiento.Text = proVencimientoV;
+                txtTransferido.Text = saldoTransferidoV;
+                txtDescripcion.Text = descripcionV;
+                txtComentario.Text = comentarioV;
+                dtFechaIngreso.Value = fechaMaquinaV;
+                dtFechaSistema.Value = fechaSistemaV;
+                dtUltimoPago.Text = ultimoPagoV;
+                dvTramitePrestamo.Visible = true;
+                txtNumPretamo.Text = numPretamoVar;
+                txtTipo.Text = tipoVar;
+                txtDeudaInicial.Text = deudaInicialVar;
+                txtSaldoActual.Text = saldoVar;
             }
         }
+
+        protected void btnBuscar_Click(object sender, EventArgs e)
+        {
+            if (rbCedula.Checked)  // Verificar si el radio button 'rbCedula' está seleccionado
+            {
+                LlenarGridViewCedula(idConsulta.Value);
+            }
+            else
+            {
+                LlenarGridViewCliente(idConsulta.Value);
+            }
+        }
+        static string descripcion;
+        protected void btnActualizarEstadoPrestamo_Click(object sender, EventArgs e)
+        {
+            ddlAccion.Disabled = false;
+            txtComentario.ReadOnly = false;
+            txtDescripcion.ReadOnly = false;
+            btnActualizarEstadoPrestamo.Visible = false;
+            btnGuardarEstadoPrestamo.Visible = true;
+            btnCancelarEstadoPrestamo.Visible = true;            
+            dtFechaSistema.Value = DateTime.Now.ToString("yyyy-MM-dd");
+            dtFechaIngreso.Value = DateTime.Now.ToString("yyyy-MM-dd");
+
+        
+
+            string variable = txtDescripcion.Text;
+            //ddlTramite.Enabled = true;
+            ddlMedidaCautelar.Enabled = true;
+            //string valor = ddlMedidaCautelar.SelectedValue;
+            //string valor2 = ddlMedidaCautelar.Text;
+            //string valor3 = ddlTramite.SelectedItem.ToString();
+            //string valor4 = ddlTramite.SelectedValue.ToString();
+            //string valor6 = ddlMedidaCautelar.SelectedItem.ToString();
+            //string valor7 = ddlMedidaCautelar.SelectedValue.ToString();
+            //string valor5 = ddlTramite.SelectedIndex.ToString();
+            
+            //descripcion = txtDescripcion.Text;
+
+
+        }
+        protected void btnGuardarEstadoPrestamo_Click(object sender, EventArgs e)
+        {            
+            string valor6 = txtDescripcion.Text.Trim();
+            string comentario = txtComentario.Text.Trim();
+            string valor8 = ddlMedidaCautelar.SelectedItem.ToString();
+            //string valor0 = ddlAccion.SelectedItem.ToString();
+            string valor7 = ddlMedidaCautelar.SelectedValue.ToString();
+
+            //if (valor4 == "")
+            //{
+            //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Por favor seleccione un trámite válido.');", true);
+            //    return;
+            //}
+        }
+
+
     }
 }

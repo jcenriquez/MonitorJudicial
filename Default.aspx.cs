@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI;
@@ -21,7 +22,7 @@ namespace MonitorJudicial
         protected double calificacionDemanda { get; set; }
         protected double cambioCasilleroJudicial { get; set; }
         protected double citacionDemandados { get; set; }
-        protected double contestaciónDemanda { get; set; }
+        protected double contestacionDemanda { get; set; }
         protected double desistimiento { get; set; }
         protected double embargo { get; set; }
         protected double juntaConciliacion { get; set; }
@@ -46,6 +47,7 @@ namespace MonitorJudicial
             if (!IsPostBack)
             {
                 PorcentajeCasos();
+                
             }
         }
         public void PorcentajeCasos()
@@ -106,7 +108,7 @@ namespace MonitorJudicial
             calificacionDemanda = porcentajes.ContainsKey("CALIFICACIÓN DEMANDA") ? porcentajes["CALIFICACIÓN DEMANDA"] : 0.0;
             cambioCasilleroJudicial = porcentajes.ContainsKey("CAMBIO DE CASILLERO JUDICIAL") ? porcentajes["CAMBIO DE CASILLERO JUDICIAL"] : 0.0;
             citacionDemandados = porcentajes.ContainsKey("CITACIÓN A LOS DEMANDADOS ") ? porcentajes["CITACIÓN A LOS DEMANDADOS "] : 0.0;
-            contestaciónDemanda = porcentajes.ContainsKey("CONTESTACIÓN DEMANDA") ? porcentajes["CONTESTACIÓN DEMANDA"] : 0.0;
+            contestacionDemanda = porcentajes.ContainsKey("CONTESTACIÓN DEMANDA") ? porcentajes["CONTESTACIÓN DEMANDA"] : 0.0;
             desistimiento = porcentajes.ContainsKey("DESISTIMIENTO") ? porcentajes["DESISTIMIENTO"] : 0.0;
             embargo = porcentajes.ContainsKey("EMBARGO") ? porcentajes["EMBARGO"] : 0.0;
             juntaConciliacion = porcentajes.ContainsKey("JUNTA DE CONCILIACIÓN ") ? porcentajes["JUNTA DE CONCILIACIÓN "] : 0.0;

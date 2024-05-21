@@ -78,175 +78,220 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.GridView gvPrestamos;
 
         /// <summary>
-        /// Control divTramitePrestamo.
+        /// Control dvTramitePrestamo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divTramitePrestamo;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl dvTramitePrestamo;
 
         /// <summary>
-        /// Control numPretamo.
+        /// Control gvEstadosJudiciales.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText numPretamo;
+        protected global::System.Web.UI.WebControls.GridView gvEstadosJudiciales;
 
         /// <summary>
-        /// Control causa.
+        /// Control btnActualizarEstadoPrestamo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText causa;
+        protected global::System.Web.UI.WebControls.Button btnActualizarEstadoPrestamo;
 
         /// <summary>
-        /// Control oficina.
+        /// Control btnGuardarEstadoPrestamo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText oficina;
+        protected global::System.Web.UI.WebControls.Button btnGuardarEstadoPrestamo;
 
         /// <summary>
-        /// Control oficial.
+        /// Control btnCancelarEstadoPrestamo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText oficial;
+        protected global::System.Web.UI.WebControls.Button btnCancelarEstadoPrestamo;
 
         /// <summary>
-        /// Control tipo.
+        /// Control txtNumPretamo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText tipo;
+        protected global::System.Web.UI.WebControls.TextBox txtNumPretamo;
 
         /// <summary>
-        /// Control adjudicado.
+        /// Control txtCausa.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText adjudicado;
+        protected global::System.Web.UI.WebControls.TextBox txtCausa;
 
         /// <summary>
-        /// Control ultimoPago.
+        /// Control txtOficina.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText ultimoPago;
+        protected global::System.Web.UI.WebControls.TextBox txtOficina;
 
         /// <summary>
-        /// Control proxVencimiento.
+        /// Control txtOficial.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText proxVencimiento;
+        protected global::System.Web.UI.WebControls.TextBox txtOficial;
 
         /// <summary>
-        /// Control deudaInicial.
+        /// Control txtTipo.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText deudaInicial;
+        protected global::System.Web.UI.WebControls.TextBox txtTipo;
 
         /// <summary>
-        /// Control saldoActual.
+        /// Control dtAdjudicado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText saldoActual;
+        protected global::System.Web.UI.WebControls.TextBox dtAdjudicado;
 
         /// <summary>
-        /// Control transferido.
+        /// Control dtUltimoPago.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText transferido;
+        protected global::System.Web.UI.WebControls.TextBox dtUltimoPago;
 
         /// <summary>
-        /// Control inlineAbogado.
+        /// Control dtProxVencimiento.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect inlineAbogado;
+        protected global::System.Web.UI.WebControls.TextBox dtProxVencimiento;
 
         /// <summary>
-        /// Control inlineTramite.
+        /// Control txtDeudaInicial.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect inlineTramite;
+        protected global::System.Web.UI.WebControls.TextBox txtDeudaInicial;
 
         /// <summary>
-        /// Control inlineMateria.
+        /// Control txtSaldoActual.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect inlineMateria;
+        protected global::System.Web.UI.WebControls.TextBox txtSaldoActual;
 
         /// <summary>
-        /// Control inlineMedidaCautelar.
+        /// Control txtTransferido.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect inlineMedidaCautelar;
+        protected global::System.Web.UI.WebControls.TextBox txtTransferido;
 
         /// <summary>
-        /// Control inlineJudicatura.
+        /// Control ddlAbogado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect inlineJudicatura;
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlAbogado;
 
         /// <summary>
-        /// Control descripcion.
+        /// Control ddlTramite.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputText descripcion;
+        protected global::System.Web.UI.WebControls.DropDownList ddlTramite;
 
         /// <summary>
-        /// Control inlineAccion.
+        /// Control ddlMateria.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlSelect inlineAccion;
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlMateria;
+
+        /// <summary>
+        /// Control ddlJudicatura.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlJudicatura;
+
+        /// <summary>
+        /// Control gridCheck.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox gridCheck;
+
+        /// <summary>
+        /// Control ddlAccion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlAccion;
+
+        /// <summary>
+        /// Control ddlMedidaCautelar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlMedidaCautelar;
+
+        /// <summary>
+        /// Control txtDescripcion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDescripcion;
 
         /// <summary>
         /// Control txtComentario.
@@ -255,24 +300,24 @@ namespace MonitorJudicial
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlTextArea txtComentario;
+        protected global::System.Web.UI.WebControls.TextBox txtComentario;
 
         /// <summary>
-        /// Control fechaIngreso.
+        /// Control dtFechaIngreso.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl fechaIngreso;
+        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl dtFechaIngreso;
 
         /// <summary>
-        /// Control fechaSistema.
+        /// Control dtFechaSistema.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl fechaSistema;
+        protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl dtFechaSistema;
     }
 }
