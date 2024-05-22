@@ -219,9 +219,9 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="ddlAccion" class="form-label">Acción Desarrollada:</label>
-                                        <select class="form-control" id="ddlAccion" runat="server" disabled>
-                                            <option selected>Seleccione...</option>
-                                        </select>
+                                        <asp:DropDownList ID="ddlAccion" runat="server" CssClass="form-control" Enabled="false">
+                                            <asp:ListItem Text="Seleccione..." Value="" Selected="false"></asp:ListItem>
+                                        </asp:DropDownList>
                                     </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Descripción:</label>

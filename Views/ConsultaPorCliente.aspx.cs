@@ -147,6 +147,15 @@ namespace MonitorJudicial
         }
 
         protected static string secuencialPrestamo;
+        protected static string secuencial = "";
+        protected static string codigoestadotramitedemjud = "";
+        protected static string codigoabogado = "";
+        protected static string comentario = "";
+        protected static string estaactivo = "";
+        protected static string numeroverificador = "";
+        protected static string codigousuario = "";
+        protected static string fechasistema = "";
+        protected static string fechamaquina = "";
         protected void gvPrestamos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             CargarFormulario();
@@ -477,6 +486,110 @@ namespace MonitorJudicial
             }
             return respuesta;
         }
+        protected void ConsultaPrestamoJudicial(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+            string query = "SELECT * FROM [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] WHERE [SECUENCIALPRESTAMO] = @SecuencialPrestamo AND ESTAACTIVO = 1";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo); // Agregar el parámetro
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    codigoabogado = reader["CODIGOABOGADO"].ToString();
+                    numeroverificador = reader["NUMEROVERIFICADOR"].ToString();
+                    codigousuario = reader["CODIGOUSUARIO"].ToString();
+
+                    // Aquí puedes usar las variables codigoabogado, numeroverificador y codigousuario
+                    // por ejemplo, asignándolas a controles de la interfaz de usuario o a otras variables de clase
+                }
+
+                reader.Close();
+            }
+
+        }
+        protected string UpdatePrestamoDescripcion(string secuencialPrestamo, string descripcion)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+            string query = @"
+            UPDATE [FBS_COBRANZAS].[PRESTAMOABOGADO]
+            SET DESCRIPCION = @Descripcion
+            WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
+                command.Parameters.AddWithValue("@Descripcion", descripcion);
+
+                try
+                {
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verifica si se actualizó alguna fila
+                    if (rowsAffected > 0)
+                    {
+                        // Éxito: se actualizó al menos una fila
+                        respuesta = "OK";
+                    }
+                    else
+                    {
+                        // No se actualizó ninguna fila
+                        respuesta = "ERROR";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de excepciones
+                    Console.WriteLine("Error: " + ex.Message);
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Ocurrió un error al actualizar la descripción.');", true);
+                    // Puedes registrar el error o mostrar un mensaje adecuado al usuario
+                }
+            }
+            return respuesta;
+        }
+        protected string ConsultarCodigoTramite(string codigoestadotramitedemjud)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+            string query = @"
+            SELECT CODIGO 
+            FROM [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] 
+            WHERE NOMBRE = @codigoestadotramitedemjud";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@codigoestadotramitedemjud", codigoestadotramitedemjud);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        respuesta = reader["CODIGO"].ToString();
+                    }
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de excepciones
+                    Console.WriteLine("Error: " + ex.Message);
+                    respuesta = "Error al obtener el código";
+                }
+            }
+
+            return respuesta;
+        }
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
             if (rbCedula.Checked)  // Verificar si el radio button 'rbCedula' está seleccionado
@@ -491,14 +604,14 @@ namespace MonitorJudicial
         static string descripcion;
         protected void btnActualizarEstadoPrestamo_Click(object sender, EventArgs e)
         {
-            ddlAccion.Disabled = false;
+            ddlAccion.Enabled = true;
             ddlAccion.SelectedIndex = 0;
             //ddlMedidaCautelar.Enabled = true;
             //ddlMedidaCautelar.SelectedIndex = 0;
             txtComentario.ReadOnly = false;
             txtComentario.Text = string.Empty;
-            txtDescripcion.ReadOnly = false;
-            txtDescripcion.Text = string.Empty;
+            //txtDescripcion.ReadOnly = false;
+            //txtDescripcion.Text = string.Empty;
             btnActualizarEstadoPrestamo.Visible = false;
             btnGuardarEstadoPrestamo.Visible = true;
             btnCancelarEstadoPrestamo.Visible = true;
@@ -513,7 +626,6 @@ namespace MonitorJudicial
             var highlightColor = '#FEF0BD';
             document.getElementById('" + txtComentario.ClientID + @"').style.backgroundColor = highlightColor;
             document.getElementById('" + ddlAccion.ClientID + @"').style.backgroundColor = highlightColor;
-            document.getElementById('" + txtDescripcion.ClientID + @"').style.backgroundColor = highlightColor;
             document.getElementById('" + txtComentario.ClientID + @"').addEventListener('focus', function() {
                 this.style.backgroundColor = '';
             });
@@ -522,9 +634,6 @@ namespace MonitorJudicial
                 this.style.backgroundColor = '';
             });
 
-            document.getElementById('" + txtDescripcion.ClientID + @"').addEventListener('focus', function() {
-                this.style.backgroundColor = '';
-            });
         </script>";
 
             ClientScript.RegisterStartupScript(this.GetType(), "HighlightFields", script);
@@ -532,33 +641,43 @@ namespace MonitorJudicial
 
         }
         protected void btnGuardarEstadoPrestamo_Click(object sender, EventArgs e)
-        {
-            string valor6 = txtDescripcion.Text.Trim();
-            string comentario = txtComentario.Text.Trim();
+        {            
+            string descripcion = ddlAccion.SelectedValue.Trim();            
 
+            string secuencialprestamoV = secuencialPrestamo;
+            string codigoEstadoJudicialV = ConsultarCodigoTramite(descripcion);
+            string codigoabogadoV = codigoabogado;
+            string comentarioV = txtComentario.Text.Trim();
+            string estaactivoV = "1";
+            string numeroverificadorV = numeroverificador;
+            string codigousuarioV = codigousuario;
+            string fechasistemaV = dtFechaSistema.Value;
+            string fechamaquinaV = dtFechaIngreso.Value;
+
+            ConsultaPrestamoJudicial(secuencialPrestamo);
             //UpdatePrestamoEstado(secuencialPrestamo);
+            //UpdatePrestamoDescripcion(secuencialPrestamo, descripcion);
 
-            if (UpdatePrestamoEstado(secuencialPrestamo).Equals("OK"))
-            {
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
-                return;
-            }
-            else
-            {
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
-                return;
-            }
+
+            //if (UpdatePrestamoEstado(secuencialPrestamo).Equals("OK"))
+            //{
+            //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
+            //    return;
+            //}
+            //else
+            //{
+            //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+            //    return;
+            //}
 
             //Cuando se h confirmdo el guardado
-            ddlAccion.Disabled = true;
+            ddlAccion.Enabled = false;
             txtComentario.ReadOnly = true;
-            txtDescripcion.ReadOnly = true;
+            //txtDescripcion.ReadOnly = true;
             //btnActualizarEstadoPrestamo.Visible = true;
             //btnGuardarEstadoPrestamo.Visible = false;
             //btnCancelarEstadoPrestamo.Visible = false;
             //CargarFormulario();
         }
-
-
     }
 }
