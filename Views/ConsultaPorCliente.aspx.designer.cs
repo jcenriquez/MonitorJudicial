@@ -96,33 +96,6 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.GridView gvEstadosJudiciales;
 
         /// <summary>
-        /// Control btnActualizarEstadoPrestamo.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnActualizarEstadoPrestamo;
-
-        /// <summary>
-        /// Control btnGuardarEstadoPrestamo.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnGuardarEstadoPrestamo;
-
-        /// <summary>
-        /// Control btnCancelarEstadoPrestamo.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Button btnCancelarEstadoPrestamo;
-
-        /// <summary>
         /// Control txtNumPretamo.
         /// </summary>
         /// <remarks>
@@ -319,5 +292,32 @@ namespace MonitorJudicial
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl dtFechaSistema;
+
+        /// <summary>
+        /// Control btnActualizarEstadoPrestamo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnActualizarEstadoPrestamo;
+
+        /// <summary>
+        /// Control btnGuardarEstadoPrestamo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnGuardarEstadoPrestamo;
+
+        /// <summary>
+        /// Control btnCancelarEstadoPrestamo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnCancelarEstadoPrestamo;
     }
 }

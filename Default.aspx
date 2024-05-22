@@ -488,7 +488,7 @@
                                         <div class="card-body">
                                             Success
                                            
-                                            <div class="text-white-50 small">#1cc88a</div>
+                                            <div class="text-white-50 small">#ffcb0c</div>
                                         </div>
                                     </div>
                                 </div>
@@ -542,7 +542,7 @@
                                         <div class="card-body">
                                             Dark
                                            
-                                            <div class="text-white-50 small">#5a5c69</div>
+                                            <div class="text-white-50 small">#8b4e21</div>
                                         </div>
                                     </div>
                                 </div>

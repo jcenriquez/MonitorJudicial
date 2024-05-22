@@ -453,6 +453,7 @@ namespace MonitorJudicial
         protected void btnActualizarEstadoPrestamo_Click(object sender, EventArgs e)
         {
             ddlAccion.Disabled = false;
+            ddlMedidaCautelar.Enabled = true;
             txtComentario.ReadOnly = false;
             txtDescripcion.ReadOnly = false;
             btnActualizarEstadoPrestamo.Visible = false;
@@ -465,7 +466,7 @@ namespace MonitorJudicial
 
             string variable = txtDescripcion.Text;
             //ddlTramite.Enabled = true;
-            ddlMedidaCautelar.Enabled = true;
+            
             //string valor = ddlMedidaCautelar.SelectedValue;
             //string valor2 = ddlMedidaCautelar.Text;
             //string valor3 = ddlTramite.SelectedItem.ToString();
@@ -479,7 +480,7 @@ namespace MonitorJudicial
 
         }
         protected void btnGuardarEstadoPrestamo_Click(object sender, EventArgs e)
-        {            
+        {
             string valor6 = txtDescripcion.Text.Trim();
             string comentario = txtComentario.Text.Trim();
             string valor8 = ddlMedidaCautelar.SelectedItem.ToString();
@@ -491,6 +492,17 @@ namespace MonitorJudicial
             //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Por favor seleccione un trámite válido.');", true);
             //    return;
             //}
+
+
+            //Cuando se h confirmdo el guardado
+            ddlAccion.Disabled = true;
+            txtComentario.ReadOnly = true;
+            txtDescripcion.ReadOnly = true;
+            ddlMedidaCautelar.Enabled = false;
+            //btnActualizarEstadoPrestamo.Visible = true;
+            //btnGuardarEstadoPrestamo.Visible = false;
+            //btnCancelarEstadoPrestamo.Visible = false;
+            //CargarFormulario();
         }
 
 

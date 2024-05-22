@@ -110,24 +110,6 @@
                                 </div>
                             </div>
 
-                            <!-- Botones -->
-                            <div class="container-fluid">
-                                <div class="row">
-                                    <div class="col-md-3 text-right">
-                                        <asp:Button ID="btnActualizarEstadoPrestamo" runat="server" CssClass="btn btn-primary" Text="Actualizar Estado Préstamo" OnClick="btnActualizarEstadoPrestamo_Click" />
-                                    </div>
-                                    <div class="col-md-3 text-right">
-                                    </div>
-                                    <div class="col-md-3 text-right">
-                                        <asp:Button ID="btnGuardarEstadoPrestamo" runat="server" CssClass="btn btn-success" Text="Guardar Estado Préstamo" OnClick="btnGuardarEstadoPrestamo_Click" Visible="false" AutoPostBack="false" EnableViewState="true" />
-                                    </div>
-                                    <div class="col-md-3 text-right">
-                                        <asp:Button ID="btnCancelarEstadoPrestamo" runat="server" CssClass="btn btn-dark" Text="Cancelar y Volver" Visible="false" OnClientClick="history.back(); return false;" />
-                                    </div>
-                                </div>
-                            </div>
-
-
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-md-6">
@@ -272,11 +254,35 @@
                                     </div>
                                 </div>
 
+
+                            </div>
+
+                            <div class="container-fluid">
+
+                                
+                                <br>
+                                <!-- Botones -->
                                 <div class="container-fluid">
                                     <div class="row">
+                                        <div class="col-md-12 ">
+                                            <asp:Button ID="btnActualizarEstadoPrestamo" runat="server" CssClass="btn-block btn-primary" Text="Actualizar Estado Préstamo" OnClick="btnActualizarEstadoPrestamo_Click" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 ">
+                                            <asp:Button ID="btnGuardarEstadoPrestamo" runat="server" CssClass="btn-block btn-success" Text="Guardar Estado Préstamo" OnClick="btnGuardarEstadoPrestamo_Click" Visible="false" AutoPostBack="false" EnableViewState="true" />
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12 t">
+                                            <asp:Button ID="btnCancelarEstadoPrestamo" runat="server" CssClass="btn-block btn-dark" Text="Cancelar y Volver" Visible="false" OnClientClick="history.back(); return false;" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
 
                         </nav>
                     </div>

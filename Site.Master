@@ -31,7 +31,7 @@
             <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
                 <a class="sidebar-brand d-flex align-items-center justify-content-center" href="Dafault.html">
                     <div class="sidebar-brand-icon">
-                        <img src="/Content/img/logoJudicial-svg.svg" alt="Logo Judicial" style="max-width: 100%;">
+                        <img src="/Content/img/logoJudicial.svg" alt="Logo Judicial" style="max-width: 100%;">
                     </div>
                 </a>
                 <hr class="sidebar-divider my-0" />
