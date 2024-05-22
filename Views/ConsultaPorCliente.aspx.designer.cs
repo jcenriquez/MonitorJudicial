@@ -96,6 +96,15 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.GridView gvEstadosJudiciales;
 
         /// <summary>
+        /// Control gridCheck.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.CheckBox gridCheck;
+
+        /// <summary>
         /// Control txtNumPretamo.
         /// </summary>
         /// <remarks>
@@ -222,6 +231,15 @@ namespace MonitorJudicial
         protected global::System.Web.UI.HtmlControls.HtmlSelect ddlMateria;
 
         /// <summary>
+        /// Control ddlMedidaCautelar.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlMedidaCautelar;
+
+        /// <summary>
         /// Control ddlJudicatura.
         /// </summary>
         /// <remarks>
@@ -231,15 +249,6 @@ namespace MonitorJudicial
         protected global::System.Web.UI.HtmlControls.HtmlSelect ddlJudicatura;
 
         /// <summary>
-        /// Control gridCheck.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox gridCheck;
-
-        /// <summary>
         /// Control ddlAccion.
         /// </summary>
         /// <remarks>
@@ -247,15 +256,6 @@ namespace MonitorJudicial
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlSelect ddlAccion;
-
-        /// <summary>
-        /// Control ddlMedidaCautelar.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlMedidaCautelar;
 
         /// <summary>
         /// Control txtDescripcion.

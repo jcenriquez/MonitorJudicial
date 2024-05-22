@@ -23,7 +23,7 @@ namespace MonitorJudicial
                 txtNombresDiv.Visible = false;
                 //CargarFormulario();
             }
-            
+
         }
 
         protected void CargarFormulario()
@@ -137,15 +137,16 @@ namespace MonitorJudicial
         protected void LlenarGridViewCliente(string numeroCliente)
         {
             txtNombresDiv.Visible = true;
-            Controllers.PrestamosController.LlenarGridViewCliente(numeroCliente, gvPrestamos,txtNombres);
+            Controllers.PrestamosController.LlenarGridViewCliente(numeroCliente, gvPrestamos, txtNombres);
         }
 
         protected void LlenarGridViewCedula(string numeroCedula)
         {
             txtNombresDiv.Visible = true;
             Controllers.PrestamosController.LlenarGridViewCedula(numeroCedula, gvPrestamos, txtNombres);
-        }        
+        }
 
+        protected static string secuencialPrestamo;
         protected void gvPrestamos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             CargarFormulario();
@@ -326,6 +327,7 @@ namespace MonitorJudicial
                         }
 
                         secuencialPrestamoV = reader["SECUENCIAL PRESTAMO"].ToString();
+                        secuencialPrestamo = secuencialPrestamoV;
                         oficialV = reader["OFICIAL"].ToString();
                         oficinaV = reader["OFICINA"].ToString();
                         adjudicadoV = reader["ADJUDICADO"].ToString();
@@ -437,7 +439,44 @@ namespace MonitorJudicial
                 txtSaldoActual.Text = saldoVar;
             }
         }
+        protected string UpdatePrestamoEstado(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
 
+            string query = "UPDATE [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] SET [ESTAACTIVO] = 0 WHERE [SECUENCIALPRESTAMO] = @SecuencialPrestamo";
+
+            string respuesta = "";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
+
+                try
+                {
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verifica si se actualizó alguna fila
+                    if (rowsAffected > 0)
+                    {
+                        // Éxito: se actualizó al menos una fila
+                        respuesta = "OK";
+                    }
+                    else
+                    {
+                        // No se actualizó ninguna fila
+                        respuesta = "ERROR";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de excepciones
+                    respuesta = "ERROR";
+                    // Puedes registrar el error o mostrar un mensaje adecuado al usuario
+                }
+            }
+            return respuesta;
+        }
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
             if (rbCedula.Checked)  // Verificar si el radio button 'rbCedula' está seleccionado
@@ -453,29 +492,42 @@ namespace MonitorJudicial
         protected void btnActualizarEstadoPrestamo_Click(object sender, EventArgs e)
         {
             ddlAccion.Disabled = false;
-            ddlMedidaCautelar.Enabled = true;
+            ddlAccion.SelectedIndex = 0;
+            //ddlMedidaCautelar.Enabled = true;
+            //ddlMedidaCautelar.SelectedIndex = 0;
             txtComentario.ReadOnly = false;
+            txtComentario.Text = string.Empty;
             txtDescripcion.ReadOnly = false;
+            txtDescripcion.Text = string.Empty;
             btnActualizarEstadoPrestamo.Visible = false;
             btnGuardarEstadoPrestamo.Visible = true;
-            btnCancelarEstadoPrestamo.Visible = true;            
+            btnCancelarEstadoPrestamo.Visible = true;
             dtFechaSistema.Value = DateTime.Now.ToString("yyyy-MM-dd");
             dtFechaIngreso.Value = DateTime.Now.ToString("yyyy-MM-dd");
 
-        
 
-            string variable = txtDescripcion.Text;
-            //ddlTramite.Enabled = true;
-            
-            //string valor = ddlMedidaCautelar.SelectedValue;
-            //string valor2 = ddlMedidaCautelar.Text;
-            //string valor3 = ddlTramite.SelectedItem.ToString();
-            //string valor4 = ddlTramite.SelectedValue.ToString();
-            //string valor6 = ddlMedidaCautelar.SelectedItem.ToString();
-            //string valor7 = ddlMedidaCautelar.SelectedValue.ToString();
-            //string valor5 = ddlTramite.SelectedIndex.ToString();
-            
-            //descripcion = txtDescripcion.Text;
+
+
+            string script = @"
+        <script type='text/javascript'>
+            var highlightColor = '#FEF0BD';
+            document.getElementById('" + txtComentario.ClientID + @"').style.backgroundColor = highlightColor;
+            document.getElementById('" + ddlAccion.ClientID + @"').style.backgroundColor = highlightColor;
+            document.getElementById('" + txtDescripcion.ClientID + @"').style.backgroundColor = highlightColor;
+            document.getElementById('" + txtComentario.ClientID + @"').addEventListener('focus', function() {
+                this.style.backgroundColor = '';
+            });
+
+            document.getElementById('" + ddlAccion.ClientID + @"').addEventListener('focus', function() {
+                this.style.backgroundColor = '';
+            });
+
+            document.getElementById('" + txtDescripcion.ClientID + @"').addEventListener('focus', function() {
+                this.style.backgroundColor = '';
+            });
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "HighlightFields", script);
 
 
         }
@@ -483,22 +535,24 @@ namespace MonitorJudicial
         {
             string valor6 = txtDescripcion.Text.Trim();
             string comentario = txtComentario.Text.Trim();
-            string valor8 = ddlMedidaCautelar.SelectedItem.ToString();
-            //string valor0 = ddlAccion.SelectedItem.ToString();
-            string valor7 = ddlMedidaCautelar.SelectedValue.ToString();
 
-            //if (valor4 == "")
-            //{
-            //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Por favor seleccione un trámite válido.');", true);
-            //    return;
-            //}
+            //UpdatePrestamoEstado(secuencialPrestamo);
 
+            if (UpdatePrestamoEstado(secuencialPrestamo).Equals("OK"))
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
+                return;
+            }
+            else
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                return;
+            }
 
             //Cuando se h confirmdo el guardado
             ddlAccion.Disabled = true;
             txtComentario.ReadOnly = true;
             txtDescripcion.ReadOnly = true;
-            ddlMedidaCautelar.Enabled = false;
             //btnActualizarEstadoPrestamo.Visible = true;
             //btnGuardarEstadoPrestamo.Visible = false;
             //btnCancelarEstadoPrestamo.Visible = false;

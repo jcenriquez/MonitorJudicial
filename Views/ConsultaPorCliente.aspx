@@ -112,6 +112,16 @@
 
                             <div class="container-fluid">
                                 <div class="row">
+                                    <div class="col-12">
+                                        <div class="form-check">
+                                            <asp:CheckBox ID="gridCheck" runat="server" CssClass="form-check-input" Enabled="false" />
+                                            <label class="form-check-label" for="gridCheck">
+                                                Está Activo
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-6">
                                         <label for="txtNumPretamo" class="form-label">N° Préstamo:</label>
                                         <asp:TextBox ID="txtNumPretamo" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
@@ -192,29 +202,20 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6">
+                                        <label for="ddlMedidaCautelar" class="form-label">Medida Cautelar:</label>
+                                        <asp:DropDownList ID="ddlMedidaCautelar" runat="server" CssClass="form-control" Enabled="false">
+                                            <asp:ListItem Text="Seleccione..." Value="" Selected="false"></asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <label for="ddlJudicatura" class="form-label">Judicatura:</label>
                                         <select class="form-control" id="ddlJudicatura" runat="server" disabled>
                                             <option selected>Seleccione...</option>
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-12">
-                                        <div class="form-check">
-                                            <asp:CheckBox ID="gridCheck" runat="server" CssClass="form-check-input" Enabled="false" />
-                                            <label class="form-check-label" for="gridCheck">
-                                                Está Activo
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <%--</div>--%>
-
-
-                                <div class="row">
-                                </div>
-
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="ddlAccion" class="form-label">Acción Desarrollada:</label>
@@ -223,14 +224,6 @@
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="ddlMedidaCautelar" class="form-label">Medida Cautelar:</label>
-                                        <asp:DropDownList ID="ddlMedidaCautelar" runat="server" CssClass="form-control" Enabled="false">
-                                        </asp:DropDownList>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-12">
                                         <label class="form-label">Descripción:</label>
                                         <asp:TextBox ID="txtDescripcion" runat="server" CssClass="form-control" ReadOnly="true" EnableViewState="true"></asp:TextBox>
                                     </div>
@@ -259,7 +252,7 @@
 
                             <div class="container-fluid">
 
-                                
+
                                 <br>
                                 <!-- Botones -->
                                 <div class="container-fluid">
