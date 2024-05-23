@@ -394,7 +394,31 @@ namespace MonitorJudicial
                     reader.Close();
                 }
 
-                string queryEstados = @"
+                CargarGridTramites(secuencialPrestamoV);
+
+                txtCausa.Text = numCausaV;
+                txtOficial.Text = oficialV;
+                txtOficina.Text = oficinaV;
+                dtAdjudicado.Text = adjudicadoV;
+                dtProxVencimiento.Text = proVencimientoV;
+                txtTransferido.Text = saldoTransferidoV;
+                txtDescripcion.Text = descripcionV;
+                txtComentario.Text = comentarioV;
+                dtFechaIngreso.Value = fechaMaquinaV;
+                dtFechaSistema.Value = fechaSistemaV;
+                dtUltimoPago.Text = ultimoPagoV;
+                dvTramitePrestamo.Visible = true;
+                txtNumPretamo.Text = numPretamoVar;
+                txtTipo.Text = tipoVar;
+                txtDeudaInicial.Text = deudaInicialVar;
+                txtSaldoActual.Text = saldoVar;
+            }
+        }
+        protected void CargarGridTramites(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string secuencialPrestamoV = secuencialPrestamo;
+            string queryEstados = @"
                     	SELECT 
                         ej.NOMBRE AS [ESTADO TRÁMITE], 
                         pt.COMENTARIO AS [COMENTARIO], 
@@ -417,36 +441,24 @@ namespace MonitorJudicial
                     ORDER BY 
                         pt.FECHAMAQUINA";
 
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    SqlCommand command = new SqlCommand(queryEstados, connection);
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryEstados, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                DataTable dataTable = new DataTable();
 
-                    adapter.Fill(dataTable);
+                adapter.Fill(dataTable);
 
-                    // Asignar datos a la GridView
-                    gvEstadosJudiciales.DataSource = dataTable;
-                    gvEstadosJudiciales.DataBind();
-                }
-
-                txtCausa.Text = numCausaV;
-                txtOficial.Text = oficialV;
-                txtOficina.Text = oficinaV;
-                dtAdjudicado.Text = adjudicadoV;
-                dtProxVencimiento.Text = proVencimientoV;
-                txtTransferido.Text = saldoTransferidoV;
-                txtDescripcion.Text = descripcionV;
-                txtComentario.Text = comentarioV;
-                dtFechaIngreso.Value = fechaMaquinaV;
-                dtFechaSistema.Value = fechaSistemaV;
-                dtUltimoPago.Text = ultimoPagoV;
-                dvTramitePrestamo.Visible = true;
-                txtNumPretamo.Text = numPretamoVar;
-                txtTipo.Text = tipoVar;
-                txtDeudaInicial.Text = deudaInicialVar;
-                txtSaldoActual.Text = saldoVar;
+                // Asignar datos a la GridView
+                gvEstadosJudiciales.DataSource = dataTable;
+                gvEstadosJudiciales.DataBind();
             }
+        }
+        protected void VaciarGridView()
+        {
+            // Asigna un DataSource vacío y actualiza el GridView
+            gvEstadosJudiciales.DataSource = null;
+            gvEstadosJudiciales.DataBind();
         }
         protected string UpdatePrestamoEstado(string secuencialPrestamo)
         {
@@ -592,6 +604,7 @@ namespace MonitorJudicial
         }
         protected void btnBuscar_Click(object sender, EventArgs e)
         {
+            dvTramitePrestamo.Visible = false;
             if (rbCedula.Checked)  // Verificar si el radio button 'rbCedula' está seleccionado
             {
                 LlenarGridViewCedula(idConsulta.Value);
@@ -618,9 +631,6 @@ namespace MonitorJudicial
             dtFechaSistema.Value = DateTime.Now.ToString("yyyy-MM-dd");
             dtFechaIngreso.Value = DateTime.Now.ToString("yyyy-MM-dd");
 
-
-
-
             string script = @"
         <script type='text/javascript'>
             var highlightColor = '#FEF0BD';
@@ -637,47 +647,130 @@ namespace MonitorJudicial
         </script>";
 
             ClientScript.RegisterStartupScript(this.GetType(), "HighlightFields", script);
-
-
         }
-        protected void btnGuardarEstadoPrestamo_Click(object sender, EventArgs e)
-        {            
-            string descripcion = ddlAccion.SelectedValue.Trim();            
 
-            string secuencialprestamoV = secuencialPrestamo;
+        protected string GuardarEstadoPrestamo(int secuencialprestamoV, string codigoEstadoJudicialV, string codigoabogadoV, string comentarioV, bool estaactivoV, int numeroverificadorV, string codigousuarioV, DateTime fechasistemaV, DateTime fechamaquinaV)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+            string query = @"
+            INSERT INTO [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE]
+            ([SECUENCIALPRESTAMO]
+            ,[CODIGOESTADOTRAMITEDEMJUD]
+            ,[CODIGOABOGADO]
+            ,[COMENTARIO]
+            ,[ESTAACTIVO]
+            ,[NUMEROVERIFICADOR]
+            ,[CODIGOUSUARIO]
+            ,[FECHASISTEMA]
+            ,[FECHAMAQUINA])
+            VALUES
+            (@SecuencialPrestamo
+            ,@CodigoEstadoJudicial
+            ,@CodigoAbogado
+            ,@Comentario
+            ,@EstaActivo
+            ,@NumeroVerificador
+            ,@CodigoUsuario
+            ,@FechaSistema
+            ,@FechaMaquina)";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialprestamoV);
+                command.Parameters.AddWithValue("@CodigoEstadoJudicial", codigoEstadoJudicialV);
+                command.Parameters.AddWithValue("@CodigoAbogado", codigoabogadoV);
+                command.Parameters.AddWithValue("@Comentario", comentarioV);
+                command.Parameters.AddWithValue("@EstaActivo", estaactivoV);
+                command.Parameters.AddWithValue("@NumeroVerificador", numeroverificadorV);
+                command.Parameters.AddWithValue("@CodigoUsuario", codigousuarioV);
+                command.Parameters.AddWithValue("@FechaSistema", fechasistemaV);
+                command.Parameters.AddWithValue("@FechaMaquina", fechamaquinaV);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    respuesta = "OK";
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de excepciones
+                    Console.WriteLine("Error: " + ex.Message);
+                    respuesta = "ERROR";
+                    // Puedes registrar el error o mostrar un mensaje adecuado al usuario
+                }
+            }
+            return respuesta;
+        }
+
+        protected void btnGuardarEstadoPrestamo_Click(object sender, EventArgs e)
+        {
+            string descripcion = ddlAccion.SelectedValue.Trim();
+            //Este método trae la información de la tabla [PRESTAMODEMANDAJUDICIALTRAMITE] 
+            ConsultaPrestamoJudicial(secuencialPrestamo);
+
+            int secuencialprestamoV = int.Parse(secuencialPrestamo);
             string codigoEstadoJudicialV = ConsultarCodigoTramite(descripcion);
             string codigoabogadoV = codigoabogado;
-            string comentarioV = txtComentario.Text.Trim();
-            string estaactivoV = "1";
-            string numeroverificadorV = numeroverificador;
+            string comentarioV = txtComentario.Text.Trim().ToUpper();
+            bool estaactivoV = true;
+            int numeroverificadorV = int.Parse(numeroverificador);
             string codigousuarioV = codigousuario;
-            string fechasistemaV = dtFechaSistema.Value;
-            string fechamaquinaV = dtFechaIngreso.Value;
+            DateTime fechasistemaV = DateTime.Parse(dtFechaSistema.Value);
+            DateTime fechamaquinaV = DateTime.Parse(dtFechaIngreso.Value);
 
-            ConsultaPrestamoJudicial(secuencialPrestamo);
-            //UpdatePrestamoEstado(secuencialPrestamo);
-            //UpdatePrestamoDescripcion(secuencialPrestamo, descripcion);
+            try
+            {
+                string actualizadoEstado = UpdatePrestamoEstado(secuencialPrestamo);
+                if (actualizadoEstado.Equals("OK"))
+                {
+                    string actualizadoDescripcion = UpdatePrestamoDescripcion(secuencialPrestamo, descripcion);
+                    if (actualizadoDescripcion.Equals("OK"))
+                    {
+                        string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV);
+                        if (guardado.Equals("OK"))
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
+                            VaciarGridView();
+                            CargarGridTramites(secuencialPrestamo);
+                            //Cuando se h confirmdo el guardado
+                            ddlAccion.Enabled = false;
+                            txtComentario.ReadOnly = true;
+                            txtDescripcion.Text = ddlAccion.SelectedValue.Trim();
+                            btnActualizarEstadoPrestamo.Visible = true;
+                            btnGuardarEstadoPrestamo.Visible = false;
+                            btnCancelarEstadoPrestamo.Visible = false;
+                            //CargarFormulario();
+                            return;
+                        }
+                        else
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                        return;
+                    }
+                }
+                else
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                return;
+            }
 
 
-            //if (UpdatePrestamoEstado(secuencialPrestamo).Equals("OK"))
-            //{
-            //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
-            //    return;
-            //}
-            //else
-            //{
-            //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
-            //    return;
-            //}
-
-            //Cuando se h confirmdo el guardado
-            ddlAccion.Enabled = false;
-            txtComentario.ReadOnly = true;
-            //txtDescripcion.ReadOnly = true;
-            //btnActualizarEstadoPrestamo.Visible = true;
-            //btnGuardarEstadoPrestamo.Visible = false;
-            //btnCancelarEstadoPrestamo.Visible = false;
-            //CargarFormulario();
+            
         }
     }
 }
