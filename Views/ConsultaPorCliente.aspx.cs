@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.Drawing;
 using System.Linq;
 using System.Web;
 using System.Web.Configuration;
@@ -18,10 +19,11 @@ namespace MonitorJudicial
         {
             if (!IsPostBack)
             {
-                divTramitePrestamo.Visible = false;
+                dvTramitePrestamo.Visible = false;
                 txtNombresDiv.Visible = false;
-                CargarFormulario();
+                //CargarFormulario();
             }
+
         }
 
         protected void CargarFormulario()
@@ -44,7 +46,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreAbogado = reader["NOMBRE"].ToString();
-                        inlineAbogado.Items.Add(new ListItem(nombreAbogado));
+                        ddlAbogado.Items.Add(new ListItem(nombreAbogado));
                     }
 
                     reader.Close();
@@ -60,7 +62,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreTramite = reader["NOMBRE"].ToString();
-                        inlineTramite.Items.Add(new ListItem(nombreTramite));
+                        ddlTramite.Items.Add(new ListItem(nombreTramite));
                     }
 
                     reader.Close();
@@ -76,7 +78,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreMateria = reader["NOMBRE"].ToString();
-                        inlineMateria.Items.Add(new ListItem(nombreMateria));
+                        ddlMateria.Items.Add(new ListItem(nombreMateria));
                     }
 
                     reader.Close();
@@ -92,7 +94,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreMedidaCautelar = reader["NOMBRE"].ToString();
-                        inlineMedidaCautelar.Items.Add(new ListItem(nombreMedidaCautelar));
+                        ddlMedidaCautelar.Items.Add(new ListItem(nombreMedidaCautelar));
                     }
 
                     reader.Close();
@@ -108,7 +110,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreJudicatura = reader["NOMBRE"].ToString();
-                        inlineJudicatura.Items.Add(new ListItem(nombreJudicatura));
+                        ddlJudicatura.Items.Add(new ListItem(nombreJudicatura));
                     }
 
                     reader.Close();
@@ -124,7 +126,7 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreEstadoTramite = reader["NOMBRE"].ToString();
-                        inlineAccion.Items.Add(new ListItem(nombreEstadoTramite));
+                        ddlAccion.Items.Add(new ListItem(nombreEstadoTramite));
                     }
 
                     reader.Close();
@@ -135,7 +137,7 @@ namespace MonitorJudicial
         protected void LlenarGridViewCliente(string numeroCliente)
         {
             txtNombresDiv.Visible = true;
-            Controllers.PrestamosController.LlenarGridViewCliente(numeroCliente, gvPrestamos,txtNombres);
+            Controllers.PrestamosController.LlenarGridViewCliente(numeroCliente, gvPrestamos, txtNombres);
         }
 
         protected void LlenarGridViewCedula(string numeroCedula)
@@ -144,20 +146,20 @@ namespace MonitorJudicial
             Controllers.PrestamosController.LlenarGridViewCedula(numeroCedula, gvPrestamos, txtNombres);
         }
 
-        protected void btnBuscar_Click(object sender, EventArgs e)
-        {
-            if (rbCedula.Checked)  // Verificar si el radio button 'rbCedula' está seleccionado
-            {
-                LlenarGridViewCedula(idConsulta.Value);
-            }
-            else
-            {
-                LlenarGridViewCliente(idConsulta.Value);
-            }
-        }
-
+        protected static string secuencialPrestamo;
+        protected static string secuencial = "";
+        protected static string codigoestadotramitedemjud = "";
+        protected static string codigoabogado = "";
+        protected static string comentario = "";
+        protected static string estaactivo = "";
+        protected static string numeroverificador = "";
+        protected static string codigousuario = "";
+        protected static string fechasistema = "";
+        protected static string fechamaquina = "";
         protected void gvPrestamos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            CargarFormulario();
+            btnActualizarEstadoPrestamo.Visible = true;
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
             if (e.CommandName == "Select")
             {
@@ -210,7 +212,8 @@ namespace MonitorJudicial
                         tj.NOMBRE AS [JUDICATURA], 
                         ej.NOMBRE AS [ACCIÓN DESARROLLADA], 
                         pa.SALDOTRANSFERIDO AS [SALDO TRANSFERIDO],
-                        pm.SECUENCIAL AS [SECUENCIAL PRESTAMO]
+                        pm.SECUENCIAL AS [SECUENCIAL PRESTAMO],
+	                    pt.ESTAACTIVO AS [ACTIVO]
                     FROM 
                         [FBS_COBRANZAS].[ABOGADO] ab
                     JOIN 
@@ -238,11 +241,13 @@ namespace MonitorJudicial
                     LEFT JOIN 
                         [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] pt ON pm.SECUENCIAL = pt.SECUENCIALPRESTAMO
                     JOIN 
-                        [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ej ON pa.CODIGOTIPOJUDICATURA = ej.CODIGO
+                        [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ej ON pt.CODIGOESTADOTRAMITEDEMJUD = ej.CODIGO
                     WHERE 
                         pm.NUMEROPRESTAMO ='" + numPretamoVar + @"'
                         AND ab.SECUENCIALEMPRESA = pm.SECUENCIALEMPRESA
-                        AND ao.SECUENCIALOFICINA = pm.SECUENCIALOFICINA";
+                        AND ao.SECUENCIALOFICINA = pm.SECUENCIALOFICINA
+                        AND pt.ESTAACTIVO='1'; ";
+
 
                 // Tu código para conectar a la base de datos y ejecutar la consulta
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -253,13 +258,16 @@ namespace MonitorJudicial
 
                     if (reader.Read()) // Verificar si hay filas en el resultado
                     {
+                        string estado = reader["ACTIVO"].ToString();
+                        gridCheck.Checked = (estado == "True");
+
                         abogado = reader["ABOGADO"].ToString();
-                        ListItem selectedAbogado = inlineAbogado.Items.FindByText(abogado);
+                        ListItem selectedAbogado = ddlAbogado.Items.FindByText(abogado);
 
                         if (selectedAbogado != null)
                         {
                             // Limpiar cualquier selección previa
-                            foreach (ListItem item in inlineAbogado.Items)
+                            foreach (ListItem item in ddlAbogado.Items)
                             {
                                 item.Selected = false;
                             }
@@ -268,10 +276,10 @@ namespace MonitorJudicial
                             selectedAbogado.Selected = true;
                         }
                         tramiteV = reader["TRAMITE"].ToString();
-                        ListItem selectedTramite = inlineTramite.Items.FindByText(tramiteV);
+                        ListItem selectedTramite = ddlTramite.Items.FindByText(tramiteV);
                         if (selectedTramite != null)
                         {
-                            foreach (ListItem item in inlineTramite.Items)
+                            foreach (ListItem item in ddlTramite.Items)
                             {
                                 item.Selected = false;
                             }
@@ -280,10 +288,10 @@ namespace MonitorJudicial
                         }
 
                         materiaV = reader["MATERIA"].ToString();
-                        ListItem selectedMateria = inlineMateria.Items.FindByText(materiaV);
+                        ListItem selectedMateria = ddlMateria.Items.FindByText(materiaV);
                         if (selectedMateria != null)
                         {
-                            foreach (ListItem item in inlineMateria.Items)
+                            foreach (ListItem item in ddlMateria.Items)
                             {
                                 item.Selected = false;
                             }
@@ -292,10 +300,10 @@ namespace MonitorJudicial
                         }
 
                         medidaCautelarV = reader["MEDIDA CAUTELAR"].ToString();
-                        ListItem selectedMedidaCautelar = inlineMedidaCautelar.Items.FindByText(medidaCautelarV);
+                        ListItem selectedMedidaCautelar = ddlMedidaCautelar.Items.FindByText(medidaCautelarV);
                         if (selectedMedidaCautelar != null)
                         {
-                            foreach (ListItem item in inlineMedidaCautelar.Items)
+                            foreach (ListItem item in ddlMedidaCautelar.Items)
                             {
                                 item.Selected = false;
                             }
@@ -304,10 +312,10 @@ namespace MonitorJudicial
                         }
 
                         judicaturaV = reader["JUDICATURA"].ToString();
-                        ListItem selectedJudicatura = inlineJudicatura.Items.FindByText(judicaturaV);
+                        ListItem selectedJudicatura = ddlJudicatura.Items.FindByText(judicaturaV);
                         if (selectedJudicatura != null)
                         {
-                            foreach (ListItem item in inlineJudicatura.Items)
+                            foreach (ListItem item in ddlJudicatura.Items)
                             {
                                 item.Selected = false;
                             }
@@ -316,10 +324,10 @@ namespace MonitorJudicial
                         }
 
                         estadoTramiteV = reader["ACCIÓN DESARROLLADA"].ToString();
-                        ListItem selectedEstadoTramite = inlineAccion.Items.FindByText(estadoTramiteV);
+                        ListItem selectedEstadoTramite = ddlAccion.Items.FindByText(estadoTramiteV);
                         if (selectedEstadoTramite != null)
                         {
-                            foreach (ListItem item in inlineAccion.Items)
+                            foreach (ListItem item in ddlAccion.Items)
                             {
                                 item.Selected = false;
                             }
@@ -328,6 +336,7 @@ namespace MonitorJudicial
                         }
 
                         secuencialPrestamoV = reader["SECUENCIAL PRESTAMO"].ToString();
+                        secuencialPrestamo = secuencialPrestamoV;
                         oficialV = reader["OFICIAL"].ToString();
                         oficinaV = reader["OFICINA"].ToString();
                         adjudicadoV = reader["ADJUDICADO"].ToString();
@@ -385,23 +394,383 @@ namespace MonitorJudicial
                     reader.Close();
                 }
 
-                causa.Value = numCausaV;
-                oficial.Value = oficialV;
-                oficina.Value = oficinaV;
-                adjudicado.Value = adjudicadoV;
-                proxVencimiento.Value = proVencimientoV;
-                transferido.Value = saldoTransferidoV;
-                descripcion.Value = descripcionV;
-                txtComentario.Value = comentarioV;
-                fechaIngreso.Value = fechaMaquinaV;
-                fechaSistema.Value = fechaSistemaV;
-                ultimoPago.Value = ultimoPagoV;
-                divTramitePrestamo.Visible = true;
-                numPretamo.Value = numPretamoVar;
-                tipo.Value = tipoVar;
-                deudaInicial.Value = deudaInicialVar;
-                saldoActual.Value = saldoVar;
+                CargarGridTramites(secuencialPrestamoV);
+
+                txtCausa.Text = numCausaV;
+                txtOficial.Text = oficialV;
+                txtOficina.Text = oficinaV;
+                dtAdjudicado.Text = adjudicadoV;
+                dtProxVencimiento.Text = proVencimientoV;
+                txtTransferido.Text = saldoTransferidoV;
+                txtDescripcion.Text = descripcionV;
+                txtComentario.Text = comentarioV;
+                dtFechaIngreso.Value = fechaMaquinaV;
+                dtFechaSistema.Value = fechaSistemaV;
+                dtUltimoPago.Text = ultimoPagoV;
+                dvTramitePrestamo.Visible = true;
+                txtNumPretamo.Text = numPretamoVar;
+                txtTipo.Text = tipoVar;
+                txtDeudaInicial.Text = deudaInicialVar;
+                txtSaldoActual.Text = saldoVar;
             }
+        }
+        protected void CargarGridTramites(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string secuencialPrestamoV = secuencialPrestamo;
+            string queryEstados = @"
+                    	SELECT 
+                        ej.NOMBRE AS [ESTADO TRÁMITE], 
+                        pt.COMENTARIO AS [COMENTARIO], 
+                        FORMAT(pt.FECHAMAQUINA, 'yyyy-MM-dd') AS [FECHAMAQUINA], 
+                        pt.ESTAACTIVO AS [ACTIVO],
+                        ISNULL(CAST(DATEDIFF(DAY, LAG(pt.FECHAMAQUINA) OVER (PARTITION BY pt.SECUENCIALPRESTAMO ORDER BY pt.FECHAMAQUINA), pt.FECHAMAQUINA) AS VARCHAR), '') AS [DIFERENCIA DÍAS],
+                        CASE 
+                            WHEN pt.FECHAMAQUINA = (SELECT MAX(pt2.FECHAMAQUINA) 
+                                                    FROM [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] pt2 
+                                                    WHERE pt2.SECUENCIALPRESTAMO = pt.SECUENCIALPRESTAMO)
+                            THEN CAST(DATEDIFF(DAY, pt.FECHAMAQUINA, GETDATE()) AS VARCHAR)
+                            ELSE ''
+                        END AS [DÍAS HASTA HOY]
+                    FROM 
+                        [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] pt
+                        INNER JOIN [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ej 
+                            ON pt.CODIGOESTADOTRAMITEDEMJUD = ej.CODIGO
+                    WHERE 
+                        pt.SECUENCIALPRESTAMO = '" + secuencialPrestamoV + @"'
+                    ORDER BY 
+                        pt.FECHAMAQUINA";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(queryEstados, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                DataTable dataTable = new DataTable();
+
+                adapter.Fill(dataTable);
+
+                // Asignar datos a la GridView
+                gvEstadosJudiciales.DataSource = dataTable;
+                gvEstadosJudiciales.DataBind();
+            }
+        }
+        protected void VaciarGridView()
+        {
+            // Asigna un DataSource vacío y actualiza el GridView
+            gvEstadosJudiciales.DataSource = null;
+            gvEstadosJudiciales.DataBind();
+        }
+        protected string UpdatePrestamoEstado(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+            string query = "UPDATE [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] SET [ESTAACTIVO] = 0 WHERE [SECUENCIALPRESTAMO] = @SecuencialPrestamo";
+
+            string respuesta = "";
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
+
+                try
+                {
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verifica si se actualizó alguna fila
+                    if (rowsAffected > 0)
+                    {
+                        // Éxito: se actualizó al menos una fila
+                        respuesta = "OK";
+                    }
+                    else
+                    {
+                        // No se actualizó ninguna fila
+                        respuesta = "ERROR";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de excepciones
+                    respuesta = "ERROR";
+                    // Puedes registrar el error o mostrar un mensaje adecuado al usuario
+                }
+            }
+            return respuesta;
+        }
+        protected void ConsultaPrestamoJudicial(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+            string query = "SELECT * FROM [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] WHERE [SECUENCIALPRESTAMO] = @SecuencialPrestamo AND ESTAACTIVO = 1";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo); // Agregar el parámetro
+
+                connection.Open();
+                SqlDataReader reader = command.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    codigoabogado = reader["CODIGOABOGADO"].ToString();
+                    numeroverificador = reader["NUMEROVERIFICADOR"].ToString();
+                    codigousuario = reader["CODIGOUSUARIO"].ToString();
+
+                    // Aquí puedes usar las variables codigoabogado, numeroverificador y codigousuario
+                    // por ejemplo, asignándolas a controles de la interfaz de usuario o a otras variables de clase
+                }
+
+                reader.Close();
+            }
+
+        }
+        protected string UpdatePrestamoDescripcion(string secuencialPrestamo, string descripcion)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+            string query = @"
+            UPDATE [FBS_COBRANZAS].[PRESTAMOABOGADO]
+            SET DESCRIPCION = @Descripcion
+            WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
+                command.Parameters.AddWithValue("@Descripcion", descripcion);
+
+                try
+                {
+                    connection.Open();
+                    int rowsAffected = command.ExecuteNonQuery();
+
+                    // Verifica si se actualizó alguna fila
+                    if (rowsAffected > 0)
+                    {
+                        // Éxito: se actualizó al menos una fila
+                        respuesta = "OK";
+                    }
+                    else
+                    {
+                        // No se actualizó ninguna fila
+                        respuesta = "ERROR";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de excepciones
+                    Console.WriteLine("Error: " + ex.Message);
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Ocurrió un error al actualizar la descripción.');", true);
+                    // Puedes registrar el error o mostrar un mensaje adecuado al usuario
+                }
+            }
+            return respuesta;
+        }
+        protected string ConsultarCodigoTramite(string codigoestadotramitedemjud)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+            string query = @"
+            SELECT CODIGO 
+            FROM [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] 
+            WHERE NOMBRE = @codigoestadotramitedemjud";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@codigoestadotramitedemjud", codigoestadotramitedemjud);
+
+                try
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+                    if (reader.Read())
+                    {
+                        respuesta = reader["CODIGO"].ToString();
+                    }
+                    reader.Close();
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de excepciones
+                    Console.WriteLine("Error: " + ex.Message);
+                    respuesta = "Error al obtener el código";
+                }
+            }
+
+            return respuesta;
+        }
+        protected void btnBuscar_Click(object sender, EventArgs e)
+        {
+            dvTramitePrestamo.Visible = false;
+            if (rbCedula.Checked)  // Verificar si el radio button 'rbCedula' está seleccionado
+            {
+                LlenarGridViewCedula(idConsulta.Value);
+            }
+            else
+            {
+                LlenarGridViewCliente(idConsulta.Value);
+            }
+        }
+        static string descripcion;
+        protected void btnActualizarEstadoPrestamo_Click(object sender, EventArgs e)
+        {
+            ddlAccion.Enabled = true;
+            ddlAccion.SelectedIndex = 0;
+            //ddlMedidaCautelar.Enabled = true;
+            //ddlMedidaCautelar.SelectedIndex = 0;
+            txtComentario.ReadOnly = false;
+            txtComentario.Text = string.Empty;
+            //txtDescripcion.ReadOnly = false;
+            //txtDescripcion.Text = string.Empty;
+            btnActualizarEstadoPrestamo.Visible = false;
+            btnGuardarEstadoPrestamo.Visible = true;
+            btnCancelarEstadoPrestamo.Visible = true;
+            dtFechaSistema.Value = DateTime.Now.ToString("yyyy-MM-dd");
+            dtFechaIngreso.Value = DateTime.Now.ToString("yyyy-MM-dd");
+
+            string script = @"
+        <script type='text/javascript'>
+            var highlightColor = '#FEF0BD';
+            document.getElementById('" + txtComentario.ClientID + @"').style.backgroundColor = highlightColor;
+            document.getElementById('" + ddlAccion.ClientID + @"').style.backgroundColor = highlightColor;
+            document.getElementById('" + txtComentario.ClientID + @"').addEventListener('focus', function() {
+                this.style.backgroundColor = '';
+            });
+
+            document.getElementById('" + ddlAccion.ClientID + @"').addEventListener('focus', function() {
+                this.style.backgroundColor = '';
+            });
+
+        </script>";
+
+            ClientScript.RegisterStartupScript(this.GetType(), "HighlightFields", script);
+        }
+
+        protected string GuardarEstadoPrestamo(int secuencialprestamoV, string codigoEstadoJudicialV, string codigoabogadoV, string comentarioV, bool estaactivoV, int numeroverificadorV, string codigousuarioV, DateTime fechasistemaV, DateTime fechamaquinaV)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+            string query = @"
+            INSERT INTO [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE]
+            ([SECUENCIALPRESTAMO]
+            ,[CODIGOESTADOTRAMITEDEMJUD]
+            ,[CODIGOABOGADO]
+            ,[COMENTARIO]
+            ,[ESTAACTIVO]
+            ,[NUMEROVERIFICADOR]
+            ,[CODIGOUSUARIO]
+            ,[FECHASISTEMA]
+            ,[FECHAMAQUINA])
+            VALUES
+            (@SecuencialPrestamo
+            ,@CodigoEstadoJudicial
+            ,@CodigoAbogado
+            ,@Comentario
+            ,@EstaActivo
+            ,@NumeroVerificador
+            ,@CodigoUsuario
+            ,@FechaSistema
+            ,@FechaMaquina)";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialprestamoV);
+                command.Parameters.AddWithValue("@CodigoEstadoJudicial", codigoEstadoJudicialV);
+                command.Parameters.AddWithValue("@CodigoAbogado", codigoabogadoV);
+                command.Parameters.AddWithValue("@Comentario", comentarioV);
+                command.Parameters.AddWithValue("@EstaActivo", estaactivoV);
+                command.Parameters.AddWithValue("@NumeroVerificador", numeroverificadorV);
+                command.Parameters.AddWithValue("@CodigoUsuario", codigousuarioV);
+                command.Parameters.AddWithValue("@FechaSistema", fechasistemaV);
+                command.Parameters.AddWithValue("@FechaMaquina", fechamaquinaV);
+
+                try
+                {
+                    connection.Open();
+                    command.ExecuteNonQuery();
+                    respuesta = "OK";
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de excepciones
+                    Console.WriteLine("Error: " + ex.Message);
+                    respuesta = "ERROR";
+                    // Puedes registrar el error o mostrar un mensaje adecuado al usuario
+                }
+            }
+            return respuesta;
+        }
+
+        protected void btnGuardarEstadoPrestamo_Click(object sender, EventArgs e)
+        {
+            string descripcion = ddlAccion.SelectedValue.Trim();
+            //Este método trae la información de la tabla [PRESTAMODEMANDAJUDICIALTRAMITE] 
+            ConsultaPrestamoJudicial(secuencialPrestamo);
+
+            int secuencialprestamoV = int.Parse(secuencialPrestamo);
+            string codigoEstadoJudicialV = ConsultarCodigoTramite(descripcion);
+            string codigoabogadoV = codigoabogado;
+            string comentarioV = txtComentario.Text.Trim().ToUpper();
+            bool estaactivoV = true;
+            int numeroverificadorV = int.Parse(numeroverificador);
+            string codigousuarioV = codigousuario;
+            DateTime fechasistemaV = DateTime.Parse(dtFechaSistema.Value);
+            DateTime fechamaquinaV = DateTime.Parse(dtFechaIngreso.Value);
+
+            try
+            {
+                string actualizadoEstado = UpdatePrestamoEstado(secuencialPrestamo);
+                if (actualizadoEstado.Equals("OK"))
+                {
+                    string actualizadoDescripcion = UpdatePrestamoDescripcion(secuencialPrestamo, descripcion);
+                    if (actualizadoDescripcion.Equals("OK"))
+                    {
+                        string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV);
+                        if (guardado.Equals("OK"))
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
+                            VaciarGridView();
+                            CargarGridTramites(secuencialPrestamo);
+                            //Cuando se h confirmdo el guardado
+                            ddlAccion.Enabled = false;
+                            txtComentario.ReadOnly = true;
+                            txtDescripcion.Text = ddlAccion.SelectedValue.Trim();
+                            btnActualizarEstadoPrestamo.Visible = true;
+                            btnGuardarEstadoPrestamo.Visible = false;
+                            btnCancelarEstadoPrestamo.Visible = false;
+                            //CargarFormulario();
+                            return;
+                        }
+                        else
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                            return;
+                        }
+                    }
+                    else
+                    {
+                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                        return;
+                    }
+                }
+                else
+                {
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                return;
+            }
+
+
+            
         }
     }
 }

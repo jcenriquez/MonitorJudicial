@@ -21,13 +21,13 @@ namespace MonitorJudicial.Controllers
 
             // Consulta SQL
             string query = @"
-                SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° Préstamo],
-                tp.NOMBRE AS [Tipo],
-                p.DEUDAINICIAL AS [Deuda Inicial],
-                p.SALDOACTUAL AS [Saldo],
-                CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [Adjudicado],
-                CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [Vencimiento],
-                e.NOMBRE AS [Estado]
+                SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
+                tp.NOMBRE AS [TIPO],
+                p.DEUDAINICIAL AS [DEUDA INICIAL],
+                p.SALDOACTUAL AS [SALDO],
+                CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
+                CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
+                e.NOMBRE AS [ESTADO]
                 FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
                 JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
                 JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
@@ -82,13 +82,13 @@ namespace MonitorJudicial.Controllers
 
             // Consulta SQL
             string query = @"
-                SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° Préstamo],
-                tp.NOMBRE AS [Tipo],
-                p.DEUDAINICIAL AS [Deuda Inicial],
-                p.SALDOACTUAL AS [Saldo],
-                CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [Adjudicado],
-                CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [Vencimiento],
-                e.NOMBRE AS [Estado]
+                SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
+                tp.NOMBRE AS [TIPO],
+                p.DEUDAINICIAL AS [DEUDA INICIAL],
+                p.SALDOACTUAL AS [SALDO],
+                CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
+                CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
+                e.NOMBRE AS [ESTADO]
                 FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
                 JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
                 JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO

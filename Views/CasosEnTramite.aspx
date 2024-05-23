@@ -1,4 +1,5 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="CasosEnTramite.aspx.cs" Inherits="MonitorJudicial.CasosEnTramite" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
 
     <!-- Page Wrapper -->
@@ -19,154 +20,22 @@
                         For more information about DataTables, please visit the <a target="_blank"
                             href="https://datatables.net">official DataTables documentation</a>.</p>--%>
 
-                    <!-- DataTales Example -->
+                    <!-- DataTables -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Tabla de Datos</h6>
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Nombres</th>
-                                            <th>Abogado Asignado</th>
-                                            <th>Estado</th>
-                                            <th># Caso</th>
-                                            <th>Fecha</th>
-                                            <th>Cantidad Adeudada</th>
-                                        </tr>
-                                    </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>Nombres</th>
-                                            <th>Abogado Asignado</th>
-                                            <th>Estado</th>
-                                            <th># Caso</th>
-                                            <th>Fecha</th>
-                                            <th>Cantidad Adeudada</th>
-                                        </tr>
-                                    </tfoot>
-                                    <tbody>
-                                        <tr>
-                                            <td>Tiger Nixon</td>
-                                            <td>Abogado A</td>
-                                            <td>En Trámite</td>
-                                            <td>61</td>
-                                            <td>2011/04/25</td>
-                                            <td>$320,800</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Garrett Winters</td>
-                                            <td>Abogado B</td>
-                                            <td>En Revisión Legal</td>
-                                            <td>63</td>
-                                            <td>2011/07/25</td>
-                                            <td>$170,750</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Ashton Cox</td>
-                                            <td>Abogado C</td>
-                                            <td>En Negociación</td>
-                                            <td>66</td>
-                                            <td>2009/01/12</td>
-                                            <td>$86,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Cedric Kelly</td>
-                                            <td>Abogado D</td>
-                                            <td>En Trámite</td>
-                                            <td>22</td>
-                                            <td>2012/03/29</td>
-                                            <td>$433,060</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Airi Satou</td>
-                                            <td>Abogado B</td>
-                                            <td>En Revisión Legal</td>
-                                            <td>33</td>
-                                            <td>2008/11/28</td>
-                                            <td>$162,700</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Brielle Williamson</td>
-                                            <td>Abogado E</td>
-                                            <td>En espera de Audiencia</td>
-                                            <td>61</td>
-                                            <td>2012/12/02</td>
-                                            <td>$372,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Herrod Chandler</td>
-                                            <td>Abogado F</td>
-                                            <td>En Negociación</td>
-                                            <td>59</td>
-                                            <td>2012/08/06</td>
-                                            <td>$137,500</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Rhona Davidson</td>
-                                            <td>Abogado E</td>
-                                            <td>En Revisión Legal</td>
-                                            <td>55</td>
-                                            <td>2010/10/14</td>
-                                            <td>$327,900</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Colleen Hurst</td>
-                                            <td>Abogado G</td>
-                                            <td>En Negociación</td>
-                                            <td>39</td>
-                                            <td>2009/09/15</td>
-                                            <td>$205,500</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Sonya Frost</td>
-                                            <td>Abogado H</td>
-                                            <td>En Trámite</td>
-                                            <td>23</td>
-                                            <td>2008/12/13</td>
-                                            <td>$103,600</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Jena Gaines</td>
-                                            <td>Abogado I</td>
-                                            <td>En Proceso de Ejecución</td>
-                                            <td>30</td>
-                                            <td>2008/12/19</td>
-                                            <td>$90,560</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Quinn Flynn</td>
-                                            <td>Abogado J</td>
-                                            <td>En Trámite</td>
-                                            <td>22</td>
-                                            <td>2013/03/03</td>
-                                            <td>$342,000</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Charde Marshall</td>
-                                            <td>Abogado K</td>
-                                            <td>En Negociación</td>
-                                            <td>36</td>
-                                            <td>2008/10/16</td>
-                                            <td>$470,600</td>
-                                        </tr>
-                                        <tr>
-                                            <td>Haley Kennedy</td>
-                                            <td>Abogado L</td>
-                                            <td>En Proceso de Ejecución</td>
-                                            <td>43</td>
-                                            <td>2012/12/18</td>
-                                            <td>$313,500</td>
-                                        </tr>
-                                        
-                                    </tbody>
-                                </table>
+                        <nav class="card-body">
+                            <div class="container-fluid">                                
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <asp:GridView class="table table-striped table-hover" ID="gvCasosJudicial" runat="server" AutoGenerateColumns="true" OnRowDataBound="gvCasosJudicial_RowDataBound" width="100%" cellspacing="0">
+                                            </asp:GridView>
+                                        </div>
+                                    </div>                                
                             </div>
-                        </div>
+                        </nav>
                     </div>
-
                 </div>
                 <!-- /.container-fluid -->
 
@@ -174,7 +43,7 @@
             <!-- End of Main Content -->
 
             <!-- Footer -->
-           <%-- <footer class="sticky-footer bg-white">
+            <%-- <footer class="sticky-footer bg-white">
                 <div class="container my-auto">
                     <div class="copyright text-center my-auto">
                         <span>Copyright &copy; Your Website 2020</span>
@@ -214,6 +83,5 @@
         </div>
     </div>
 
-   
 
 </asp:Content>
