@@ -96,6 +96,7 @@
                             <h6 class="collapse-header">Préstamos:</h6>
                             <a class="collapse-item" href="/Views/ConsultaPorCliente.aspx">Por Cliente</a>
                             <a class="collapse-item" href="cards.html">Por Número</a>
+                            <a class="collapse-item" href="/Tests/ConsultaPorClienteCopia.aspx">Por Cliente Prueba</a>
                         </div>
                     </div>
                 </li>

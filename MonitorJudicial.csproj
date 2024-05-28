@@ -111,6 +111,7 @@
   <ItemGroup>
     <Content Include="About.aspx" />
     <Content Include="Content\img\logoJudicial.svg" />
+    <Content Include="Tests\ConsultaPorClienteCopia.aspx" />
     <Content Include="Views\CasosEnTramite.aspx" />
     <Content Include="Views\ConsultaPorCliente.aspx" />
     <Content Include="Contact.aspx" />
@@ -2119,6 +2120,13 @@
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\PrestamosController.cs" />
+    <Compile Include="Tests\ConsultaPorClienteCopia.aspx.cs">
+      <DependentUpon>ConsultaPorClienteCopia.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tests\ConsultaPorClienteCopia.aspx.designer.cs">
+      <DependentUpon>ConsultaPorClienteCopia.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Views\CasosEnTramite.aspx.cs">
       <DependentUpon>CasosEnTramite.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
