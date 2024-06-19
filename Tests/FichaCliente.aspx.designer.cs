@@ -7,29 +7,20 @@
 // </generado automáticamente>
 //------------------------------------------------------------------------------
 
-namespace MonitorJudicial
+namespace MonitorJudicial.Tests
 {
 
 
-    public partial class _Default
+    public partial class FichaCliente
     {
 
         /// <summary>
-        /// Control litPrestamoJudicial.
+        /// Control lblEstado.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litPrestamoJudicial;
-
-        /// <summary>
-        /// Control gvCasosAbogado.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.GridView gvCasosAbogado;
+        protected global::System.Web.UI.WebControls.Label lblEstado;
     }
 }

@@ -98,21 +98,63 @@
 
                         <nav class="card-body">
 
-                            <!-- Tabla Préstamos Judiciales -->
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="table-responsive">
-                                            <asp:GridView class="table table-striped table-hover border-left-info border-bottom-info" ID="gvEstadosJudiciales" runat="server" AutoGenerateColumns="true">
-                                            </asp:GridView>
+                                    <div class="col-xl-3 col-md-6 mb-4">
+                                        <div class="card border-left-warning shadow h-100 py-2">
+                                            <div class="card-body">
+                                                <div class="row no-gutters align-items-center">
+                                                    <div class="col mr-2">
+                                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                            <asp:Literal ID="litDiasDesdePrestamo" runat="server"></asp:Literal>
+                                                        </div>
+                                                        <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                            Días desde registro
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-auto">
+                                                        <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
+                            <!-- Tabla Préstamos Judiciales -->
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-12">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <asp:GridView class="table table-striped table-hover border-left-info border-bottom-info"
+                                                ID="gvEstadosJudiciales" runat="server" AutoGenerateColumns="true"
+                                                OnRowCommand="gvEstadosJudiciales_RowCommand">
+                                                <Columns>
+                                                    <asp:TemplateField>
+                                                        <ItemTemplate>
+                                                            <%--<asp:LinkButton ID="lnkVer" runat="server" CommandName="Select" ToolTip="Ver" CommandArgument='<%# Eval("ID") %>'
+                                                                OnClientClick="return confirm('¿Está seguro de que desea eliminar este registro? Esta acción es irreversible!');">
+    <i class="fas fa-eye"></i>
+                                                            </asp:LinkButton>--%>
+                                                            <asp:LinkButton ID="lnkSelect" runat="server" CommandName="Select" ToolTip="Eliminar" CommandArgument='<%# Eval("ID") %>'
+                                                                OnClientClick="return confirm('¿Está seguro de que desea eliminar este registro? Esta acción es irreversible!');">
+                        <i class="fas fa-trash-alt"></i>
+                                                            </asp:LinkButton>
+
+                                                        </ItemTemplate>
+                                                    </asp:TemplateField>
+                                                </Columns>
+                                            </asp:GridView>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="container-fluid">
+                                <%--<div class="row">
+                                    <div class="col-6">
                                         <div class="form-check">
                                             <asp:CheckBox ID="gridCheck" runat="server" CssClass="form-check-input" Enabled="false" />
                                             <label class="form-check-label" for="gridCheck">
@@ -120,7 +162,7 @@
                                             </label>
                                         </div>
                                     </div>
-                                </div>
+                                </div>--%>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="txtNumPretamo" class="form-label">N° Préstamo:</label>
@@ -149,18 +191,18 @@
                                         <asp:TextBox ID="txtTipo" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="dtAdjudicado" class="form-label">Adjudicado:</label>
+                                        <label for="dtAdjudicado" class="form-label">Fecha Adjudicado:</label>
                                         <asp:TextBox ID="dtAdjudicado" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label for="dtUltimoPago" class="form-label">Último Pago:</label>
+                                        <label for="dtUltimoPago" class="form-label">Fecha Último Pago:</label>
                                         <asp:TextBox ID="dtUltimoPago" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="dtProxVencimiento" class="form-label">Próximo Vencimiento:</label>
+                                        <label for="dtProxVencimiento" class="form-label">Fecha Vencimiento:</label>
                                         <asp:TextBox ID="dtProxVencimiento" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
@@ -270,7 +312,7 @@
 
                                     <div class="row">
                                         <div class="col-md-12 t">
-                                            <asp:Button ID="btnCancelarEstadoPrestamo" runat="server" CssClass="btn-block btn-dark" Text="Cancelar y Volver" Visible="false" OnClientClick="history.back(); return false;" />
+                                            <asp:Button ID="btnCancelarEstadoPrestamo" runat="server" CssClass="btn-block btn-dark" Text="Cancelar y Volver" Visible="false" OnClick="btnCancelarEstadoPrestamo_Click" />
                                         </div>
                                     </div>
                                 </div>

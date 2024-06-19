@@ -112,6 +112,7 @@
     <Content Include="About.aspx" />
     <Content Include="Content\img\logoJudicial.svg" />
     <Content Include="Tests\ConsultaPorClienteCopia.aspx" />
+    <Content Include="Tests\FichaCliente.aspx" />
     <Content Include="Views\CasosEnTramite.aspx" />
     <Content Include="Views\ConsultaPorCliente.aspx" />
     <Content Include="Contact.aspx" />
@@ -2126,6 +2127,13 @@
     </Compile>
     <Compile Include="Tests\ConsultaPorClienteCopia.aspx.designer.cs">
       <DependentUpon>ConsultaPorClienteCopia.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Tests\FichaCliente.aspx.cs">
+      <DependentUpon>FichaCliente.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Tests\FichaCliente.aspx.designer.cs">
+      <DependentUpon>FichaCliente.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\CasosEnTramite.aspx.cs">
       <DependentUpon>CasosEnTramite.aspx</DependentUpon>

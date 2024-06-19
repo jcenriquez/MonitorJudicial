@@ -87,6 +87,15 @@ namespace MonitorJudicial
         protected global::System.Web.UI.HtmlControls.HtmlGenericControl dvTramitePrestamo;
 
         /// <summary>
+        /// Control litDiasDesdePrestamo.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litDiasDesdePrestamo;
+
+        /// <summary>
         /// Control gvEstadosJudiciales.
         /// </summary>
         /// <remarks>
@@ -94,15 +103,6 @@ namespace MonitorJudicial
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvEstadosJudiciales;
-
-        /// <summary>
-        /// Control gridCheck.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.CheckBox gridCheck;
 
         /// <summary>
         /// Control txtNumPretamo.
