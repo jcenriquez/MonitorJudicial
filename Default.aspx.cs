@@ -58,64 +58,105 @@ namespace MonitorJudicial
 
             // Consulta SQL
             string query = @"
-            SELECT AB.NOMBRE, 
-                   COUNT(AB.NOMBRE) AS [# CASOS]
-            FROM [FBS_COBRANZAS].[PRESTAMOABOGADO] PA
-            INNER JOIN [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PA.SECUENCIALPRESTAMO=PM.SECUENCIAL
-            INNER JOIN [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO=AB.CODIGO
-            WHERE PM.CODIGOESTADOPRESTAMO='J' AND PA.ESTAACTIVO='1'
-            GROUP BY AB.NOMBRE
-            ORDER BY [# CASOS]";
-                        
+                WITH CombinedData AS (
+        SELECT AB.NOMBRE, 
+               CASE 
+                   WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
+                   WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
+                   WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                   WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                   WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+               END AS Tipo
+        FROM [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
+        LEFT JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
+        INNER JOIN [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
+        WHERE PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+          AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+
+        UNION ALL
+
+        SELECT AB.NOMBRE, 
+               CASE 
+                   WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                   WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                   WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+               END AS Tipo
+        FROM [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
+        INNER JOIN [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
+        INNER JOIN [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
+        WHERE PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
+          AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+    )
+    SELECT ISNULL(NOMBRE, 'TOTAL') AS NOMBRE,
+           ISNULL([CASTIGADO], 0) AS CASTIGADO,
+           ISNULL([JUDICIAL], 0) AS JUDICIAL,
+           ISNULL([AL DIA], 0) AS [AL DIA],
+           ISNULL([PREJUDICIAL], 0) AS PREJUDICIAL,
+           ISNULL([VENCIDO], 0) AS VENCIDO,
+           ISNULL([CASTIGADO], 0) + ISNULL([JUDICIAL], 0) + ISNULL([AL DIA], 0) + ISNULL([PREJUDICIAL], 0) + ISNULL([VENCIDO], 0) AS TOTAL
+    FROM CombinedData
+    PIVOT (
+        COUNT(Tipo)
+        FOR Tipo IN ([CASTIGADO], [JUDICIAL], [AL DIA], [PREJUDICIAL], [VENCIDO])
+    ) AS PivotTable
+    ORDER BY 
+        CASE 
+            WHEN NOMBRE IS NULL THEN 1 
+            ELSE 0 
+        END, 
+        NOMBRE";
+
+            int sumaTotal = 0;
+            // Contadores para cada tipo de préstamo
+            int totalCastigado = 0;
+            int totalJudicial = 0;
+            int totalAlDia = 0;
+            int totalPrejudicial = 0;
+            int totalVencido = 0;
+
             // Establecer conexión y ejecutar la consulta
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                SqlCommand command = new SqlCommand(query, connection);                
+                SqlCommand command = new SqlCommand(query, connection);
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataTable dataTable = new DataTable();
 
                 adapter.Fill(dataTable);
 
+                
+
+                // Iterar sobre las filas del DataTable y contar los distintos tipos
+                foreach (DataRow row in dataTable.Rows)
+                {
+                    totalCastigado += Convert.ToInt32(row["CASTIGADO"]);
+                    totalJudicial += Convert.ToInt32(row["JUDICIAL"]);
+                    totalAlDia += Convert.ToInt32(row["AL DIA"]);
+                    totalPrejudicial += Convert.ToInt32(row["PREJUDICIAL"]);
+                    totalVencido += Convert.ToInt32(row["VENCIDO"]);
+                }
+
                 // Asignar datos a la GridView
                 gvCasosAbogado.DataSource = dataTable;
                 gvCasosAbogado.DataBind();
+
+                // Imprimir los totales en la consola (o puedes usar estos valores según tu necesidad)
+                //Console.WriteLine($"Total Castigado: {totalCastigado}");
+                //Console.WriteLine($"Total Judicial: {totalJudicial}");
+                //Console.WriteLine($"Total Al Dia: {totalAlDia}");
+                //Console.WriteLine($"Total Prejudicial: {totalPrejudicial}");
+                //Console.WriteLine($"Total Vencido: {totalVencido}");
+                sumaTotal = totalCastigado + totalJudicial + totalAlDia + totalPrejudicial + totalVencido;
             }
 
-            litPrestamoJudicial.Text = ObtenerNumeroPrestamoJudicial();
+            litPrestamoJudicial.Text = sumaTotal.ToString();
+            litotalCastigado.Text = totalCastigado.ToString();
+            litotalJudicial.Text = totalJudicial.ToString();
+            litotalAlDia.Text = totalAlDia.ToString();
+            //    litotalPrejudicial.Text = totalPrejudicial.ToString();
+            //    litotalVencido.Text = totalVencido.ToString();
         }
 
-        private string ObtenerNumeroPrestamoJudicial()
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-            string query = @"
-            select COUNT(*) from [FBS_CARTERA].[PRESTAMOMAESTRO] 
-            WHERE CODIGOESTADOPRESTAMO='J'";
 
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    using (SqlCommand command = new SqlCommand(query, connection))
-                    {
-                        connection.Open();
-                        object result = command.ExecuteScalar();
-                        if (result != null)
-                        {
-                            return result.ToString();
-                        }
-                        else
-                        {
-                            return "No se encontró el registro.";
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                // Manejar excepciones según sea necesario
-                return $"Error: {ex.Message}";
-            }
-        }
         public void PorcentajeCasos()
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
@@ -128,7 +169,7 @@ namespace MonitorJudicial
                                         FROM [FBS_CARTERA].[PRESTAMOMAESTRO] P
                                         LEFT JOIN [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = P.SECUENCIAL
                                         LEFT JOIN [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
-                                        WHERE P.CODIGOESTADOPRESTAMO='J') AS [PORCENTAJE]
+                                        WHERE P.CODIGOESTADOPRESTAMO IN ('J','I','G')) AS [PORCENTAJE]
                 FROM 
                     [FBS_CARTERA].[PRESTAMOMAESTRO] P
                 LEFT JOIN 
@@ -136,7 +177,7 @@ namespace MonitorJudicial
                 LEFT JOIN 
                     [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
                 WHERE 
-                    P.CODIGOESTADOPRESTAMO='J'
+                    P.CODIGOESTADOPRESTAMO IN ('J','I','G')
                 GROUP BY 
                     ISNULL(ET.NOMBRE, 'NINGUNO');";
 
@@ -194,7 +235,7 @@ namespace MonitorJudicial
             audiencia = porcentajes.ContainsKey("AUDIENCIA") ? porcentajes["AUDIENCIA"] : 0;
             razonNoPago = porcentajes.ContainsKey("RAZÓN DE NO PAGO") ? porcentajes["RAZÓN DE NO PAGO"] : 0;
             audienciaEjecucion = porcentajes.ContainsKey("AUDIENCIA EJECUCIÓN") ? porcentajes["AUDIENCIA EJECUCIÓN"] : 0;
-                        
+
         }
     }
 }
