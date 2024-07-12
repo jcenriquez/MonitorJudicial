@@ -152,8 +152,8 @@ namespace MonitorJudicial
             litotalCastigado.Text = totalCastigado.ToString();
             litotalJudicial.Text = totalJudicial.ToString();
             litotalAlDia.Text = totalAlDia.ToString();
-            //    litotalPrejudicial.Text = totalPrejudicial.ToString();
-            //    litotalVencido.Text = totalVencido.ToString();
+            litotalPrejudicial.Text = totalPrejudicial.ToString();
+            litotalVencido.Text = totalVencido.ToString();
         }
 
 

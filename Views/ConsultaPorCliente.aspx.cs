@@ -26,6 +26,8 @@ namespace MonitorJudicial
         protected static string codigousuario;
         protected static string fechasistema = "";
         protected static string fechamaquina = "";
+        protected static string medicaCautelar = "";
+        protected static string judicatura = "";
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -588,10 +590,73 @@ namespace MonitorJudicial
         protected string UpdatePrestamoDescripcion(string secuencialPrestamo, string descripcion)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string medicaCautelarV = ddlMedidaCautelar.SelectedValue.Trim();
+            string queryMedidaCautelar = @"SELECT NOMBRE, CODIGO FROM [FBS_COBRANZAS].[TIPOMEDIDACAUTELAR] WHERE NOMBRE = @medicaCautelarV;";
+            string judicaturaV = ddlJudicatura.SelectedValue.Trim();
+            string queryJudicatura = @"SELECT CODIGO FROM [FBS_COBRANZAS].[TIPOJUDICATURA] WHERE NOMBRE = @judicaturaV;";
+
+
+            string codigoJudicatura = null;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(queryJudicatura, connection))
+                {
+                    command.Parameters.AddWithValue("@judicaturaV", judicaturaV);
+
+                    try
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                //nombreResultado = reader["NOMBRE"].ToString();
+                                codigoJudicatura = reader["CODIGO"].ToString();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+
+            //string nombreResultado = null;
+            string codigoResultado = null;
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(queryMedidaCautelar, connection))
+                {
+                    command.Parameters.AddWithValue("@medicaCautelarV", medicaCautelarV);
+
+                    try
+                    {
+                        connection.Open();
+                        using (SqlDataReader reader = command.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                //nombreResultado = reader["NOMBRE"].ToString();
+                                codigoResultado = reader["CODIGO"].ToString();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine("Error: " + ex.Message);
+                    }
+                }
+            }
+
             string respuesta = "";
             string query = @"
             UPDATE [FBS_COBRANZAS].[PRESTAMOABOGADO]
-            SET DESCRIPCION = @Descripcion
+            SET DESCRIPCION = @Descripcion,
+            CODIGOTIPOMEDCAUTELAR = @codigoResultado,
+            CODIGOTIPOJUDICATURA = @codigoJudicatura
             WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -599,6 +664,8 @@ namespace MonitorJudicial
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
                 command.Parameters.AddWithValue("@Descripcion", descripcion);
+                command.Parameters.AddWithValue("@codigoResultado", codigoResultado);
+                command.Parameters.AddWithValue("@codigoJudicatura", codigoJudicatura);
 
                 try
                 {
@@ -678,6 +745,8 @@ namespace MonitorJudicial
         {
             ddlAccion.Enabled = true;
             ddlAccion.SelectedIndex = 0;
+            ddlMedidaCautelar.Enabled = true;
+            ddlJudicatura.Enabled = true;
             //ddlMedidaCautelar.Enabled = true;
             //ddlMedidaCautelar.SelectedIndex = 0;
             txtComentario.ReadOnly = false;
@@ -700,6 +769,15 @@ namespace MonitorJudicial
             });
 
             document.getElementById('" + ddlAccion.ClientID + @"').addEventListener('focus', function() {
+                this.style.backgroundColor = '';
+            });
+document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundColor = highlightColor;
+            document.getElementById('" + ddlJudicatura.ClientID + @"').style.backgroundColor = highlightColor;
+            document.getElementById('" + ddlMedidaCautelar.ClientID + @"').addEventListener('focus', function() {
+                this.style.backgroundColor = '';
+            });
+
+            document.getElementById('" + ddlJudicatura.ClientID + @"').addEventListener('focus', function() {
                 this.style.backgroundColor = '';
             });
 
@@ -770,6 +848,11 @@ namespace MonitorJudicial
             //Este método trae la información de la tabla [PRESTAMODEMANDAJUDICIALTRAMITE] 
             ConsultaPrestamoJudicial(secuencialPrestamo);
 
+            string medicaCautelarV = ddlMedidaCautelar.SelectedValue.Trim();
+            string medidaCau = ddlMedidaCautelar.SelectedIndex.ToString();
+            string medidasCau = ddlMedidaCautelar.SelectedItem.ToString();
+            //string judicaturaV = ddlJudicatura.SelectedIndex.ToString();
+
             int secuencialprestamoV = int.Parse(secuencialPrestamo);
             string codigoEstadoJudicialV = ConsultarCodigoTramite(descripcion);
             string codigoabogadoV = codigoAbogado;
@@ -796,6 +879,8 @@ namespace MonitorJudicial
                         CargarGridTramites(secuencialPrestamo);
                         //Cuando se h confirmdo el guardado
                         ddlAccion.Enabled = false;
+                        ddlMedidaCautelar.Enabled = false;
+                        ddlJudicatura.Enabled = false;
                         txtComentario.ReadOnly = true;
                         txtDescripcion.Text = ddlAccion.SelectedValue.Trim();
                         btnActualizarEstadoPrestamo.Visible = true;
@@ -847,6 +932,8 @@ namespace MonitorJudicial
             CargarGridTramites(secuencialPrestamo);
             //Cuando se h confirmdo el guardado
             ddlAccion.Enabled = false;
+            ddlMedidaCautelar.Enabled = false;
+            ddlJudicatura.Enabled = false;
             ddlAccion.SelectedIndex = 0;
             txtComentario.ReadOnly = true;
             //txtDescripcion.Text = ddlAccion.SelectedValue.Trim();

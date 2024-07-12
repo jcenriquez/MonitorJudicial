@@ -253,9 +253,15 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label for="ddlJudicatura" class="form-label">Judicatura:</label>
-                                        <select class="form-control" id="ddlJudicatura" runat="server" disabled>
+
+                                        <%-- <select class="form-control" id="" runat="server" disabled>
                                             <option selected>Seleccione...</option>
-                                        </select>
+                                        </select>--%>
+
+                                        <asp:DropDownList ID="ddlJudicatura" runat="server" CssClass="form-control" Enabled="false">
+                                            <asp:ListItem Text="Seleccione..." Value="" Selected="false"></asp:ListItem>
+                                        </asp:DropDownList>
+
                                     </div>
                                 </div>
                                 <div class="row">
