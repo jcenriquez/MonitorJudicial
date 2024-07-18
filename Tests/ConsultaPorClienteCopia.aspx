@@ -1,4 +1,4 @@
-﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ConsultaPorCliente.aspx.cs" Inherits="MonitorJudicial.ConsultaPorCliente" MaintainScrollPositionOnPostback="true" %>
+﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ConsultaPorClienteCopia.aspx.cs" Inherits="MonitorJudicial.ConsultaPorClienteCopia" MaintainScrollPositionOnPostback="true" %>
 
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <script>
@@ -11,22 +11,6 @@
         }
 
     </script>
-    <script type="text/javascript">
-        function isNumberKey(evt) {
-            var charCode = (evt.which) ? evt.which : event.keyCode;
-            var value = evt.target.value;
-            var dotPos = value.indexOf('.');
-
-            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
-                return false;
-            }
-            // Permitir solo un punto decimal
-            if (dotPos > -1 && charCode == 46) {
-                return false;
-            }
-            return true;
-        }
-</script>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -207,18 +191,18 @@
                                         <asp:TextBox ID="txtTipo" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="dtAdjudicado" class="form-label">Fecha Adjudicado:</label>
+                                        <label for="dtAdjudicado" class="form-label">Adjudicado:</label>
                                         <asp:TextBox ID="dtAdjudicado" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
 
                                 <div class="row">
                                     <div class="col-md-6">
-                                        <label for="dtUltimoPago" class="form-label">Fecha Último Pago:</label>
+                                        <label for="dtUltimoPago" class="form-label">Último Pago:</label>
                                         <asp:TextBox ID="dtUltimoPago" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="dtProxVencimiento" class="form-label">Fecha Vencimiento:</label>
+                                        <label for="dtProxVencimiento" class="form-label">Próximo Vencimiento:</label>
                                         <asp:TextBox ID="dtProxVencimiento" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
@@ -269,21 +253,15 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <label for="ddlJudicatura" class="form-label">Judicatura:</label>
-
-                                        <%-- <select class="form-control" id="" runat="server" disabled>
+                                        <select class="form-control" id="ddlJudicatura" runat="server" disabled>
                                             <option selected>Seleccione...</option>
-                                        </select>--%>
-
-                                        <asp:DropDownList ID="ddlJudicatura" runat="server" CssClass="form-control" Enabled="false">
-                                            <asp:ListItem Text="Seleccione..." Value="" Selected="false"></asp:ListItem>
-                                        </asp:DropDownList>
-
+                                        </select>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="ddlAccion" class="form-label">Acción Desarrollada:</label>
-                                        <asp:DropDownList ID="ddlAccion" runat="server" CssClass="form-control" Enabled="false" AutoPostBack="true">
+                                        <asp:DropDownList ID="ddlAccion" runat="server" CssClass="form-control" Enabled="false">
                                             <asp:ListItem Text="Seleccione..." Value="" Selected="false"></asp:ListItem>
                                         </asp:DropDownList>
                                     </div>

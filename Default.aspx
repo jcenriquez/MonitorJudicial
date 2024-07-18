@@ -16,29 +16,54 @@
                 <!-- Begin Page Content -->
                 <div class="container-fluid">
 
-                    <!-- Page Heading -->
+                    <!-- Título -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-                        <h1 class="h3 mb-0 text-gray-800">Dashboard</h1>
-                        <a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm"><i
-                            class="fas fa-download fa-sm text-white-50"></i>Generate Report</a>
+                        <h1 class="h3 mb-0 text-gray-800">Tablero</h1>
+                        <%--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" ><i
+                            class="fas fa-download fa-sm text-white-50"></i>Generar Reporte</a>--%>
+                        <asp:LinkButton ID="btnGenerarReporte" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" runat="server" OnClick="btnGenerarReporte_Click">
+    <i class="fas fa-download"></i> Generar Reporte Excel
+</asp:LinkButton>
                     </div>
+                    <%--<div class="row">
+                        <div class="col-xl-6 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <asp:Literal ID="litPrestamoJudicial" runat="server"></asp:Literal>
+                                            </div>
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Préstamos en Estado Judicial
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-gavel fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>--%>
 
-                    <!-- Content Row -->
                     <div class="row">
 
                         <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="col-xl-2 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Earnings (Monthly)
+                                                Total Casos
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <asp:Literal ID="litPrestamoJudicial" runat="server"></asp:Literal>
+                                            </div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                            <i class="fas fa-suitcase fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -46,18 +71,41 @@
                         </div>
 
                         <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="col-xl-2 col-md-6 mb-4">
+                            <div class="card border-left-secondary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                                Castigados
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <asp:Literal ID="litotalCastigado" runat="server"></asp:Literal>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-gavel fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-2 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Earnings (Annual)
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Judicial
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <asp:Literal ID="litotalJudicial" runat="server"></asp:Literal>
+                                            </div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                            <i class="fas fa-balance-scale fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -65,484 +113,378 @@
                         </div>
 
                         <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
+                        <div class="col-xl-2 col-md-6 mb-4">
                             <div class="card border-left-info shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
-                                                Tasks
-                                           
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Al Día
                                             </div>
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col-auto">
-                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
-                                                </div>
-                                                <div class="col">
-                                                    <div class="progress progress-sm mr-2">
-                                                        <div class="progress-bar bg-info" role="progressbar"
-                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                                                            aria-valuemax="100">
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <asp:Literal ID="litotalAlDia" runat="server"></asp:Literal>
                                             </div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                            <i class="fas fa-wallet fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
-                        <!-- Pending Requests Card Example -->
-                        <div class="col-xl-3 col-md-6 mb-4">
-                            <div class="card border-left-warning shadow h-100 py-2">
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-2 col-md-6 mb-4">
+                            <div class="card border-left-dark shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Pending Requests
+                                            <div class="text-xs font-weight-bold text-dark text-uppercase mb-1">
+                                                Prejudicial
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <asp:Literal ID="litotalPrejudicial" runat="server"></asp:Literal>
+                                            </div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                            <i class="fas fa-balance-scale-left fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <!-- Content Row -->
-
-                    <div class="row">
-
-                        <!-- Area Chart -->
-                        <div class="col-xl-8 col-lg-7">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Earnings Overview</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-2 col-md-6 mb-4">
+                            <div class="card border-left-danger shadow h-100 py-2">
                                 <div class="card-body">
-                                    <div class="chart-area">
-                                        <canvas id="myAreaChart"></canvas>
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
+                                                Vencidos
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <asp:Literal ID="litotalVencido" runat="server"></asp:Literal>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-frown-open fa-2x text-gray-300"></i>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Pie Chart -->
-                        <div class="col-xl-4 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary">Revenue Sources</h6>
-                                    <div class="dropdown no-arrow">
-                                        <a class="dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-ellipsis-v fa-sm fa-fw text-gray-400"></i>
-                                        </a>
-                                        <div class="dropdown-menu dropdown-menu-right shadow animated--fade-in"
-                                            aria-labelledby="dropdownMenuLink">
-                                            <div class="dropdown-header">Dropdown Header:</div>
-                                            <a class="dropdown-item" href="#">Action</a>
-                                            <a class="dropdown-item" href="#">Another action</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Something else here</a>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-pie pt-4 pb-2">
-                                        <canvas id="myPieChart"></canvas>
-                                    </div>
-                                    <div class="mt-4 text-center small">
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-primary"></i>Direct
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-success"></i>Social
-                                        </span>
-                                        <span class="mr-2">
-                                            <i class="fas fa-circle text-info"></i>Referral
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </div>
 
                     <!-- Content Row -->
                     <div class="row">
+                        <!-- Porcentajes -->
+                        <div class="col-xl-12 col-lg-12">
+                            <div class="row">
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 mb-4">
+
+                                    <!-- Project Card Example -->
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="m-0 font-weight-bold text-primary">Casos por Abogado</h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="col-md-12">
+                                                <div class="table-responsive">
+                                                    <asp:GridView class="table table-striped table-hover"
+                                                        ID="gvCasosAbogado"
+                                                        runat="server"
+                                                        AutoGenerateColumns="true"
+                                                        Width="100%"
+                                                        CellSpacing="0">
+                                                    </asp:GridView>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="card-body">
+                                            <h4 class="small font-weight-bold">DR. DANIEL MARCELO GUERRA PANAMA <span
+                                                class="float-right">0.52%</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0.52%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">DR. VASQUEZ RIVADENEIRA CARLOS GABRIEL <span
+                                                class="float-right">21.01%</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 21.01%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">Dr. GUARANGUAY VARGAS ROLANDO JAVIER <span
+                                                class="float-right">30.73%</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 30.73%"
+                                                    aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">DR. LUIS EDISON CRESPO ALMEIDA <span
+                                                class="float-right">25.00%</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar" role="progressbar" style="width: 25.00%"
+                                                    aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">DR. EDISSON ESPINOSA VENEGAS <span
+                                                class="float-right">22.74%</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 22.74%"
+                                                    aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
 
                         <!-- Content Column -->
-                        <div class="col-lg-6 mb-4">
+                        <div class="col-lg-6 mb-4" hidden>
 
-                            <!-- Project Card Example -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Por Transacción</h6>
-                                </div>
-                                <div class="card-body">
-                                    <h4 class="small font-weight-bold">Abandono <span class="float-right"><%: abandono.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: <%= (int)abandono %>%">
-    <%= abandono %>%
-</div>
-                                    </div>
-
-                                    <h4 class="small font-weight-bold">Abstención de Trámite por Parte Del Juez <span class="float-right"><%: abstencionTrmiteParteJuez.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: <%= (int)abstencionTrmiteParteJuez %>%">
-    <%= abstencionTrmiteParteJuez %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Adjudicación <span class="float-right"><%: adjudicacion.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: <%= (int)adjudicacion %>%">
-    <%= adjudicacion %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Alegatos <span class="float-right"><%: alegatos.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: <%= (int)alegatos %>%">
-    <%= alegatos %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Apelación <span class="float-right"><%: apelacion.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: <%= (int)apelacion %>%">
-    <%= apelacion %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Avaluó de Bienes <span class="float-right">0.44%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: 0.44%">
-                                            <%= avaluoBienes %>% 
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: <%= (int)avaluoBienes %>%">
-    <%= avaluoBienes %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Calificación Demanda <span class="float-right"><%: calificacionDemanda.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: <%= (int)calificacionDemanda %>%">
-    <%= calificacionDemanda %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Cambio de Casillero Judicial <span class="float-right"><%: cambioCasilleroJudicial.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: <%= (int)cambioCasilleroJudicial %>%">
-    <%= cambioCasilleroJudicial %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Citación a los Demandados <span class="float-right"><%: citacionDemandados.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: 2.62%">
-    <%= citacionDemandados %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Contestación Demanda <span class="float-right"><%: contestacionDemanda.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: <%= (int)contestacionDemanda %>%">
-    <%= contestacionDemanda %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Desistimiento <span class="float-right"><%: desistimiento.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: <%= (int)desistimiento %>%">
-    <%= desistimiento %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Embargo <span class="float-right"><%: embargo.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-
-
-
-    <div class="progress-bar bg-danger" role="progressbar"
-        style="width: 0.44%">
-        <%= embargo %>%
-    </div>
-
-
-
-</div>
-                                    <h4 class="small font-weight-bold">Junta de Conciliación <span class="float-right"><%: juntaConciliacion.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= juntaConciliacion %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= juntaConciliacion %>%">
-                                            <%= juntaConciliacion %>% 
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: 0%">
-    <%= ninguno %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Liquidación <span class="float-right"><%: liquidacion.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= liquidacion %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: 0.87%">
-                                            <%= liquidacion %>% 
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: 0.87%">
-    <%= ninguno %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Mandamiento de Ejecución <span class="float-right"><%: mandamientoEjecucion.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= mandamientoEjecucion %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: 0%">
-                                            <%= mandamientoEjecucion %>% 
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar"
-    style="width: 0%">
-    <%= ninguno %>%
-</div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Ninguno <span class="float-right"><%: ninguno.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-
-
-
-                                        <div class="progress-bar bg-danger" role="progressbar"
-                                            style="width: <%= (int)ninguno %>%">
-                                            <%= ninguno %>%
-                                        </div>
-
-
-
-                                    </div>
-                                    <h4 class="small font-weight-bold">No Contesta Demanda <span class="float-right"><%: noContestaDemanda.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= noContestaDemanda %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= noContestaDemanda %>%">
-                                            <%= noContestaDemanda %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Otros <span class="float-right"><%: otros.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= otros %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= otros %>%">
-                                            <%= otros %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Presentación Demanda <span class="float-right"><%: presentacionDemanda.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= presentacionDemanda %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= presentacionDemanda %>%">
-                                            <%= presentacionDemanda %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Prueba <span class="float-right"><%: prueba.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: prueba.ToString("0.00") %>%"
-                                            aria-valuenow="<%: prueba.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
-                                            <%= avaluoBienes %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Remate <span class="float-right"><%: remate.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: remate.ToString("0.00") %>%"
-                                            aria-valuenow="<%: remate.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
-                                            <%= avaluoBienes %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Sentencia <span class="float-right"><%: sentencia.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: sentencia.ToString("0.00") %>%"
-                                            aria-valuenow="<%: sentencia.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
-                                            <%= avaluoBienes %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Suspendido por Acuerdo <span class="float-right"><%: suspendidoAcuerdo.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: suspendidoAcuerdo.ToString("0.00") %>%"
-                                            aria-valuenow="<%: suspendidoAcuerdo.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
-                                            <%= avaluoBienes %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Terminado por Acuerdo o Pago de Obligaciones <span class="float-right"><%: terminadoAcuerdoPagoObligaciones.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: terminadoAcuerdoPagoObligaciones.ToString("0.00") %>%"
-                                            aria-valuenow="<%: terminadoAcuerdoPagoObligaciones.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
-                                            <%= avaluoBienes %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Aprehencion Vehicular <span class="float-right"><%: aprehencionVehicular.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: aprehencionVehicular.ToString("0.00") %>%"
-                                            aria-valuenow="<%: aprehencionVehicular.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
-                                            <%= avaluoBienes %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Audiencia <span class="float-right"><%: audiencia.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: audiencia.ToString("0.00") %>%"
-                                            aria-valuenow="<%: audiencia.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
-                                            <%= avaluoBienes %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Razón de no Pago <span class="float-right"><%: razonNoPago.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: razonNoPago.ToString("0.00") %>%"
-                                            aria-valuenow="<%: razonNoPago.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
-                                            <%= avaluoBienes %>% 
-                                        </div>
-                                    </div>
-                                    <h4 class="small font-weight-bold">Audiencia Ejecución <span class="float-right"><%: audienciaEjecucion.ToString("0.00") %>%</span></h4>
-                                    <div class="progress mb-4">
-
-                                        <div class="progress-bar bg-danger" role="progressbar" style="width: <%: audienciaEjecucion.ToString("0.00") %>%"
-                                            aria-valuenow="<%: audienciaEjecucion.ToString("0.00") %>" aria-valuemin="0" aria-valuemax="100">
-                                        </div>
-                                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow='<%= avaluoBienes %>'
-                                            aria-valuemin="0" aria-valuemax="100" style="width: <%= avaluoBienes %>%">
-                                            <%= avaluoBienes %>% 
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Color System -->
                             <div class="row">
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-primary text-white shadow">
+                                <div class="col-lg-12 mb-4">
+                                    <!-- Por Transacción -->
+                                    <div class="card shadow mb-4">
+                                        <div class="card-header py-3">
+                                            <h6 class="m-0 font-weight-bold text-primary">Porcentaje por Tipo de Transacción</h6>
+                                        </div>
                                         <div class="card-body">
-                                            Primary
-                                           
-                                            <div class="text-white-50 small">#4e73df</div>
+                                            <h4 class="small font-weight-bold" hidden="">Abandono <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Abstención de Trámite por Parte Del Juez <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Adjudicación <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Alegatos <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Apelación <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">Avaluó de Bienes <span class="float-right"><%= avaluoBienes.ToString() %></span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: <%= avaluoBienes.ToString() %>%"
+                                                    aria-valuenow="<%= avaluoBienes.ToString() %>" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+
+                                            <h4 class="small font-weight-bold" hidden="">Calificación Demanda <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Cambio de Casillero Judicial <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">Citación a los Demandados <span
+                                                class="float-right">6</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 2.62%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Contestación Demanda <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Desistimiento <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">Embargo <span
+                                                class="float-right">1</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0.44%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Junta de Conciliación <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">Liquidación <span
+                                                class="float-right">2</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0.87%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Mandamiento de Ejecución <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">Ingreso de la Demanda <span
+                                                class="float-right">218</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 94.32%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">No Contesta Demanda <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Otros <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Presentación Demanda <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Remate <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">Sentencia <span
+                                                class="float-right">2</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0.87%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">Suspendido por Acuerdo <span
+                                                class="float-right">1</span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0.44%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Terminado por Acuerdo o Pago de Obligaciones <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Aprehencion Vehicular <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Audiencia <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Razón de no Pago <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold" hidden="">Audiencia Ejecución <span
+                                                class="float-right">0%</span></h4>
+                                            <div class="progress mb-4" hidden="">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"
+                                                    aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-success text-white shadow">
-                                        <div class="card-body">
-                                            Success
-                                           
-                                            <div class="text-white-50 small">#ffcb0c</div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-12 mb-4">
+                                    <div class="card shadow mb-4">
+                                        <!-- Card Header - Dropdown -->
+                                        <div
+                                            class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                            <h6 class="m-0 font-weight-bold text-primary">Porcentajes</h6>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-info text-white shadow">
+                                        <!-- Card Body -->
                                         <div class="card-body">
-                                            Info
-                                           
-                                            <div class="text-white-50 small">#36b9cc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-warning text-white shadow">
-                                        <div class="card-body">
-                                            Warning
-                                           
-                                            <div class="text-white-50 small">#f6c23e</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-danger text-white shadow">
-                                        <div class="card-body">
-                                            Danger
-                                           
-                                            <div class="text-white-50 small">#e74a3b</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-secondary text-white shadow">
-                                        <div class="card-body">
-                                            Secondary
-                                           
-                                            <div class="text-white-50 small">#858796</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-light text-black shadow">
-                                        <div class="card-body">
-                                            Light
-                                           
-                                            <div class="text-black-50 small">#f8f9fc</div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 mb-4">
-                                    <div class="card bg-dark text-white shadow">
-                                        <div class="card-body">
-                                            Dark
-                                           
-                                            <div class="text-white-50 small">#8b4e21</div>
+                                            <div class="chart-pie pt-4 pb-2">
+                                                <canvas id="myPieChart"></canvas>
+                                            </div>
+                                            <div class="mt-4 text-center small">
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle text-primary"></i>AvaluO De Bienes
+                                                </span>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle text-success"></i>"Citación A Los Demandados
+                                                </span>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle text-info"></i>Embargo
+                                                </span>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle text-warning"></i>Liquidación
+                                                </span>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle text-danger"></i>Sentencia
+                                                </span>
+                                                <span class="mr-2">
+                                                    <i class="fas fa-circle text-secondary"></i>Suspendido Por Acuerdo
+                                                </span>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -550,53 +492,11 @@
 
                         </div>
 
-                        <div class="col-lg-6 mb-4">
-
-                            <!-- Illustrations -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Illustrations</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 25rem;"
-                                            src="/Content/img/undraw_posting_photo.svg" alt="...">
-                                    </div>
-                                    <p>
-                                        Add some quality, svg illustrations to your project courtesy of <a
-                                            target="_blank" rel="nofollow" href="https://undraw.co/">unDraw</a>, a
-                                        constantly updated collection of beautiful svg images that you can use
-                                        completely free and without attribution!
-                                    </p>
-                                    <a target="_blank" rel="nofollow" href="https://undraw.co/">Browse Illustrations on
-                                        unDraw &rarr;</a>
-                                </div>
-                            </div>
-
-                            <!-- Approach -->
-                            <div class="card shadow mb-4">
-                                <div class="card-header py-3">
-                                    <h6 class="m-0 font-weight-bold text-primary">Development Approach</h6>
-                                </div>
-                                <div class="card-body">
-                                    <p>
-                                        SB Admin 2 makes extensive use of Bootstrap 4 utility classes in order to reduce
-                                        CSS bloat and poor page performance. Custom CSS classes are used to create
-                                        custom components and custom utility classes.
-                                    </p>
-                                    <p class="mb-0">
-                                        Before working with this theme, you should become familiar with the
-                                        Bootstrap framework, especially the utility classes.
-                                    </p>
-                                </div>
-                            </div>
-
-                        </div>
                     </div>
+
 
                 </div>
                 <!-- /.container-fluid -->
-
             </div>
             <!-- End of Main Content -->
 

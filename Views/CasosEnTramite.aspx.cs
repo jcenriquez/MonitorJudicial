@@ -8,6 +8,7 @@ using System.Web;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using System.Web.Configuration;
 
 namespace MonitorJudicial
 {
@@ -18,33 +19,70 @@ namespace MonitorJudicial
             if (!IsPostBack)
             {
                 LlenarGridViewCasos();
+                CargarEstados();
             }
 
         }
-        public void LlenarGridViewCasos()
+        protected void btnQuitarFiltro_Click(object sender, EventArgs e)
+        {
+            LlenarGridViewCasos();
+        }
+        protected void CargarEstados()
+        {
+            string connectionString = WebConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string queryEstadoTramite = "SELECT NOMBRE FROM [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] WHERE ESTAACTIVO='1' ORDER BY NOMBRE";
+
+            ddlAccion.Items.Clear(); // Limpiar elementos previos
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(queryEstadoTramite, connection))
+            {
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        ddlAccion.Items.Add(new ListItem(reader["NOMBRE"].ToString()));
+                    }
+                }
+            }
+        }
+        public void LlenarGridViewCasos(string estadoFiltro = "")
         {
             // Cadena de conexión a la base de datos
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
 
             // Consulta SQL
             string query = @"
-                SELECT  
-                    P.NUMEROPRESTAMO AS [NUMERO PRESTAMO], PER.NOMBREUNIDO AS [NOMBRE COMPLETO],P.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], P.DEUDAINICIAL AS [DEUDA INICIAL], 
-                    P.SALDOACTUAL AS [SALDO ACTUAL], CONVERT(VARCHAR, P.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], CONVERT(VARCHAR, P.FECHAVENCIMIENTO, 23) AS [FECHA VENCIMIENTO],
-                    ISNULL(ET.NOMBRE, '') AS [ESTADO], ISNULL(PT.COMENTARIO, '') AS [COMENTARIO], ISNULL(CONVERT(VARCHAR, PT.FECHASISTEMA, 23), '') AS [FECHA TRÁMITE] 
-                FROM 
-                    [FBS_CARTERA].[PRESTAMOMAESTRO] P
-                JOIN [FBS_PERSONAS].[PERSONA] PER ON P.IDENTIFICACIONSUJETOORIGINAL=PER.IDENTIFICACION
-                JOIN [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
-                LEFT JOIN [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = P.SECUENCIAL
-                LEFT JOIN [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
-                WHERE P.CODIGOESTADOPRESTAMO='J'
-                ORDER BY P.FECHAVENCIMIENTO DESC;";
+            SELECT  
+                P.NUMEROPRESTAMO AS [NUMERO PRESTAMO], PER.NOMBREUNIDO AS [NOMBRE COMPLETO], P.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                P.DEUDAINICIAL AS [DEUDA INICIAL], P.SALDOACTUAL AS [SALDO ACTUAL], 
+                CONVERT(VARCHAR, P.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], CONVERT(VARCHAR, P.FECHAVENCIMIENTO, 23) AS [FECHA VENCIMIENTO],
+                ISNULL(ET.NOMBRE, '') AS [ESTADO], ISNULL(PT.COMENTARIO, '') AS [COMENTARIO], 
+                ISNULL(CONVERT(VARCHAR, PT.FECHASISTEMA, 23), '') AS [FECHA TRÁMITE] 
+            FROM 
+                [FBS_CARTERA].[PRESTAMOMAESTRO] P
+            JOIN [FBS_PERSONAS].[PERSONA] PER ON P.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+            JOIN [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+            LEFT JOIN [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = P.SECUENCIAL
+            LEFT JOIN [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+            WHERE P.CODIGOESTADOPRESTAMO IN ('J','I','G')";
+
+            if (!string.IsNullOrEmpty(estadoFiltro))
+            {
+                query += " AND ET.NOMBRE = @EstadoFiltro";
+            }
+
+            query += " ORDER BY P.FECHAVENCIMIENTO DESC;";
 
             // Establecer conexión y ejecutar la consulta
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
+                if (!string.IsNullOrEmpty(estadoFiltro))
+                {
+                    command.Parameters.AddWithValue("@EstadoFiltro", estadoFiltro.Trim());
+                }
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataTable dataTable = new DataTable();
 
@@ -55,40 +93,17 @@ namespace MonitorJudicial
                 gvCasosJudicial.DataBind();
             }
         }
-
-        public DataTable LlenarDataTableCasos()
+        protected void btnFiltrar_Click(object sender, EventArgs e)
         {
-            // Cadena de conexión a la base de datos
-            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-
-            // Consulta SQL
-            string query = @"
-        SELECT  
-            P.NUMEROPRESTAMO AS [NUMERO PRESTAMO], PER.NOMBREUNIDO AS [NOMBRE COMPLETO],P.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], P.DEUDAINICIAL AS [DEUDA INICIAL], 
-            P.SALDOACTUAL AS [SALDO ACTUAL], CONVERT(VARCHAR, P.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], CONVERT(VARCHAR, P.FECHAVENCIMIENTO, 23) AS [FECHA VENCIMIENTO],
-            ISNULL(ET.NOMBRE, '') AS [ESTADO], ISNULL(PT.COMENTARIO, '') AS [COMENTARIO], ISNULL(CONVERT(VARCHAR, PT.FECHASISTEMA, 23), '') AS [FECHA TRÁMITE] 
-        FROM 
-            [FBS_CARTERA].[PRESTAMOMAESTRO] P
-        JOIN [FBS_PERSONAS].[PERSONA] PER ON P.IDENTIFICACIONSUJETOORIGINAL=PER.IDENTIFICACION
-        JOIN [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
-        LEFT JOIN [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = P.SECUENCIAL
-        LEFT JOIN [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
-        WHERE P.CODIGOESTADOPRESTAMO='J'
-        ORDER BY P.FECHAVENCIMIENTO DESC;";
-
-            // Establecer conexión y ejecutar la consulta
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query, connection);
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataTable dataTable = new DataTable();
-
-                adapter.Fill(dataTable);
-
-                // Devolver la DataTable con los datos cargados
-                return dataTable;
-            }
+            LlenarGridViewCasos(ddlAccion.SelectedValue);
         }
+
+        protected void gvCasosJudicial_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvCasosJudicial.PageIndex = e.NewPageIndex;
+            LlenarGridViewCasos();
+        }
+
 
         protected void gvCasosJudicial_RowDataBound(object sender, GridViewRowEventArgs e)
         {

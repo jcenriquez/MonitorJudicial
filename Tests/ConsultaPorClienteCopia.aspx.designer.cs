@@ -11,7 +11,7 @@ namespace MonitorJudicial
 {
 
 
-    public partial class ConsultaPorCliente
+    public partial class ConsultaPorClienteCopia
     {
 
         /// <summary>
@@ -246,7 +246,7 @@ namespace MonitorJudicial
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList ddlJudicatura;
+        protected global::System.Web.UI.HtmlControls.HtmlSelect ddlJudicatura;
 
         /// <summary>
         /// Control ddlAccion.

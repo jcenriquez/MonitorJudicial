@@ -33,7 +33,7 @@ namespace MonitorJudicial.Controllers
                 JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
                 JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
                 JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
-                WHERE p.CODIGOESTADOPRESTAMO='J' AND PER.IDENTIFICACION='" + numeroCedula + @"'
+                WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G') AND PER.IDENTIFICACION='" + numeroCedula + @"'
                 ORDER BY p.SECUENCIAL DESC";
 
             string queryNombre = @"
@@ -94,7 +94,7 @@ namespace MonitorJudicial.Controllers
                 JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
                 JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
                 JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
-                WHERE p.CODIGOESTADOPRESTAMO='J'  AND cli.NUMEROCLIENTE='" + numeroCliente + @"'
+                WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G')  AND cli.NUMEROCLIENTE='" + numeroCliente + @"'
                 ORDER BY p.SECUENCIAL DESC";
 
             // Establecer conexión y ejecutar la consulta

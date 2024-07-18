@@ -13,7 +13,7 @@ using MonitorJudicial.Controllers;
 
 namespace MonitorJudicial
 {
-    public partial class ConsultaPorCliente : System.Web.UI.Page
+    public partial class ConsultaPorClienteCopia : System.Web.UI.Page
     {
         protected static string secuencialPrestamo;
         protected static string codigoAbogado;
@@ -26,8 +26,6 @@ namespace MonitorJudicial
         protected static string codigousuario;
         protected static string fechasistema = "";
         protected static string fechamaquina = "";
-        protected static string medicaCautelar = "";
-        protected static string judicatura = "";
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
@@ -47,7 +45,7 @@ namespace MonitorJudicial
             string queryMateria = "SELECT NOMBRE FROM [FBS_COBRANZAS].[TIPOMATERIAJUICIO] WHERE ESTAACTIVO='1' ORDER BY NOMBRE";
             string queryMedidaCautelar = "SELECT NOMBRE FROM [FBS_COBRANZAS].[TIPOMEDIDACAUTELAR] WHERE ESTAACTIVO='1' ORDER BY NOMBRE";
             string queryJudicatura = "SELECT NOMBRE FROM [FBS_COBRANZAS].[TIPOJUDICATURA] WHERE ESTAACTIVO='1' ORDER BY NOMBRE";
-            string queryEstadoTramite = "SELECT NOMBRE\r\nFROM [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] \r\nWHERE ESTAACTIVO = '1'\r\nORDER BY CASE CODIGO\r\n    WHEN '19' THEN 1\r\n    WHEN '07' THEN 2\r\n    WHEN '16' THEN 3\r\n    WHEN '25' THEN 4\r\n    WHEN '09' THEN 5\r\n    WHEN '26' THEN 6\r\n    WHEN '22' THEN 7\r\n    WHEN '14' THEN 8\r\n    WHEN '15' THEN 9\r\n    WHEN '27' THEN 10\r\n    WHEN '12' THEN 11\r\n    WHEN '06' THEN 12\r\n    WHEN '28' THEN 13\r\n    WHEN '21' THEN 14\r\n    WHEN '03' THEN 15\r\n    WHEN '01' THEN 16\r\n    WHEN '02' THEN 17\r\n    WHEN '04' THEN 18\r\n    WHEN '05' THEN 19\r\n    WHEN '08' THEN 20\r\n    WHEN '10' THEN 21\r\n    WHEN '11' THEN 22\r\n    WHEN '13' THEN 23\r\n    WHEN '17' THEN 24\r\n    WHEN '18' THEN 25\r\n    WHEN '20' THEN 26\r\n    WHEN '23' THEN 27\r\n    WHEN '24' THEN 28\r\nEND;";
+            string queryEstadoTramite = "SELECT NOMBRE FROM [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] WHERE ESTAACTIVO='1' ORDER BY NOMBRE";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -158,7 +156,7 @@ namespace MonitorJudicial
             txtNombresDiv.Visible = true;
             Controllers.PrestamosController.LlenarGridViewCedula(numeroCedula, gvPrestamos, txtNombres);
         }
-
+        
         protected void gvPrestamos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             CargarFormulario();
@@ -250,7 +248,7 @@ namespace MonitorJudicial
                         //gridCheck.Checked = (estado == "True");
 
                         abogado = reader["ABOGADO"].ToString();
-
+                        
                         ListItem selectedAbogado = ddlAbogado.Items.FindByText(abogado);
 
                         if (selectedAbogado != null)
@@ -327,7 +325,7 @@ namespace MonitorJudicial
                         secuencialPrestamoV = reader["SECUENCIAL PRESTAMO"].ToString();
                         secuencialPrestamo = secuencialPrestamoV;
                         codigoAbogado = reader["CODIGOABOGADO"].ToString();
-                        codigousuario = reader["USUARIOINGRESO"].ToString();
+                        codigousuario= reader["USUARIOINGRESO"].ToString(); 
                         oficialV = reader["OFICIAL"].ToString();
                         oficinaV = reader["OFICINA"].ToString();
                         adjudicadoV = reader["ADJUDICADO"].ToString();
@@ -485,6 +483,7 @@ namespace MonitorJudicial
                             ISNULL(EJ.NOMBRE, '') AS [TRÁMITE], 
                             ISNULL(PT.COMENTARIO, '') AS [COMENTARIO],
                             ISNULL(PT.ESTAACTIVO, '') AS [ACTIVO], 
+                            ISNULL(CONVERT(VARCHAR, PA.FECHASISTEMAINGRESO, 105), '') AS [FECHA REGISTRO], 
                             ISNULL(CONVERT(VARCHAR, PT.FECHASISTEMA, 105), '') AS [FECHA ESTADO JUDICIAL],                            
                             ISNULL((SELECT TOP 1 -DATEDIFF(DAY, PT.FECHASISTEMA, PT2.FECHASISTEMA) 
                                      FROM [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT2 
@@ -590,73 +589,10 @@ namespace MonitorJudicial
         protected string UpdatePrestamoDescripcion(string secuencialPrestamo, string descripcion)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-            string medicaCautelarV = ddlMedidaCautelar.SelectedValue.Trim();
-            string queryMedidaCautelar = @"SELECT NOMBRE, CODIGO FROM [FBS_COBRANZAS].[TIPOMEDIDACAUTELAR] WHERE NOMBRE = @medicaCautelarV;";
-            string judicaturaV = ddlJudicatura.SelectedValue.Trim();
-            string queryJudicatura = @"SELECT CODIGO FROM [FBS_COBRANZAS].[TIPOJUDICATURA] WHERE NOMBRE = @judicaturaV;";
-
-
-            string codigoJudicatura = null;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                using (SqlCommand command = new SqlCommand(queryJudicatura, connection))
-                {
-                    command.Parameters.AddWithValue("@judicaturaV", judicaturaV);
-
-                    try
-                    {
-                        connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                //nombreResultado = reader["NOMBRE"].ToString();
-                                codigoJudicatura = reader["CODIGO"].ToString();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Error: " + ex.Message);
-                    }
-                }
-            }
-
-            //string nombreResultado = null;
-            string codigoResultado = null;
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                using (SqlCommand command = new SqlCommand(queryMedidaCautelar, connection))
-                {
-                    command.Parameters.AddWithValue("@medicaCautelarV", medicaCautelarV);
-
-                    try
-                    {
-                        connection.Open();
-                        using (SqlDataReader reader = command.ExecuteReader())
-                        {
-                            if (reader.Read())
-                            {
-                                //nombreResultado = reader["NOMBRE"].ToString();
-                                codigoResultado = reader["CODIGO"].ToString();
-                            }
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Console.WriteLine("Error: " + ex.Message);
-                    }
-                }
-            }
-
             string respuesta = "";
             string query = @"
             UPDATE [FBS_COBRANZAS].[PRESTAMOABOGADO]
-            SET DESCRIPCION = @Descripcion,
-            CODIGOTIPOMEDCAUTELAR = @codigoResultado,
-            CODIGOTIPOJUDICATURA = @codigoJudicatura
+            SET DESCRIPCION = @Descripcion
             WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
@@ -664,8 +600,6 @@ namespace MonitorJudicial
                 SqlCommand command = new SqlCommand(query, connection);
                 command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
                 command.Parameters.AddWithValue("@Descripcion", descripcion);
-                command.Parameters.AddWithValue("@codigoResultado", codigoResultado);
-                command.Parameters.AddWithValue("@codigoJudicatura", codigoJudicatura);
 
                 try
                 {
@@ -694,8 +628,6 @@ namespace MonitorJudicial
             }
             return respuesta;
         }
-
-        
         protected string ConsultarCodigoTramite(string codigoestadotramitedemjud)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
@@ -747,8 +679,6 @@ namespace MonitorJudicial
         {
             ddlAccion.Enabled = true;
             ddlAccion.SelectedIndex = 0;
-            ddlMedidaCautelar.Enabled = true;
-            ddlJudicatura.Enabled = true;
             //ddlMedidaCautelar.Enabled = true;
             //ddlMedidaCautelar.SelectedIndex = 0;
             txtComentario.ReadOnly = false;
@@ -773,15 +703,6 @@ namespace MonitorJudicial
             document.getElementById('" + ddlAccion.ClientID + @"').addEventListener('focus', function() {
                 this.style.backgroundColor = '';
             });
-document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundColor = highlightColor;
-            document.getElementById('" + ddlJudicatura.ClientID + @"').style.backgroundColor = highlightColor;
-            document.getElementById('" + ddlMedidaCautelar.ClientID + @"').addEventListener('focus', function() {
-                this.style.backgroundColor = '';
-            });
-
-            document.getElementById('" + ddlJudicatura.ClientID + @"').addEventListener('focus', function() {
-                this.style.backgroundColor = '';
-            });
 
         </script>";
 
@@ -803,7 +724,6 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             ,[CODIGOUSUARIO]
             ,[FECHASISTEMA]
             ,[FECHAMAQUINA])
-            OUTPUT INSERTED.SECUENCIAL
             VALUES
             (@SecuencialPrestamo
             ,@CodigoEstadoJudicial
@@ -831,9 +751,7 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                 try
                 {
                     connection.Open();
-                    int secuencialInsertado = (int)command.ExecuteScalar(); // Obtener el valor insertado
-                    //GuardarValoresJudiciales(secuencialprestamoV, secuencialInsertado, txtConcepto.Text, Double.Parse(txtValor.Text), ddlAccion.SelectedValue.ToString());
-                    // Aquí puedes hacer lo que necesites con el secuencialInsertado
+                    command.ExecuteNonQuery();
                     respuesta = "OK";
                 }
                 catch (Exception ex)
@@ -846,60 +764,12 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             }
             return respuesta;
         }
-        //protected string GuardarValoresJudiciales(int secuencialprestamoV, int secuencialJudicialV, string conceptoV, double valorV, string accionJudicialV)
-        //{
-        //    string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-        //    string respuesta = "";
-        //    string query = @"
-        //    INSERT INTO [FBS_COBRANZAS].[VALORES_POR_ACCION_JUDICIAL]
-        //   ([SECUENCIALPRESTAMO]
-        //   ,[SECUENCIAL_TRAM_JUDICIAL]
-        //   ,[CONCEPTO]  
-        //   ,[VALOR]
-        //   ,[ACCION_JUDICIAL]) 
-        //    VALUES
-        //    (@SecuencialPrestamo
-        //    ,@Secuencial_Tram_Judicial
-        //    ,@Concepto
-        //    ,@Valor
-        //    ,@Accion_Judicial)";
-
-        //    using (SqlConnection connection = new SqlConnection(connectionString))
-        //    {
-        //        SqlCommand command = new SqlCommand(query, connection);
-        //        command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialprestamoV);
-        //        command.Parameters.AddWithValue("@Secuencial_Tram_Judicial", secuencialJudicialV);
-        //        command.Parameters.AddWithValue("@Concepto", conceptoV);
-        //        command.Parameters.AddWithValue("@Valor", valorV);
-        //        command.Parameters.AddWithValue("@Accion_Judicial", accionJudicialV);
-
-        //        try
-        //        {
-        //            connection.Open();
-        //            command.ExecuteNonQuery();
-        //            respuesta = "OK";
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            // Manejo de excepciones
-        //            Console.WriteLine("Error: " + ex.Message);
-        //            respuesta = "ERROR";
-        //            // Puedes registrar el error o mostrar un mensaje adecuado al usuario
-        //        }
-        //    }
-        //    return respuesta;
-        //}
 
         protected void btnGuardarEstadoPrestamo_Click(object sender, EventArgs e)
         {
             string descripcion = ddlAccion.SelectedValue.Trim();
             //Este método trae la información de la tabla [PRESTAMODEMANDAJUDICIALTRAMITE] 
             ConsultaPrestamoJudicial(secuencialPrestamo);
-
-            string medicaCautelarV = ddlMedidaCautelar.SelectedValue.Trim();
-            string medidaCau = ddlMedidaCautelar.SelectedIndex.ToString();
-            string medidasCau = ddlMedidaCautelar.SelectedItem.ToString();
-            //string judicaturaV = ddlJudicatura.SelectedIndex.ToString();
 
             int secuencialprestamoV = int.Parse(secuencialPrestamo);
             string codigoEstadoJudicialV = ConsultarCodigoTramite(descripcion);
@@ -916,20 +786,17 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                 string actualizadoEstado = UpdatePrestamoEstado(secuencialPrestamo);
                 //if (actualizadoEstado.Equals("OK"))
                 //{
-                string actualizadoDescripcion = UpdatePrestamoDescripcion(secuencialPrestamo, descripcion);
-                if (actualizadoDescripcion.Equals("OK"))
-                {
-                    
-                    string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV);
-                    if (guardado.Equals("OK"))
+                    string actualizadoDescripcion = UpdatePrestamoDescripcion(secuencialPrestamo, descripcion);
+                    if (actualizadoDescripcion.Equals("OK"))
                     {
+                        string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV);
+                        if (guardado.Equals("OK"))
+                        {
                         ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
                         VaciarGridView();
                         CargarGridTramites(secuencialPrestamo);
                         //Cuando se h confirmdo el guardado
                         ddlAccion.Enabled = false;
-                        ddlMedidaCautelar.Enabled = false;
-                        ddlJudicatura.Enabled = false;
                         txtComentario.ReadOnly = true;
                         txtDescripcion.Text = ddlAccion.SelectedValue.Trim();
                         btnActualizarEstadoPrestamo.Visible = true;
@@ -946,18 +813,18 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
 
 
                         return;
+                        }
+                        else
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                            return;
+                        }
                     }
                     else
                     {
                         ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
                         return;
                     }
-                }
-                else
-                {
-                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
-                    return;
-                }
                 //}
                 //else
                 //{
@@ -972,7 +839,7 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             }
 
 
-
+            
         }
         protected void btnCancelarEstadoPrestamo_Click(object sender, EventArgs e)
         {
@@ -981,8 +848,6 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             CargarGridTramites(secuencialPrestamo);
             //Cuando se h confirmdo el guardado
             ddlAccion.Enabled = false;
-            ddlMedidaCautelar.Enabled = false;
-            ddlJudicatura.Enabled = false;
             ddlAccion.SelectedIndex = 0;
             txtComentario.ReadOnly = true;
             //txtDescripcion.Text = ddlAccion.SelectedValue.Trim();
