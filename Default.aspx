@@ -21,6 +21,9 @@
                         <h1 class="h3 mb-0 text-gray-800">Tablero</h1>
                         <%--<a href="#" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" ><i
                             class="fas fa-download fa-sm text-white-50"></i>Generar Reporte</a>--%>
+                        <asp:LinkButton ID="btnGenerarReporte" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" runat="server" OnClick="btnGenerarReporte_Click">
+    <i class="fas fa-download"></i> Generar Reporte Excel
+</asp:LinkButton>
                     </div>
                     <%--<div class="row">
                         <div class="col-xl-6 col-md-6 mb-4">

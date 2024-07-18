@@ -11,6 +11,22 @@
         }
 
     </script>
+    <script type="text/javascript">
+        function isNumberKey(evt) {
+            var charCode = (evt.which) ? evt.which : event.keyCode;
+            var value = evt.target.value;
+            var dotPos = value.indexOf('.');
+
+            if (charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)) {
+                return false;
+            }
+            // Permitir solo un punto decimal
+            if (dotPos > -1 && charCode == 46) {
+                return false;
+            }
+            return true;
+        }
+</script>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -267,7 +283,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <label for="ddlAccion" class="form-label">Acción Desarrollada:</label>
-                                        <asp:DropDownList ID="ddlAccion" runat="server" CssClass="form-control" Enabled="false">
+                                        <asp:DropDownList ID="ddlAccion" runat="server" CssClass="form-control" Enabled="false" AutoPostBack="true">
                                             <asp:ListItem Text="Seleccione..." Value="" Selected="false"></asp:ListItem>
                                         </asp:DropDownList>
                                     </div>

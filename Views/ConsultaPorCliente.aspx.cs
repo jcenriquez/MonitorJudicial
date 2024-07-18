@@ -694,6 +694,8 @@ namespace MonitorJudicial
             }
             return respuesta;
         }
+
+        
         protected string ConsultarCodigoTramite(string codigoestadotramitedemjud)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
@@ -801,6 +803,7 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             ,[CODIGOUSUARIO]
             ,[FECHASISTEMA]
             ,[FECHAMAQUINA])
+            OUTPUT INSERTED.SECUENCIAL
             VALUES
             (@SecuencialPrestamo
             ,@CodigoEstadoJudicial
@@ -828,7 +831,9 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                 try
                 {
                     connection.Open();
-                    command.ExecuteNonQuery();
+                    int secuencialInsertado = (int)command.ExecuteScalar(); // Obtener el valor insertado
+                    //GuardarValoresJudiciales(secuencialprestamoV, secuencialInsertado, txtConcepto.Text, Double.Parse(txtValor.Text), ddlAccion.SelectedValue.ToString());
+                    // Aquí puedes hacer lo que necesites con el secuencialInsertado
                     respuesta = "OK";
                 }
                 catch (Exception ex)
@@ -841,6 +846,49 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             }
             return respuesta;
         }
+        //protected string GuardarValoresJudiciales(int secuencialprestamoV, int secuencialJudicialV, string conceptoV, double valorV, string accionJudicialV)
+        //{
+        //    string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+        //    string respuesta = "";
+        //    string query = @"
+        //    INSERT INTO [FBS_COBRANZAS].[VALORES_POR_ACCION_JUDICIAL]
+        //   ([SECUENCIALPRESTAMO]
+        //   ,[SECUENCIAL_TRAM_JUDICIAL]
+        //   ,[CONCEPTO]  
+        //   ,[VALOR]
+        //   ,[ACCION_JUDICIAL]) 
+        //    VALUES
+        //    (@SecuencialPrestamo
+        //    ,@Secuencial_Tram_Judicial
+        //    ,@Concepto
+        //    ,@Valor
+        //    ,@Accion_Judicial)";
+
+        //    using (SqlConnection connection = new SqlConnection(connectionString))
+        //    {
+        //        SqlCommand command = new SqlCommand(query, connection);
+        //        command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialprestamoV);
+        //        command.Parameters.AddWithValue("@Secuencial_Tram_Judicial", secuencialJudicialV);
+        //        command.Parameters.AddWithValue("@Concepto", conceptoV);
+        //        command.Parameters.AddWithValue("@Valor", valorV);
+        //        command.Parameters.AddWithValue("@Accion_Judicial", accionJudicialV);
+
+        //        try
+        //        {
+        //            connection.Open();
+        //            command.ExecuteNonQuery();
+        //            respuesta = "OK";
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            // Manejo de excepciones
+        //            Console.WriteLine("Error: " + ex.Message);
+        //            respuesta = "ERROR";
+        //            // Puedes registrar el error o mostrar un mensaje adecuado al usuario
+        //        }
+        //    }
+        //    return respuesta;
+        //}
 
         protected void btnGuardarEstadoPrestamo_Click(object sender, EventArgs e)
         {
@@ -871,6 +919,7 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                 string actualizadoDescripcion = UpdatePrestamoDescripcion(secuencialPrestamo, descripcion);
                 if (actualizadoDescripcion.Equals("OK"))
                 {
+                    
                     string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV);
                     if (guardado.Equals("OK"))
                     {

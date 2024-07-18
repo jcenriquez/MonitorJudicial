@@ -3,12 +3,14 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
 using System.Linq;
 using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using OfficeOpenXml;
 
 namespace MonitorJudicial
 {
@@ -156,6 +158,88 @@ namespace MonitorJudicial
             litotalVencido.Text = totalVencido.ToString();
         }
 
+        protected void btnGenerarReporte_Click(object sender, EventArgs e)
+        {
+            // Establecer el contexto de la licencia
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+
+            // Obtiene los valores de los controles
+            string totalCasos = litPrestamoJudicial.Text;
+            string castigados = litotalCastigado.Text;
+            string judicial = litotalJudicial.Text;
+            string alDia = litotalAlDia.Text;
+            string prejudicial = litotalPrejudicial.Text;
+            string vencidos = litotalVencido.Text;
+
+            using (ExcelPackage excel = new ExcelPackage())
+            {
+                var workSheet = excel.Workbook.Worksheets.Add("Reporte");
+
+                // Añadir cabecera
+                workSheet.Cells[1, 1, 1, 6].Merge = true;
+                workSheet.Cells[1, 1].Value = "REPORTE EXCEL CASOS PRÉSTAMOS EN ESTADOS JUDICIALES";
+                workSheet.Cells[1, 1].Style.Font.Size = 14;
+                workSheet.Cells[1, 1].Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+
+                // Añadir encabezados
+                workSheet.Cells[2, 1].Value = "TOTAL CASOS";
+                workSheet.Cells[2, 2].Value = "CASTIGADOS";
+                workSheet.Cells[2, 3].Value = "JUDICIAL";
+                workSheet.Cells[2, 4].Value = "AL DÍA";
+                workSheet.Cells[2, 5].Value = "PREJUDICIAL";
+                workSheet.Cells[2, 6].Value = "VENCIDOS";
+
+                // Añadir datos
+                workSheet.Cells[3, 1].Value = totalCasos;
+                workSheet.Cells[3, 2].Value = castigados;
+                workSheet.Cells[3, 3].Value = judicial;
+                workSheet.Cells[3, 4].Value = alDia;
+                workSheet.Cells[3, 5].Value = prejudicial;
+                workSheet.Cells[3, 6].Value = vencidos;
+
+                // Ajustar tamaño de columnas
+                workSheet.Cells.AutoFitColumns();
+
+                // Añadir datos del GridView
+                if (gvCasosAbogado.Rows.Count > 0)
+                {
+                    int startRow = 5; // La fila donde comenzarán los datos del GridView
+                    int colIndex = 1;
+
+                    // Añadir encabezados del GridView
+                    for (int i = 0; i < gvCasosAbogado.HeaderRow.Cells.Count; i++)
+                    {
+                        workSheet.Cells[startRow, colIndex + i].Value = gvCasosAbogado.HeaderRow.Cells[i].Text;
+                    }
+
+                    // Añadir datos del GridView
+                    for (int i = 0; i < gvCasosAbogado.Rows.Count; i++)
+                    {
+                        for (int j = 0; j < gvCasosAbogado.Rows[i].Cells.Count; j++)
+                        {
+                            workSheet.Cells[startRow + i + 1, colIndex + j].Value = gvCasosAbogado.Rows[i].Cells[j].Text;
+                        }
+                    }
+
+                    // Ajustar tamaño de columnas
+                    workSheet.Cells[startRow, 1, startRow + gvCasosAbogado.Rows.Count, gvCasosAbogado.HeaderRow.Cells.Count].AutoFitColumns();
+                }
+
+                // Generar el archivo Excel
+                string excelName = $"Reporte_{DateTime.Now:yyyyMMddHHmmss}.xlsx";
+
+                using (var memoryStream = new MemoryStream())
+                {
+                    Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    Response.AddHeader("content-disposition", "attachment; filename=" + excelName);
+                    excel.SaveAs(memoryStream);
+                    memoryStream.WriteTo(Response.OutputStream);
+                    Response.Flush();
+                    Response.End();
+                }
+            }
+        }
 
         public void PorcentajeCasos()
         {
