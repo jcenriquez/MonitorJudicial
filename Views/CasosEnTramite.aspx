@@ -18,12 +18,14 @@
                     <h1 class="h3 mb-2 text-gray-800">En Trámite</h1>
                     <%--<p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
                         For more information about DataTables, please visit the <a target="_blank"
-                            href="https://datatables.net">official DataTables documentation</a>.</p>--%>
-
+                            href="https://datatables.net">official DataTables documentation</a>.</p>--%>                  
+                    
                     <!-- DataTables -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Tabla de Datos</h6>
+                            <asp:Button ID="btnGenerateReport" runat="server" Text="Generar Reporte" OnClick="btnGenerateReport_Click" />
+
                         </div>
                         <nav class="card-body">
                             <div class="container-fluid">
@@ -36,7 +38,7 @@
                                     </div>
                                 </div>
                                 <br />
-                                <div class="row">
+                                <div class="row" id="divGridPrincipal" runat="server" >
                                     <div class="col-md-12">
                                         <div class="table-responsive">
                                             <asp:GridView class="table table-striped table-hover"
@@ -54,6 +56,24 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row" id="divGridFiltrado" runat="server" >
+    <div class="col-md-12">
+        <div class="table-responsive">
+            <asp:GridView class="table table-striped table-hover"
+                ID="gvCasosJudicialFiltrado"
+                runat="server"
+                AutoGenerateColumns="true"
+                OnRowDataBound="gvCasosJudicial_RowDataBound"
+                AllowPaging="true"
+                PageSize="10"
+                OnPageIndexChanging="gvCasosJudicialFiltrado_PageIndexChanging"
+                Width="100%"
+                CellSpacing="0">
+                <PagerSettings Mode="NextPrevious" NextPageText="Siguiente" PreviousPageText="Anterior" />
+            </asp:GridView>
+        </div>
+    </div>
+</div>
                             </div>
                         </nav>
                     </div>

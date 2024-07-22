@@ -10,7 +10,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Monitor Judicial - COAC</title>
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
     <link href="/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link

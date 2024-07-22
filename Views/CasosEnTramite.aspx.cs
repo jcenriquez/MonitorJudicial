@@ -9,6 +9,9 @@ using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
 using System.Web.Configuration;
+using OfficeOpenXml;
+using System.IO;
+using ClosedXML.Excel;
 
 namespace MonitorJudicial
 {
@@ -16,15 +19,18 @@ namespace MonitorJudicial
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            LlenarGridViewCasos();
+            
             if (!IsPostBack)
             {
-                LlenarGridViewCasos();
                 CargarEstados();
             }
 
         }
         protected void btnQuitarFiltro_Click(object sender, EventArgs e)
         {
+            divGridPrincipal.Visible = true;
+            divGridFiltrado.Visible = false;
             LlenarGridViewCasos();
         }
         protected void CargarEstados()
@@ -33,6 +39,10 @@ namespace MonitorJudicial
             string queryEstadoTramite = "SELECT NOMBRE FROM [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] WHERE ESTAACTIVO='1' ORDER BY NOMBRE";
 
             ddlAccion.Items.Clear(); // Limpiar elementos previos
+
+            // Agregar opción por defecto
+            ddlAccion.Items.Add(new ListItem("...SELECCIONAR POR TRÁMITE...", ""));
+            ddlAccion.Items.Add(new ListItem("...TODAS...", ""));
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             using (SqlCommand command = new SqlCommand(queryEstadoTramite, connection))
@@ -47,42 +57,89 @@ namespace MonitorJudicial
                 }
             }
         }
-        public void LlenarGridViewCasos(string estadoFiltro = "")
+        public void LlenarGridViewCasos()
         {
             // Cadena de conexión a la base de datos
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
 
             // Consulta SQL
             string query = @"
-            SELECT  
-                P.NUMEROPRESTAMO AS [NUMERO PRESTAMO], PER.NOMBREUNIDO AS [NOMBRE COMPLETO], P.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
-                P.DEUDAINICIAL AS [DEUDA INICIAL], P.SALDOACTUAL AS [SALDO ACTUAL], 
-                CONVERT(VARCHAR, P.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], CONVERT(VARCHAR, P.FECHAVENCIMIENTO, 23) AS [FECHA VENCIMIENTO],
-                ISNULL(ET.NOMBRE, '') AS [ESTADO], ISNULL(PT.COMENTARIO, '') AS [COMENTARIO], 
-                ISNULL(CONVERT(VARCHAR, PT.FECHASISTEMA, 23), '') AS [FECHA TRÁMITE] 
+                    (
+            SELECT 
+                PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                PM.NUMEROPRESTAMO, 
+                CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                PM.DEUDAINICIAL, 
+                PM.SALDOACTUAL,
+                AB.NOMBRE AS [NOMBRE ABOGADO],
+                CASE 
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                END AS [ESTADO JUDICIAL],
+                ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
             FROM 
-                [FBS_CARTERA].[PRESTAMOMAESTRO] P
-            JOIN [FBS_PERSONAS].[PERSONA] PER ON P.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
-            JOIN [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
-            LEFT JOIN [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = P.SECUENCIAL
-            LEFT JOIN [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
-            WHERE P.CODIGOESTADOPRESTAMO IN ('J','I','G')";
-
-            if (!string.IsNullOrEmpty(estadoFiltro))
-            {
-                query += " AND ET.NOMBRE = @EstadoFiltro";
-            }
-
-            query += " ORDER BY P.FECHAVENCIMIENTO DESC;";
+                [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
+            LEFT JOIN 
+                [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
+            INNER JOIN 
+                [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
+            JOIN 
+                [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+            JOIN 
+                [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+            LEFT JOIN 
+                [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+            LEFT JOIN 
+                [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+            WHERE 
+                PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+                AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+        )
+        UNION ALL
+        (
+            SELECT 
+                PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                PM.NUMEROPRESTAMO, 
+                CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                PM.DEUDAINICIAL, 
+                PM.SALDOACTUAL,
+                AB.NOMBRE AS [NOMBRE ABOGADO],
+                CASE 
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                END AS [ESTADO JUDICIAL],
+                ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+            FROM 
+                [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
+            INNER JOIN 
+                [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
+            INNER JOIN 
+                [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
+            JOIN 
+                [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+            JOIN 
+                [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+            LEFT JOIN 
+                [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+            LEFT JOIN 
+                [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+            WHERE 
+                PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
+                AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+        )
+        ORDER BY 
+            [FECHA ADJUDICACION] DESC;";
 
             // Establecer conexión y ejecutar la consulta
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 SqlCommand command = new SqlCommand(query, connection);
-                if (!string.IsNullOrEmpty(estadoFiltro))
-                {
-                    command.Parameters.AddWithValue("@EstadoFiltro", estadoFiltro.Trim());
-                }
                 SqlDataAdapter adapter = new SqlDataAdapter(command);
                 DataTable dataTable = new DataTable();
 
@@ -93,15 +150,138 @@ namespace MonitorJudicial
                 gvCasosJudicial.DataBind();
             }
         }
+        static string filtro = "";
+        public void LlenarGridViewCasosFiltrado(string filtroTramiteJudicial)
+        {
+            filtro=filtroTramiteJudicial;
+            divGridPrincipal.Visible = false;
+            divGridFiltrado.Visible = true;
+            if (filtroTramiteJudicial == "") 
+            {
+                divGridPrincipal.Visible = true;
+                divGridFiltrado.Visible = false;
+                LlenarGridViewCasos();
+            }
+            else
+            {
+                // Cadena de conexión a la base de datos
+                string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+                // Consulta SQL
+                string query = @"
+                                (
+                SELECT 
+                    PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                    PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                    PM.NUMEROPRESTAMO, 
+                    CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                    PM.DEUDAINICIAL, 
+                    PM.SALDOACTUAL,
+                    AB.NOMBRE AS [NOMBRE ABOGADO],
+                    CASE 
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                    END AS [ESTADO JUDICIAL],
+                    ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+                FROM 
+                    [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
+                LEFT JOIN 
+                    [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
+                INNER JOIN 
+                    [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
+                JOIN 
+                    [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+                JOIN 
+                    [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+                LEFT JOIN 
+                    [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                LEFT JOIN 
+                    [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+                WHERE 
+                    PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+                    AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+		            AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
+            )
+            UNION ALL
+            (
+                SELECT 
+                    PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                    PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                    PM.NUMEROPRESTAMO, 
+                    CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                    PM.DEUDAINICIAL, 
+                    PM.SALDOACTUAL,
+                    AB.NOMBRE AS [NOMBRE ABOGADO],
+                    CASE 
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                    END AS [ESTADO JUDICIAL],
+                    ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+                FROM 
+                    [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
+                INNER JOIN 
+                    [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                INNER JOIN 
+                    [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
+                JOIN 
+                    [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+                JOIN 
+                    [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+                LEFT JOIN 
+                    [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                LEFT JOIN 
+                    [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+                WHERE 
+                    PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
+                    AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+		            AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
+            )
+            ORDER BY 
+                [FECHA ADJUDICACION] DESC;";
+
+                // Establecer conexión y ejecutar la consulta
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    SqlCommand command = new SqlCommand(query, connection);
+                    SqlDataAdapter adapter = new SqlDataAdapter(command);
+                    DataTable dataTable = new DataTable();
+
+                    adapter.Fill(dataTable);
+
+                    // Asignar datos a la GridView
+                    gvCasosJudicialFiltrado.DataSource = dataTable;
+                    gvCasosJudicialFiltrado.DataBind();
+                }
+            }
+            
+        }
         protected void btnFiltrar_Click(object sender, EventArgs e)
         {
-            LlenarGridViewCasos(ddlAccion.SelectedValue);
+            if ((filtro == "...SELECCIONAR POR TRÁMITE...") || (filtro == "...TODAS..."))
+            {
+                divGridPrincipal.Visible = true;
+                divGridFiltrado.Visible = false;
+                LlenarGridViewCasos();
+            }
+            else
+            {
+                LlenarGridViewCasosFiltrado(ddlAccion.SelectedValue);
+            }
         }
 
         protected void gvCasosJudicial_PageIndexChanging(object sender, GridViewPageEventArgs e)
         {
             gvCasosJudicial.PageIndex = e.NewPageIndex;
             LlenarGridViewCasos();
+        }
+        protected void gvCasosJudicialFiltrado_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvCasosJudicialFiltrado.PageIndex = e.NewPageIndex;
+            LlenarGridViewCasosFiltrado(ddlAccion.SelectedValue);
         }
 
 
@@ -117,6 +297,115 @@ namespace MonitorJudicial
                 }
             }
         }
+
+        protected void btnGenerateReport_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+            string query = @"
+            (SELECT 
+                PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                PM.NUMEROPRESTAMO, 
+                CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                PM.DEUDAINICIAL, 
+                PM.SALDOACTUAL,
+                AB.NOMBRE AS [NOMBRE ABOGADO],
+                CASE 
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                END AS [ESTADO JUDICIAL],
+                ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+            FROM 
+                [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
+            LEFT JOIN 
+                [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
+            INNER JOIN 
+                [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
+            JOIN 
+                [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+            JOIN 
+                [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+            LEFT JOIN 
+                [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+            LEFT JOIN 
+                [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+            WHERE 
+                PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+                AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+            )
+            UNION ALL
+            (
+            SELECT 
+                PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                PM.NUMEROPRESTAMO, 
+                CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                PM.DEUDAINICIAL, 
+                PM.SALDOACTUAL,
+                AB.NOMBRE AS [NOMBRE ABOGADO],
+                CASE 
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                    WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                END AS [ESTADO JUDICIAL],
+                ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+            FROM 
+                [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
+            INNER JOIN 
+                [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
+            INNER JOIN 
+                [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
+            JOIN 
+                [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+            JOIN 
+                [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+            LEFT JOIN 
+                [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+            LEFT JOIN 
+                [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+            WHERE 
+                PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
+                AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+            )
+            ORDER BY 
+                [FECHA ADJUDICACION] DESC;";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        sda.Fill(dt);
+
+                        using (XLWorkbook wb = new XLWorkbook())
+                        {
+                            wb.Worksheets.Add(dt, "Reporte");
+
+                            Response.Clear();
+                            Response.Buffer = true;
+                            Response.Charset = "";
+                            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                            Response.AddHeader("content-disposition", "attachment;filename=Reporte.xlsx");
+
+                            using (MemoryStream MyMemoryStream = new MemoryStream())
+                            {
+                                wb.SaveAs(MyMemoryStream);
+                                MyMemoryStream.WriteTo(Response.OutputStream);
+                                Response.Flush();
+                                Response.End();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
     }
 }
