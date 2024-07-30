@@ -30,8 +30,7 @@ namespace MonitorJudicial.Views
             }
         }
 
-        private static readonly string EncryptionKey = GenerateAESKey(256);
-        //private static readonly string EncryptionKey = "l8hYQ6IY5FkFzRL9u7XvhTjzGBkeVwBjx+X/zXNL8Do="; // Clave generada
+        private static readonly string EncryptionKey = "l8hYQ6IY5FkFzRL9u7XvhTjzGBkeVwBjx+X/zXNL8Do="; // Clave generada
 
         public static string EncryptString(string plainText)
         {
@@ -87,34 +86,7 @@ namespace MonitorJudicial.Views
             }
         }
 
-        public void InsertarNuevoUsuario(string usuario, string password, string email, string nombres, string apellidos, int rol, string codigoAbogado)
-        {
-            string encryptedPassword = EncryptString(password);
-            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-            
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                string query = "INSERT INTO [FBS_Respaldo_DC_Produccion].[FBS_SEGURIDADES].[USUARIO_ABOGADOS] " +
-                               "([CODIGOUSUARIO], [CLAVE], [EMAIL], [NOMBRES], [APELLIDOS], [ROL], [FECHA_CREACION], [ESTADO_ACTIVO], [CODIGOABOGADO]) " +
-                               "VALUES (@usuario, @password, @correo, @nombres, @apellidos, @rol, @fechaCreacion, @estadoActivo, @codigoAbogado)";
-
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@usuario", usuario);
-                    command.Parameters.AddWithValue("@password", encryptedPassword);
-                    command.Parameters.AddWithValue("@correo", email);
-                    command.Parameters.AddWithValue("@nombres", nombres);
-                    command.Parameters.AddWithValue("@apellidos", apellidos);
-                    command.Parameters.AddWithValue("@rol", rol);
-                    command.Parameters.AddWithValue("@fechaCreacion", DateTime.Now);
-                    command.Parameters.AddWithValue("@estadoActivo", true); // O el valor que consideres adecuado
-                    command.Parameters.AddWithValue("@codigoAbogado", codigoAbogado);
-
-                    connection.Open();
-                    command.ExecuteNonQuery();
-                }
-            }
-        }
+        
 
         protected void btnIngresar_Click(object sender, EventArgs e)
         {

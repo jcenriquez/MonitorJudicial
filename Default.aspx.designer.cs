@@ -33,13 +33,13 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.Literal litPrestamoJudicial;
 
         /// <summary>
-        /// Control litotalCastigado.
+        /// Control litotalPrejudicial.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litotalCastigado;
+        protected global::System.Web.UI.WebControls.Literal litotalPrejudicial;
 
         /// <summary>
         /// Control litotalJudicial.
@@ -60,15 +60,6 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.Literal litotalAlDia;
 
         /// <summary>
-        /// Control litotalPrejudicial.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.Literal litotalPrejudicial;
-
-        /// <summary>
         /// Control litotalVencido.
         /// </summary>
         /// <remarks>
@@ -76,6 +67,15 @@ namespace MonitorJudicial
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Literal litotalVencido;
+
+        /// <summary>
+        /// Control litotalCastigado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Literal litotalCastigado;
 
         /// <summary>
         /// Control gvCasosAbogado.
