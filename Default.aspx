@@ -205,41 +205,38 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <h4 class="small font-weight-bold">DR. DANIEL MARCELO GUERRA PANAMA <span
-                                                class="float-right">0.52%</span></h4>
+                                            <h4 class="small font-weight-bold">DR. DANIEL MARCELO GUERRA PANAMA <span class="float-right"><%= porcentajesDanielGuerra %></span></h4>
                                             <div class="progress mb-4">
-                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0.52%"
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0.35%;"
                                                     aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                                                 </div>
                                             </div>
-                                            <h4 class="small font-weight-bold">DR. VASQUEZ RIVADENEIRA CARLOS GABRIEL <span
-                                                class="float-right">21.01%</span></h4>
+                                            <h4 class="small font-weight-bold">DR. VASQUEZ RIVADENEIRA CARLOS GABRIEL <span class="float-right"><%= porcentajesCarlosVasquez %></span></h4>
                                             <div class="progress mb-4">
-                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 21.01%"
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 21.13%"
                                                     aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                                                 </div>
                                             </div>
-                                            <h4 class="small font-weight-bold">Dr. GUARANGUAY VARGAS ROLANDO JAVIER <span
-                                                class="float-right">30.73%</span></h4>
+                                            <h4 class="small font-weight-bold">DR. EDISSON ESPINOSA VENEGAS <span class="float-right"><%= porcentajesEdissonVenegas %></span></h4>
                                             <div class="progress mb-4">
-                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 30.73%"
-                                                    aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-                                                </div>
-                                            </div>
-                                            <h4 class="small font-weight-bold">DR. LUIS EDISON CRESPO ALMEIDA <span
-                                                class="float-right">25.00%</span></h4>
-                                            <div class="progress mb-4">
-                                                <div class="progress-bar" role="progressbar" style="width: 25.00%"
-                                                    aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                                                </div>
-                                            </div>
-                                            <h4 class="small font-weight-bold">DR. EDISSON ESPINOSA VENEGAS <span
-                                                class="float-right">22.74%</span></h4>
-                                            <div class="progress mb-4">
-                                                <div class="progress-bar bg-info" role="progressbar" style="width: 22.74%"
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 22.898%"
                                                     aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
                                                 </div>
                                             </div>
+                                            <h4 class="small font-weight-bold">DR. LUIS EDISON CRESPO ALMEIDA <span class="float-right"><%= porcentajesLuisCrespo %></span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar" role="progressbar" style="width: 24.47%"
+                                                    aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">Dr. GUARANGUAY VARGAS ROLANDO JAVIER <span class="float-right"><%= porcentajesRolandoCarnguay %></span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 31.16%"
+                                                    aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -247,6 +244,7 @@
 
 
                         </div>
+
 
                         <!-- Content Column -->
                         <div class="col-lg-6 mb-4" hidden>

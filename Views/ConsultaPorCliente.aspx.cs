@@ -159,6 +159,12 @@ namespace MonitorJudicial
             Controllers.PrestamosController.LlenarGridViewCedula(numeroCedula, gvPrestamos, txtNombres);
         }
 
+        protected void LlenarGridViewCaso(string numeroCaso)
+        {
+            txtNombresDiv.Visible = true;
+            Controllers.PrestamosController.LlenarGridViewCaso(numeroCaso, gvPrestamos, txtNombres);
+        }
+
         protected void gvPrestamos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             CargarFormulario();
@@ -737,9 +743,13 @@ namespace MonitorJudicial
             {
                 LlenarGridViewCedula(idConsulta.Value);
             }
-            else
+            if (rbCliente.Checked)
             {
                 LlenarGridViewCliente(idConsulta.Value);
+            }
+            if (rbCaso.Checked)
+            {
+                LlenarGridViewCaso(idConsulta.Value);
             }
         }
         static string descripcion;
