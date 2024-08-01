@@ -240,7 +240,7 @@ namespace MonitorJudicial
                     JOIN [FBS_COBRANZAS].[TIPOJUDICATURA] TJ ON TJ.CODIGO = PA.CODIGOTIPOJUDICATURA
                     LEFT JOIN [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ETJ ON ETJ.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
                     WHERE PM.NUMEROPRESTAMO = '" + numPretamoVar + @"'
-                    ORDER BY PT.SECUENCIAL DESC;; ";
+                    ORDER BY PT.SECUENCIAL DESC; ";
 
 
                 // Tu código para conectar a la base de datos y ejecutar la consulta
