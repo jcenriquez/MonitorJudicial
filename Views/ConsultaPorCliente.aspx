@@ -26,7 +26,7 @@
             }
             return true;
         }
-</script>
+    </script>
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -57,7 +57,7 @@
 
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <input type="search" id="idConsulta" class="form-control" placeholder="N° de Cédula o de Cliente" aria-label="Buscar" maxlength="15" validationgroup="grupoNumeroEntero" onkeypress="return soloNumeros(event);" runat="server">
+                                        <input type="search" id="idConsulta" class="form-control" placeholder="N° de Cédula o de Cliente" aria-label="Buscar" maxlength="20" validationgroup="grupoNumeroEntero" onkeypress="return soloNumeros(event);" runat="server">
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-check">
@@ -70,6 +70,12 @@
                                             <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCliente" runat="server">
                                             <label class="form-check-label" for="rbCliente">
                                                 Por N° Cliente
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="radio" name="flexRadioDefault" id="rbCaso" runat="server">
+                                            <label class="form-check-label" for="rbCaso">
+                                                Por N° Causa
                                             </label>
                                         </div>
                                     </div>

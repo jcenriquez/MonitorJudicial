@@ -10,7 +10,7 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <title>Monitor Judicial - COAC</title>
-    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <link href="/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
     <link href="/Content/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
     <link
@@ -31,7 +31,7 @@
     <form runat="server">
         <div id="wrapper">
             <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
-                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/Default.aspx">
+                <a class="sidebar-brand d-flex align-items-center justify-content-center" href="Default.aspx">
                     <div class="sidebar-brand-icon">
                         <img src="/Content/img/logoJudicial.svg" alt="Logo Judicial" style="max-width: 100%;">
                     </div>
@@ -39,7 +39,7 @@
                 <hr class="sidebar-divider my-0" />
                 <!-- Nav Item - Tablero -->
                 <li class="nav-item active">
-                    <a class="nav-link" href="/Default.aspx">
+                    <a class="nav-link" href="Default.aspx">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Tablero</span>
                     </a>

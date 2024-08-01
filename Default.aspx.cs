@@ -47,10 +47,12 @@ namespace MonitorJudicial
 
         protected void Page_Load(object sender, EventArgs e)
         {
+
             if (!IsPostBack)
             {
                 PorcentajeCasos();
                 LlenarGridAbogados();
+                LlenarGridAbogadosPorcentajes();
             }
         }
         public void LlenarGridAbogados()
@@ -60,53 +62,15 @@ namespace MonitorJudicial
 
             // Consulta SQL
             string query = @"
-                WITH CombinedData AS (
-        SELECT AB.NOMBRE, 
-               CASE 
-                   WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
-                   WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
-                   WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
-                   WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
-                   WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
-               END AS Tipo
-        FROM [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
-        LEFT JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
-        INNER JOIN [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
-        WHERE PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
-          AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
-
-        UNION ALL
-
-        SELECT AB.NOMBRE, 
-               CASE 
-                   WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
-                   WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
-                   WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
-               END AS Tipo
-        FROM [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
-        INNER JOIN [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
-        INNER JOIN [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
-        WHERE PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
-          AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
-    )
-    SELECT ISNULL(NOMBRE, 'TOTAL') AS NOMBRE,
-           ISNULL([CASTIGADO], 0) AS CASTIGADO,
-           ISNULL([JUDICIAL], 0) AS JUDICIAL,
-           ISNULL([AL DIA], 0) AS [AL DIA],
-           ISNULL([PREJUDICIAL], 0) AS PREJUDICIAL,
-           ISNULL([VENCIDO], 0) AS VENCIDO,
-           ISNULL([CASTIGADO], 0) + ISNULL([JUDICIAL], 0) + ISNULL([AL DIA], 0) + ISNULL([PREJUDICIAL], 0) + ISNULL([VENCIDO], 0) AS TOTAL
-    FROM CombinedData
-    PIVOT (
-        COUNT(Tipo)
-        FOR Tipo IN ([CASTIGADO], [JUDICIAL], [AL DIA], [PREJUDICIAL], [VENCIDO])
-    ) AS PivotTable
-    ORDER BY 
-        CASE 
-            WHEN NOMBRE IS NULL THEN 1 
-            ELSE 0 
-        END, 
-        NOMBRE";
+                SELECT TOP (1000) [NOMBRE]
+      ,[PREJUDICIAL]
+      ,[JUDICIAL]
+      ,[JUDICIAL CON ACUERDO AL DÍA] AS [JUDICIAL CON ACUERDO AL DIA]
+      ,[JUDICIAL CON ACUERDO VENCIDO]
+      ,[CASTIGADO]
+      ,[TOTAL]
+  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  ORDER BY TOTAL";
 
             int sumaTotal = 0;
             // Contadores para cada tipo de préstamo
@@ -125,28 +89,23 @@ namespace MonitorJudicial
 
                 adapter.Fill(dataTable);
 
-                
+
 
                 // Iterar sobre las filas del DataTable y contar los distintos tipos
                 foreach (DataRow row in dataTable.Rows)
                 {
-                    totalCastigado += Convert.ToInt32(row["CASTIGADO"]);
-                    totalJudicial += Convert.ToInt32(row["JUDICIAL"]);
-                    totalAlDia += Convert.ToInt32(row["AL DIA"]);
                     totalPrejudicial += Convert.ToInt32(row["PREJUDICIAL"]);
-                    totalVencido += Convert.ToInt32(row["VENCIDO"]);
+                    totalJudicial += Convert.ToInt32(row["JUDICIAL"]);
+                    totalAlDia += Convert.ToInt32(row["JUDICIAL CON ACUERDO AL DIA"]);
+                    totalVencido += Convert.ToInt32(row["JUDICIAL CON ACUERDO VENCIDO"]);
+                    totalCastigado += Convert.ToInt32(row["CASTIGADO"]);
                 }
+
 
                 // Asignar datos a la GridView
                 gvCasosAbogado.DataSource = dataTable;
                 gvCasosAbogado.DataBind();
 
-                // Imprimir los totales en la consola (o puedes usar estos valores según tu necesidad)
-                //Console.WriteLine($"Total Castigado: {totalCastigado}");
-                //Console.WriteLine($"Total Judicial: {totalJudicial}");
-                //Console.WriteLine($"Total Al Dia: {totalAlDia}");
-                //Console.WriteLine($"Total Prejudicial: {totalPrejudicial}");
-                //Console.WriteLine($"Total Vencido: {totalVencido}");
                 sumaTotal = totalCastigado + totalJudicial + totalAlDia + totalPrejudicial + totalVencido;
             }
 
@@ -157,6 +116,84 @@ namespace MonitorJudicial
             litotalPrejudicial.Text = totalPrejudicial.ToString();
             litotalVencido.Text = totalVencido.ToString();
         }
+
+        public void LlenarGridAbogadosPorcentajes()
+        {
+            // Cadena de conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+            // Consulta SQL
+            string query = @"
+                SELECT [Porcentaje]
+  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  WHERE NOMBRE='DR. DANIEL MARCELO GUERRA PANAMA'";
+            string query1 = @"
+                SELECT [Porcentaje]
+  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  WHERE NOMBRE='DR. VASQUEZ RIVADENEIRA CARLOS GABRIEL'";
+            string query2 = @"
+                SELECT [Porcentaje]
+  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  WHERE NOMBRE='DR. EDISSON ESPINOSA VENEGAS'";
+            string query3 = @"
+                SELECT [Porcentaje]
+  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  WHERE NOMBRE='DR. LUIS EDISON CRESPO ALMEIDA'";
+            string query4 = @"
+                SELECT [Porcentaje]
+  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  WHERE NOMBRE='DR. GUARANGUAY VARGAS ROLANDO JAVIER'";
+
+            // Usa 'using' para asegurar que los recursos se liberen correctamente
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                connection.Open();
+                object result = command.ExecuteScalar();
+                porcentajesDanielGuerra = result.ToString();
+            }
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query1, connection);
+                connection.Open();
+                object result = command.ExecuteScalar();
+                porcentajesCarlosVasquez = result.ToString();
+            }
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query2, connection);
+                connection.Open();
+                object result = command.ExecuteScalar();
+                porcentajesEdissonVenegas = result.ToString();
+            }
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query3, connection);
+                connection.Open();
+                object result = command.ExecuteScalar();
+                porcentajesLuisCrespo = result.ToString();
+            }
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query4, connection);
+                connection.Open();
+                object result = command.ExecuteScalar();
+                porcentajesRolandoCarnguay = result.ToString();
+            }
+            
+        }
+
+        static string sumaTotales;
+        static string totalCastigados;
+        static string totalJudiciales;
+        static string totalAlDias;
+        static string totalVencidos;
+        static string totalPrejudiciales;
+        public static string porcentajesDanielGuerra;
+        public static string porcentajesCarlosVasquez;
+        public static string porcentajesEdissonVenegas;
+        public static string porcentajesLuisCrespo;
+        public static string porcentajesRolandoCarnguay;
 
         protected void btnGenerarReporte_Click(object sender, EventArgs e)
         {
@@ -184,19 +221,19 @@ namespace MonitorJudicial
 
                 // Añadir encabezados
                 workSheet.Cells[2, 1].Value = "TOTAL CASOS";
-                workSheet.Cells[2, 2].Value = "CASTIGADOS";
+                workSheet.Cells[2, 2].Value = "PREJUDICIAL"; 
                 workSheet.Cells[2, 3].Value = "JUDICIAL";
-                workSheet.Cells[2, 4].Value = "AL DÍA";
-                workSheet.Cells[2, 5].Value = "PREJUDICIAL";
-                workSheet.Cells[2, 6].Value = "VENCIDOS";
+                workSheet.Cells[2, 4].Value = "JUDICIAL CON ACUERDO AL DIA";
+                workSheet.Cells[2, 5].Value = "JUDICIAL CON ACUERDO VENCIDO";
+                workSheet.Cells[2, 6].Value = "CASTIGADOS";
 
                 // Añadir datos
                 workSheet.Cells[3, 1].Value = totalCasos;
-                workSheet.Cells[3, 2].Value = castigados;
+                workSheet.Cells[3, 2].Value = prejudicial; 
                 workSheet.Cells[3, 3].Value = judicial;
                 workSheet.Cells[3, 4].Value = alDia;
-                workSheet.Cells[3, 5].Value = prejudicial;
-                workSheet.Cells[3, 6].Value = vencidos;
+                workSheet.Cells[3, 5].Value = vencidos;
+                workSheet.Cells[3, 6].Value = castigados;
 
                 // Ajustar tamaño de columnas
                 workSheet.Cells.AutoFitColumns();

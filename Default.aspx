@@ -23,7 +23,7 @@
                             class="fas fa-download fa-sm text-white-50"></i>Generar Reporte</a>--%>
                         <asp:LinkButton ID="btnGenerarReporte" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" runat="server" OnClick="btnGenerarReporte_Click">
     <i class="fas fa-download"></i> Generar Reporte Excel
-</asp:LinkButton>
+                        </asp:LinkButton>
                     </div>
                     <%--<div class="row">
                         <div class="col-xl-6 col-md-6 mb-4">
@@ -70,69 +70,7 @@
                             </div>
                         </div>
 
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-2 col-md-6 mb-4">
-                            <div class="card border-left-secondary shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
-                                                Castigados
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                <asp:Literal ID="litotalCastigado" runat="server"></asp:Literal>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-gavel fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-2 col-md-6 mb-4">
-                            <div class="card border-left-success shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                Judicial
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                <asp:Literal ID="litotalJudicial" runat="server"></asp:Literal>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-balance-scale fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Earnings (Monthly) Card Example -->
-                        <div class="col-xl-2 col-md-6 mb-4">
-                            <div class="card border-left-info shadow h-100 py-2">
-                                <div class="card-body">
-                                    <div class="row no-gutters align-items-center">
-                                        <div class="col mr-2">
-                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Al Día
-                                            </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                                <asp:Literal ID="litotalAlDia" runat="server"></asp:Literal>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto">
-                                            <i class="fas fa-wallet fa-2x text-gray-300"></i>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Earnings (Monthly) Card Example -->
+                        <!-- Prejudicial -->
                         <div class="col-xl-2 col-md-6 mb-4">
                             <div class="card border-left-dark shadow h-100 py-2">
                                 <div class="card-body">
@@ -153,14 +91,56 @@
                             </div>
                         </div>
 
-                        <!-- Earnings (Monthly) Card Example -->
+                        <!-- Judicial -->
+                        <div class="col-xl-2 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Judicial
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <asp:Literal ID="litotalJudicial" runat="server"></asp:Literal>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-balance-scale fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Judicial con Acuerdo Al Día -->
+                        <div class="col-xl-2 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Judicial con Acuerdo Al Día
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <asp:Literal ID="litotalAlDia" runat="server"></asp:Literal>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-wallet fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Judicial con Acuerdo Vencido -->
                         <div class="col-xl-2 col-md-6 mb-4">
                             <div class="card border-left-danger shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">
-                                                Vencidos
+                                                Judicial con Acuerdo Vencido
                                             </div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800">
                                                 <asp:Literal ID="litotalVencido" runat="server"></asp:Literal>
@@ -174,6 +154,26 @@
                             </div>
                         </div>
 
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-2 col-md-6 mb-4">
+                            <div class="card border-left-secondary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-secondary text-uppercase mb-1">
+                                                Castigado
+                                            </div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                <asp:Literal ID="litotalCastigado" runat="server"></asp:Literal>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-gavel fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                     </div>
 
@@ -205,41 +205,38 @@
                                             </div>
                                         </div>
                                         <div class="card-body">
-                                            <h4 class="small font-weight-bold">DR. DANIEL MARCELO GUERRA PANAMA <span
-                                                class="float-right">0.52%</span></h4>
+                                            <h4 class="small font-weight-bold">DR. DANIEL MARCELO GUERRA PANAMA <span class="float-right"><%= porcentajesDanielGuerra %></span></h4>
                                             <div class="progress mb-4">
-                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0.52%"
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0.35%;"
                                                     aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                                                 </div>
                                             </div>
-                                            <h4 class="small font-weight-bold">DR. VASQUEZ RIVADENEIRA CARLOS GABRIEL <span
-                                                class="float-right">21.01%</span></h4>
+                                            <h4 class="small font-weight-bold">DR. VASQUEZ RIVADENEIRA CARLOS GABRIEL <span class="float-right"><%= porcentajesCarlosVasquez %></span></h4>
                                             <div class="progress mb-4">
-                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 21.01%"
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 21.13%"
                                                     aria-valuenow="20" aria-valuemin="0" aria-valuemax="100">
                                                 </div>
                                             </div>
-                                            <h4 class="small font-weight-bold">Dr. GUARANGUAY VARGAS ROLANDO JAVIER <span
-                                                class="float-right">30.73%</span></h4>
+                                            <h4 class="small font-weight-bold">DR. EDISSON ESPINOSA VENEGAS <span class="float-right"><%= porcentajesEdissonVenegas %></span></h4>
                                             <div class="progress mb-4">
-                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 30.73%"
-                                                    aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-                                                </div>
-                                            </div>
-                                            <h4 class="small font-weight-bold">DR. LUIS EDISON CRESPO ALMEIDA <span
-                                                class="float-right">25.00%</span></h4>
-                                            <div class="progress mb-4">
-                                                <div class="progress-bar" role="progressbar" style="width: 25.00%"
-                                                    aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
-                                                </div>
-                                            </div>
-                                            <h4 class="small font-weight-bold">DR. EDISSON ESPINOSA VENEGAS <span
-                                                class="float-right">22.74%</span></h4>
-                                            <div class="progress mb-4">
-                                                <div class="progress-bar bg-info" role="progressbar" style="width: 22.74%"
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 22.898%"
                                                     aria-valuenow="80" aria-valuemin="0" aria-valuemax="100">
                                                 </div>
                                             </div>
+                                            <h4 class="small font-weight-bold">DR. LUIS EDISON CRESPO ALMEIDA <span class="float-right"><%= porcentajesLuisCrespo %></span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar" role="progressbar" style="width: 24.47%"
+                                                    aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+                                            <h4 class="small font-weight-bold">Dr. GUARANGUAY VARGAS ROLANDO JAVIER <span class="float-right"><%= porcentajesRolandoCarnguay %></span></h4>
+                                            <div class="progress mb-4">
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 31.16%"
+                                                    aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
+                                                </div>
+                                            </div>
+
+
                                         </div>
                                     </div>
                                 </div>
@@ -247,6 +244,7 @@
 
 
                         </div>
+
 
                         <!-- Content Column -->
                         <div class="col-lg-6 mb-4" hidden>

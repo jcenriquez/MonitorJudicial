@@ -47,7 +47,7 @@ namespace MonitorJudicial
             string queryMateria = "SELECT NOMBRE FROM [FBS_COBRANZAS].[TIPOMATERIAJUICIO] WHERE ESTAACTIVO='1' ORDER BY NOMBRE";
             string queryMedidaCautelar = "SELECT NOMBRE FROM [FBS_COBRANZAS].[TIPOMEDIDACAUTELAR] WHERE ESTAACTIVO='1' ORDER BY NOMBRE";
             string queryJudicatura = "SELECT NOMBRE FROM [FBS_COBRANZAS].[TIPOJUDICATURA] WHERE ESTAACTIVO='1' ORDER BY NOMBRE";
-            string queryEstadoTramite = "SELECT NOMBRE\r\nFROM [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] \r\nWHERE ESTAACTIVO = '1'\r\nORDER BY CASE CODIGO\r\n    WHEN '19' THEN 1\r\n    WHEN '07' THEN 2\r\n    WHEN '16' THEN 3\r\n    WHEN '25' THEN 4\r\n    WHEN '09' THEN 5\r\n    WHEN '26' THEN 6\r\n    WHEN '22' THEN 7\r\n    WHEN '14' THEN 8\r\n    WHEN '15' THEN 9\r\n    WHEN '27' THEN 10\r\n    WHEN '12' THEN 11\r\n    WHEN '06' THEN 12\r\n    WHEN '28' THEN 13\r\n    WHEN '21' THEN 14\r\n    WHEN '03' THEN 15\r\n    WHEN '01' THEN 16\r\n    WHEN '02' THEN 17\r\n    WHEN '04' THEN 18\r\n    WHEN '05' THEN 19\r\n    WHEN '08' THEN 20\r\n    WHEN '10' THEN 21\r\n    WHEN '11' THEN 22\r\n    WHEN '13' THEN 23\r\n    WHEN '17' THEN 24\r\n    WHEN '18' THEN 25\r\n    WHEN '20' THEN 26\r\n    WHEN '23' THEN 27\r\n    WHEN '24' THEN 28\r\nEND;";
+            string queryEstadoTramite = "SELECT NOMBRE\r\nFROM [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] \r\nWHERE ESTAACTIVO = '1'\r\nORDER BY CASE CODIGO\r\n    WHEN '19' THEN 1\r\n    WHEN '07' THEN 2\r\n    WHEN '16' THEN 3\r\n    WHEN '25' THEN 4\r\n    WHEN '09' THEN 5\r\n    WHEN '26' THEN 6\r\n    WHEN '22' THEN 7\r\n    WHEN '14' THEN 8\r\n    WHEN '15' THEN 9\r\n    WHEN '27' THEN 10\r\n    WHEN '12' THEN 11\r\n    WHEN '06' THEN 12\r\n    WHEN '28' THEN 13\r\n    WHEN '21' THEN 14\r\n    WHEN '03' THEN 15\r\n    WHEN '01' THEN 16\r\n    WHEN '02' THEN 17\r\n    WHEN '04' THEN 18\r\n    WHEN '05' THEN 19\r\n    WHEN '08' THEN 20\r\n    WHEN '10' THEN 21\r\n    WHEN '11' THEN 22\r\n    WHEN '13' THEN 23\r\n    WHEN '17' THEN 24\r\n    WHEN '18' THEN 25\r\n    WHEN '20' THEN 26\r\n    WHEN '23' THEN 27\r\n    WHEN '30' THEN 28\r\n    WHEN '24' THEN 29\r\nEND;";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -157,6 +157,12 @@ namespace MonitorJudicial
         {
             txtNombresDiv.Visible = true;
             Controllers.PrestamosController.LlenarGridViewCedula(numeroCedula, gvPrestamos, txtNombres);
+        }
+
+        protected void LlenarGridViewCaso(string numeroCaso)
+        {
+            txtNombresDiv.Visible = true;
+            Controllers.PrestamosController.LlenarGridViewCaso(numeroCaso, gvPrestamos, txtNombres);
         }
 
         protected void gvPrestamos_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -737,9 +743,13 @@ namespace MonitorJudicial
             {
                 LlenarGridViewCedula(idConsulta.Value);
             }
-            else
+            if (rbCliente.Checked)
             {
                 LlenarGridViewCliente(idConsulta.Value);
+            }
+            if (rbCaso.Checked)
+            {
+                LlenarGridViewCaso(idConsulta.Value);
             }
         }
         static string descripcion;
@@ -892,87 +902,94 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
 
         protected void btnGuardarEstadoPrestamo_Click(object sender, EventArgs e)
         {
-            string descripcion = ddlAccion.SelectedValue.Trim();
-            //Este método trae la información de la tabla [PRESTAMODEMANDAJUDICIALTRAMITE] 
-            ConsultaPrestamoJudicial(secuencialPrestamo);
+            string textComentario=txtComentario.Text;
 
-            string medicaCautelarV = ddlMedidaCautelar.SelectedValue.Trim();
-            string medidaCau = ddlMedidaCautelar.SelectedIndex.ToString();
-            string medidasCau = ddlMedidaCautelar.SelectedItem.ToString();
-            //string judicaturaV = ddlJudicatura.SelectedIndex.ToString();
-
-            int secuencialprestamoV = int.Parse(secuencialPrestamo);
-            string codigoEstadoJudicialV = ConsultarCodigoTramite(descripcion);
-            string codigoabogadoV = codigoAbogado;
-            string comentarioV = txtComentario.Text.Trim().ToUpper();
-            bool estaactivoV = true;
-            int numeroverificadorV = 1;//int.Parse(numeroverificador);
-            string codigousuarioV = codigousuario;
-            DateTime fechasistemaV = DateTime.Parse(dtFechaSistema.Value);
-            DateTime fechamaquinaV = DateTime.Parse(dtFechaIngreso.Value);
-
-            try
+            if(string.IsNullOrEmpty(textComentario))
             {
-                string actualizadoEstado = UpdatePrestamoEstado(secuencialPrestamo);
-                //if (actualizadoEstado.Equals("OK"))
-                //{
-                string actualizadoDescripcion = UpdatePrestamoDescripcion(secuencialPrestamo, descripcion);
-                if (actualizadoDescripcion.Equals("OK"))
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! Ingrese un Comentario!');", true);
+                return;
+            }
+            else
+            {
+                string descripcion = ddlAccion.SelectedValue.Trim();
+                //Este método trae la información de la tabla [PRESTAMODEMANDAJUDICIALTRAMITE] 
+                ConsultaPrestamoJudicial(secuencialPrestamo);
+
+                string medicaCautelarV = ddlMedidaCautelar.SelectedValue.Trim();
+                string medidaCau = ddlMedidaCautelar.SelectedIndex.ToString();
+                string medidasCau = ddlMedidaCautelar.SelectedItem.ToString();
+                //string judicaturaV = ddlJudicatura.SelectedIndex.ToString();
+
+                int secuencialprestamoV = int.Parse(secuencialPrestamo);
+                string codigoEstadoJudicialV = ConsultarCodigoTramite(descripcion);
+                string codigoabogadoV = codigoAbogado;
+                string comentarioV = txtComentario.Text.Trim().ToUpper();
+                bool estaactivoV = true;
+                int numeroverificadorV = 1;//int.Parse(numeroverificador);
+                string codigousuarioV = codigousuario;
+                DateTime fechasistemaV = DateTime.Parse(dtFechaSistema.Value);
+                DateTime fechamaquinaV = DateTime.Parse(dtFechaIngreso.Value);
+
+                try
                 {
-                    
-                    string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV);
-                    if (guardado.Equals("OK"))
+                    string actualizadoEstado = UpdatePrestamoEstado(secuencialPrestamo);
+                    //if (actualizadoEstado.Equals("OK"))
+                    //{
+                    string actualizadoDescripcion = UpdatePrestamoDescripcion(secuencialPrestamo, descripcion);
+                    if (actualizadoDescripcion.Equals("OK"))
                     {
-                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
-                        VaciarGridView();
-                        CargarGridTramites(secuencialPrestamo);
-                        //Cuando se h confirmdo el guardado
-                        ddlAccion.Enabled = false;
-                        ddlMedidaCautelar.Enabled = false;
-                        ddlJudicatura.Enabled = false;
-                        txtComentario.ReadOnly = true;
-                        txtDescripcion.Text = ddlAccion.SelectedValue.Trim();
-                        btnActualizarEstadoPrestamo.Visible = true;
-                        btnGuardarEstadoPrestamo.Visible = false;
-                        btnCancelarEstadoPrestamo.Visible = false;
-                        //CargarFormulario();
-                        ///
-                        //Response.Redirect(Request.RawUrl);
+
+                        string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV);
+                        if (guardado.Equals("OK"))
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
+                            VaciarGridView();
+                            CargarGridTramites(secuencialPrestamo);
+                            //Cuando se h confirmdo el guardado
+                            ddlAccion.Enabled = false;
+                            ddlMedidaCautelar.Enabled = false;
+                            ddlJudicatura.Enabled = false;
+                            txtComentario.ReadOnly = true;
+                            txtDescripcion.Text = ddlAccion.SelectedValue.Trim();
+                            btnActualizarEstadoPrestamo.Visible = true;
+                            btnGuardarEstadoPrestamo.Visible = false;
+                            btnCancelarEstadoPrestamo.Visible = false;
+                            //CargarFormulario();
+                            ///
+                            //Response.Redirect(Request.RawUrl);
 
 
-                        //string script = "alert('Estado Judicial Actualizado!');";
-                        //script += "window.location = '" + Request.RawUrl + "';"; // Redirige a la URL actual después de la alerta
-                        //ClientScript.RegisterStartupScript(this.GetType(), "alert", script, true);
+                            //string script = "alert('Estado Judicial Actualizado!');";
+                            //script += "window.location = '" + Request.RawUrl + "';"; // Redirige a la URL actual después de la alerta
+                            //ClientScript.RegisterStartupScript(this.GetType(), "alert", script, true);
 
 
-                        return;
+                            return;
+                        }
+                        else
+                        {
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                            return;
+                        }
                     }
                     else
                     {
                         ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
                         return;
                     }
+                    //}
+                    //else
+                    //{
+                    //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                    //    return;
+                    //}
                 }
-                else
+                catch (Exception ex)
                 {
                     ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
                     return;
                 }
-                //}
-                //else
-                //{
-                //    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
-                //    return;
-                //}
             }
-            catch (Exception ex)
-            {
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
-                return;
-            }
-
-
-
         }
         protected void btnCancelarEstadoPrestamo_Click(object sender, EventArgs e)
         {

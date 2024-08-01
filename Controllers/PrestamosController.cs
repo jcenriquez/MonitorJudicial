@@ -75,6 +75,75 @@ namespace MonitorJudicial.Controllers
                 }
             }
         }
+
+        public static void LlenarGridViewCaso(string numeroCedula, GridView gvPrestamos, HtmlInputText txtNombres)
+        {
+            // Cadena de conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+            // Consulta SQL
+            string query = @"
+        SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
+tp.NOMBRE AS [TIPO],
+p.DEUDAINICIAL AS [DEUDA INICIAL],
+p.SALDOACTUAL AS [SALDO],
+CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
+CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
+e.NOMBRE AS [ESTADO]
+FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
+JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
+JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
+JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
+JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] pa ON pa.SECUENCIALPRESTAMO=p.SECUENCIAL
+JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
+WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G')
+AND pai.NUMEROCAUSA='" + numeroCedula + @"'
+ORDER BY p.SECUENCIAL DESC;";
+
+            string queryNombre = @"
+        SELECT per.IDENTIFICACION AS [CEDULA],
+        cli.NUMEROCLIENTE AS [CLIENTE],
+        per.NOMBREUNIDO AS [NOMBRES]
+    FROM [FBS_PERSONAS].[PERSONA] per
+    JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+	JOIN [FBS_CARTERA].[PRESTAMOMAESTRO] p ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
+	JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] pa ON pa.SECUENCIALPRESTAMO=p.SECUENCIAL
+JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
+    WHERE pai.NUMEROCAUSA='" + numeroCedula + @"';";
+
+            // Establecer conexión y ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                DataTable dataTable = new DataTable();
+
+                adapter.Fill(dataTable);
+
+                // Asignar datos a la GridView
+                gvPrestamos.DataSource = dataTable;
+                gvPrestamos.DataBind();
+            }
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(queryNombre, connection))
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        string nombreApellido = reader["NOMBRES"].ToString();
+                        txtNombres.Value = nombreApellido;
+                    }
+
+                    reader.Close();
+                }
+            }
+        }
+
         public static void LlenarGridViewCliente(string numeroCliente, GridView gvPrestamos, HtmlInputText txtNombres)
         {
             // Cadena de conexión a la base de datos
