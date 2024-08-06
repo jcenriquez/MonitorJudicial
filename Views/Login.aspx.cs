@@ -92,12 +92,22 @@ namespace MonitorJudicial.Views
         {
             string usuario = txtUsuario.Text;
             string password = txtPassword.Text;
+            
 
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
 
             if (ValidarUsuario(usuario, password, connectionString))
             {
-                Response.Redirect("/Default.aspx");
+                string role = (string)(Session["Rol"]);
+                if (role.Equals("1"))
+                {
+                    Response.Redirect("/Default.aspx");
+                }
+                else
+                {
+                    Response.Redirect("~/Views/ConsultaPorCliente.aspx");
+                }
+                
             }
             else
             {
@@ -105,28 +115,44 @@ namespace MonitorJudicial.Views
             }
         }
 
+
         private bool ValidarUsuario(string usuario, string password, string connectionString)
         {
             bool isValid = false;
-
+            string roles;
+            string nombres;
+            string codigoAbogado;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "SELECT [CLAVE] FROM [FBS_Respaldo_DC_Produccion].[FBS_SEGURIDADES].[USUARIO_ABOGADOS] WHERE [CODIGOUSUARIO] = @usuario";
+                string query = @"SELECT [CODIGOUSUARIO], [CLAVE], [EMAIL], [NOMBRES], [APELLIDOS], [ROL], 
+                                    [FECHA_CREACION], [ESTADO_ACTIVO], [CODIGOABOGADO] 
+                             FROM [FBS_Respaldo_DC_Produccion].[FBS_SEGURIDADES].[USUARIO_ABOGADOS] 
+                             WHERE [CODIGOUSUARIO] = @usuario";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
                     command.Parameters.AddWithValue("@usuario", usuario);
 
                     connection.Open();
-                    string encryptedPassword = (string)command.ExecuteScalar();
-
-                    if (!string.IsNullOrEmpty(encryptedPassword))
+                    using (SqlDataReader reader = command.ExecuteReader())
                     {
-                        string decryptedPassword = DecryptString(encryptedPassword);
-
-                        if (decryptedPassword == password)
+                        if (reader.Read())
                         {
-                            isValid = true;
+                            string encryptedPassword = reader["CLAVE"].ToString();
+                            if (!string.IsNullOrEmpty(encryptedPassword))
+                            {
+                                string decryptedPassword = DecryptString(encryptedPassword);
+                                if (decryptedPassword == password)
+                                {
+                                    isValid = true;
+                                    roles = reader["ROL"].ToString(); // Asigna el valor de la columna ROL a la variable roles
+                                    Session["Rol"] = roles;
+                                    nombres = reader["NOMBRES"].ToString() +" "+ reader["APELLIDOS"].ToString();
+                                    Session["Nombres"] = nombres;
+                                    codigoAbogado = reader["CODIGOABOGADO"].ToString(); // Asigna el valor de la columna ROL a la variable roles
+                                    Session["CodigoAbogado"] = codigoAbogado;
+                                }
+                            }
                         }
                     }
                 }
@@ -134,7 +160,6 @@ namespace MonitorJudicial.Views
 
             return isValid;
         }
-
 
     }
 }

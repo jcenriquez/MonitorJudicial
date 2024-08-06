@@ -165,6 +165,19 @@ namespace MonitorJudicial
             Controllers.PrestamosController.LlenarGridViewCaso(numeroCaso, gvPrestamos, txtNombres);
         }
 
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            // Limpiar las variables de sesión
+            Session["Nombres"] = null;
+            Session["Rol"] = null;
+
+            // O puedes usar Session.Clear() para limpiar todas las variables de sesión
+            // Session.Clear();
+
+            // Redirigir a la página de inicio de sesión
+            Response.Redirect("Login.aspx");
+        }
+
         protected void gvPrestamos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
             CargarFormulario();
@@ -240,7 +253,7 @@ namespace MonitorJudicial
                     JOIN [FBS_COBRANZAS].[TIPOJUDICATURA] TJ ON TJ.CODIGO = PA.CODIGOTIPOJUDICATURA
                     LEFT JOIN [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ETJ ON ETJ.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
                     WHERE PM.NUMEROPRESTAMO = '" + numPretamoVar + @"'
-                    ORDER BY PT.SECUENCIAL DESC;; ";
+                    ORDER BY PT.SECUENCIAL DESC; ";
 
 
                 // Tu código para conectar a la base de datos y ejecutar la consulta

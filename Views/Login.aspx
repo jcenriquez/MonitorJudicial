@@ -1,4 +1,4 @@
-﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Login.aspx.cs" Inherits="MonitorJudicial.Views.Login" %>
+﻿<%@ Page Language="C#" AutoEventWireup="true" CodeBehind="Views/Login.aspx.cs" Inherits="MonitorJudicial.Views.Login" %>
 
 
 <!DOCTYPE html>

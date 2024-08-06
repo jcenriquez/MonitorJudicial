@@ -229,7 +229,7 @@
                                                     aria-valuenow="60" aria-valuemin="0" aria-valuemax="100">
                                                 </div>
                                             </div>
-                                            <h4 class="small font-weight-bold">Dr. GUARANGUAY VARGAS ROLANDO JAVIER <span class="float-right"><%= porcentajesRolandoCarnguay %></span></h4>
+                                            <h4 class="small font-weight-bold">DR. GUARANGUAY VARGAS ROLANDO JAVIER <span class="float-right"><%= porcentajesRolandoCarnguay %></span></h4>
                                             <div class="progress mb-4">
                                                 <div class="progress-bar bg-warning" role="progressbar" style="width: 31.16%"
                                                     aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
@@ -525,15 +525,14 @@
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">¿Listo para salir?</h5>
                     <button class="close" type="button" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">×</span>
                     </button>
                 </div>
-                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-body">Seleccione "Salir" a continuación si está listo para finalizar su sesión actual.</div>
                 <div class="modal-footer">
-                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                    <a class="btn btn-primary" href="login.html">Logout</a>
+                    <asp:Button ID="btnLogout" runat="server" Text="Cerrar sesión" OnClick="btnLogout_Click" />
                 </div>
             </div>
         </div>
