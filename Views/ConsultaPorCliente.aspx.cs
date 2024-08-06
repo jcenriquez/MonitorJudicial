@@ -150,19 +150,274 @@ namespace MonitorJudicial
         protected void LlenarGridViewCliente(string numeroCliente)
         {
             txtNombresDiv.Visible = true;
-            Controllers.PrestamosController.LlenarGridViewCliente(numeroCliente, gvPrestamos, txtNombres);
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+            // Consulta SQL
+            string query;
+            string codigoAbogado = (string)(Session["CodigoAbogado"]);
+
+            if (codigoAbogado.Equals("0"))
+            {
+                query = @"
+                SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
+                tp.NOMBRE AS [TIPO],
+                p.DEUDAINICIAL AS [DEUDA INICIAL],
+                p.SALDOACTUAL AS [SALDO],
+                CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
+                CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
+                e.NOMBRE AS [ESTADO]
+                FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
+                JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
+                JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
+                JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
+                JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+                WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G')  AND cli.NUMEROCLIENTE='" + numeroCliente + @"'
+                ORDER BY p.SECUENCIAL DESC";
+            }
+            else
+            {
+                query = @"
+                SELECT  p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
+                tp.NOMBRE AS [TIPO],
+                p.DEUDAINICIAL AS [DEUDA INICIAL],
+                p.SALDOACTUAL AS [SALDO],
+                CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
+                CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
+                e.NOMBRE AS [ESTADO]
+                FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
+                JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
+                JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
+                JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
+                JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+				left JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PA.SECUENCIALPRESTAMO = p.SECUENCIAL
+				left JOIN [FBS_COBRANZAS].[ABOGADO] AB ON AB.CODIGO = PA.CODIGOABOGADO
+                WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G')  AND cli.NUMEROCLIENTE='" + numeroCliente + @"'
+				AND AB.CODIGO= '" + codigoAbogado + @"'
+                ORDER BY p.SECUENCIAL DESC";
+            }
+
+            // Establecer conexión y ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                DataTable dataTable = new DataTable();
+
+                adapter.Fill(dataTable);
+
+                // Asignar datos a la GridView
+                gvPrestamos.DataSource = dataTable;
+                gvPrestamos.DataBind();
+            }
+
+            string queryNombre = @"
+                SELECT per.IDENTIFICACION AS [CEDULA],
+                    cli.NUMEROCLIENTE AS [CLIENTE],
+                    per.NOMBREUNIDO AS [NOMBRES]
+                FROM [FBS_PERSONAS].[PERSONA] per
+                JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+                WHERE cli.NUMEROCLIENTE='" + numeroCliente + @"'";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(queryNombre, connection))
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        string nombreApellido = reader["NOMBRES"].ToString();
+                        txtNombres.Value = nombreApellido;
+                    }
+
+                    reader.Close();
+                }
+            }
         }
 
         protected void LlenarGridViewCedula(string numeroCedula)
         {
             txtNombresDiv.Visible = true;
-            Controllers.PrestamosController.LlenarGridViewCedula(numeroCedula, gvPrestamos, txtNombres);
+            // Cadena de conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string query;
+            string codigoAbogado = (string)(Session["CodigoAbogado"]);
+
+            if (codigoAbogado.Equals("0"))
+            {
+                query = @"
+                SELECT TOP (100) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
+                tp.NOMBRE AS [TIPO],
+                p.DEUDAINICIAL AS [DEUDA INICIAL],
+                p.SALDOACTUAL AS [SALDO],
+                CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
+                CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
+                e.NOMBRE AS [ESTADO]
+                FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
+                JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
+                JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
+                JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
+                JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+                WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G') AND PER.IDENTIFICACION='" + numeroCedula + @"'
+                ORDER BY p.SECUENCIAL DESC";
+            }
+            else
+            {
+                query = @"
+                SELECT TOP(100) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
+                tp.NOMBRE AS [TIPO],
+                p.DEUDAINICIAL AS [DEUDA INICIAL],
+                p.SALDOACTUAL AS [SALDO],
+                CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
+                CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
+                e.NOMBRE AS [ESTADO]
+                FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
+                JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
+                JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
+                JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
+                JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+                left JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PA.SECUENCIALPRESTAMO = p.SECUENCIAL
+                left JOIN [FBS_COBRANZAS].[ABOGADO] AB ON AB.CODIGO = PA.CODIGOABOGADO
+                WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G') AND PER.IDENTIFICACION='" + numeroCedula + @"'
+                AND AB.CODIGO= '" + codigoAbogado + @"'
+                ORDER BY p.SECUENCIAL DESC";
+            }
+
+            string queryNombre = @"
+                SELECT per.IDENTIFICACION AS [CEDULA],
+                    cli.NUMEROCLIENTE AS [CLIENTE],
+                    per.NOMBREUNIDO AS [NOMBRES]
+                FROM [FBS_PERSONAS].[PERSONA] per
+                JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+                WHERE per.IDENTIFICACION='" + numeroCedula + @"'";
+
+            // Establecer conexión y ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                DataTable dataTable = new DataTable();
+
+                adapter.Fill(dataTable);
+
+                // Asignar datos a la GridView
+                gvPrestamos.DataSource = dataTable;
+                gvPrestamos.DataBind();
+            }
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(queryNombre, connection))
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        string nombreApellido = reader["NOMBRES"].ToString();
+                        txtNombres.Value = nombreApellido;
+                    }
+
+                    reader.Close();
+                }
+            }
         }
 
-        protected void LlenarGridViewCaso(string numeroCaso)
+        protected void LlenarGridViewCaso(string numeroCedula)
         {
             txtNombresDiv.Visible = true;
-            Controllers.PrestamosController.LlenarGridViewCaso(numeroCaso, gvPrestamos, txtNombres);
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+            string query;
+            string codigoAbogado = (string)(Session["CodigoAbogado"]);
+
+            if (codigoAbogado.Equals("0"))
+            {
+                query = @"
+        SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
+tp.NOMBRE AS [TIPO],
+p.DEUDAINICIAL AS [DEUDA INICIAL],
+p.SALDOACTUAL AS [SALDO],
+CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
+CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
+e.NOMBRE AS [ESTADO]
+FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
+JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
+JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
+JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
+JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] pa ON pa.SECUENCIALPRESTAMO=p.SECUENCIAL
+JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
+WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G')
+AND pai.NUMEROCAUSA='" + numeroCedula + @"'
+ORDER BY p.SECUENCIAL DESC;";
+            }
+            else
+            {
+                query = @"
+        SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
+tp.NOMBRE AS [TIPO],
+p.DEUDAINICIAL AS [DEUDA INICIAL],
+p.SALDOACTUAL AS [SALDO],
+CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
+CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
+e.NOMBRE AS [ESTADO]
+FROM [FBS_CARTERA].[PRESTAMOMAESTRO] p 
+JOIN [FBS_CREDITO].[TIPOPRESTAMO] tp ON p.CODIGOTIPOPRESTAMO = tp.CODIGO
+JOIN [FBS_CARTERA].[ESTADOPRESTAMO] e ON p.CODIGOESTADOPRESTAMO=e.CODIGO
+JOIN [FBS_PERSONAS].[PERSONA] per ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
+JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] pa ON pa.SECUENCIALPRESTAMO=p.SECUENCIAL
+JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
+left JOIN [FBS_COBRANZAS].[ABOGADO] AB ON AB.CODIGO = pa.CODIGOABOGADO
+WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G')
+AND pai.NUMEROCAUSA='" + numeroCedula + @"'
+AND AB.CODIGO= '" + codigoAbogado + @"'
+ORDER BY p.SECUENCIAL DESC;";
+            }
+
+            string queryNombre = @"
+        SELECT per.IDENTIFICACION AS [CEDULA],
+        cli.NUMEROCLIENTE AS [CLIENTE],
+        per.NOMBREUNIDO AS [NOMBRES]
+    FROM [FBS_PERSONAS].[PERSONA] per
+    JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
+	JOIN [FBS_CARTERA].[PRESTAMOMAESTRO] p ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
+	JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] pa ON pa.SECUENCIALPRESTAMO=p.SECUENCIAL
+JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
+    WHERE pai.NUMEROCAUSA='" + numeroCedula + @"';";
+
+            // Establecer conexión y ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                SqlDataAdapter adapter = new SqlDataAdapter(command);
+                DataTable dataTable = new DataTable();
+
+                adapter.Fill(dataTable);
+
+                // Asignar datos a la GridView
+                gvPrestamos.DataSource = dataTable;
+                gvPrestamos.DataBind();
+            }
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(queryNombre, connection))
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        string nombreApellido = reader["NOMBRES"].ToString();
+                        txtNombres.Value = nombreApellido;
+                    }
+
+                    reader.Close();
+                }
+            }
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -170,6 +425,7 @@ namespace MonitorJudicial
             // Limpiar las variables de sesión
             Session["Nombres"] = null;
             Session["Rol"] = null;
+            Session["CodigoAbogado"] = null;
 
             // O puedes usar Session.Clear() para limpiar todas las variables de sesión
             // Session.Clear();
