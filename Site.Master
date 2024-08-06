@@ -35,8 +35,8 @@
                 </a>
                 <hr class="sidebar-divider my-0" />
                 <!-- Nav Item - Tablero -->
-                <li class="nav-item active">
-                    <a class="nav-link" href="Default.aspx">
+                <li class="nav-item active" id="admin3" runat="server" visible="false">
+                    <a class="nav-link" href="/Default.aspx">
                         <i class="fas fa-fw fa-tachometer-alt"></i>
                         <span>Tablero</span>
                     </a>
