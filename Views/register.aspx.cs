@@ -1,5 +1,6 @@
 ﻿using DocumentFormat.OpenXml.Spreadsheet;
 using Irony.Parsing;
+using OfficeOpenXml.Drawing.Slicer.Style;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -9,6 +10,7 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
@@ -18,24 +20,93 @@ namespace MonitorJudicial.Views
     {
         protected void Page_Load(object sender, EventArgs e)
         {
+            CargarFormulario();
+
+        }
+        protected void CargarFormulario()
+        {
+            string connectionString = WebConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string queryAbogado = "SELECT NOMBRE FROM [FBS_COBRANZAS].[ABOGADO] WHERE ESTAACTIVO='1' ORDER BY NOMBRE";
+           
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                using (SqlCommand command = new SqlCommand(queryAbogado, connection))
+                {
+                    connection.Open();
+                    SqlDataReader reader = command.ExecuteReader();
+
+                    while (reader.Read())
+                    {
+                        string nombreAbogado = reader["NOMBRE"].ToString();
+                        ddlAbogado.Items.Add(new ListItem(nombreAbogado));
+                    }
+
+                    reader.Close();
+                }
+            }
             
+        }
+
+        protected string CargarCodigoAbogado(string nombreAbogado)
+        {
+            string respuesta = "";
+
+            if(nombreAbogado.Equals("ADMINISTRATIVO COAC"))
+            {
+                respuesta = "0";
+            }
+            else
+            {
+                string connectionString = WebConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+                string queryAbogado = "SELECT CODIGO FROM [FBS_COBRANZAS].[ABOGADO] WHERE NOMBRE = @NombreAbogado ORDER BY NOMBRE";
+
+                using (SqlConnection connection = new SqlConnection(connectionString))
+                {
+                    using (SqlCommand command = new SqlCommand(queryAbogado, connection))
+                    {
+                        command.Parameters.AddWithValue("@NombreAbogado", nombreAbogado);
+
+                        connection.Open();
+                        SqlDataReader reader = command.ExecuteReader();
+
+                        if (reader.Read())
+                        {
+                            respuesta = reader["CODIGO"].ToString();
+                        }
+
+                        reader.Close();
+                    }
+                }
+            }            
+            return respuesta;
         }
         protected void btnRegister_Click(object sender, EventArgs e)
         {
-            string usuario = txtusuario.Text;
+            string usuario = txtUsuario.Text;
             string nombres = txtFirstName.Text;
             string apellidos = txtLastName.Text;
             string email = txtEmail.Text;
             int rol = ddlCategories.SelectedIndex;
-            string codigoAbogado = "0";
+            string codigoAbogado = CargarCodigoAbogado(ddlAbogado.SelectedItem.ToString());
             string password = txtPassword.Text;
             string repeatPassword = txtRepeatPassword.Text;
+            ValidatePage();
+            try
+            {
+                // Implementar la lógica de validación y almacenamiento de datos aquí
+                InsertarNuevoUsuario(usuario, password, email, nombres, apellidos, rol, codigoAbogado);
 
-            InsertarNuevoUsuario(usuario, password, email, nombres, apellidos, rol, codigoAbogado);
-            // Implementar la lógica de validación y almacenamiento de datos aquí
-            Response.Write("<script>alert('Usuario creado con éxito');</script>");
-            // Redireccionar a la página de inicio de sesión, por ejemplo
-            Response.Redirect("login.aspx");
+                // Mostrar mensaje de éxito y redirigir a login después de mostrar el mensaje
+                string script = "alert('Usuario creado con éxito'); window.location='Login.aspx';";
+                ClientScript.RegisterStartupScript(this.GetType(), "UsuarioCreado", script, true);
+            }
+            catch (Exception ex)
+            {
+                // Mostrar mensaje de error
+                string script = "alert('Error!: No se pudo guardar el usuario');";
+                ClientScript.RegisterStartupScript(this.GetType(), "ErrorGuardarUsuario", script, true);
+            }
+
         }
 
         public void InsertarNuevoUsuario(string usuario, string password, string email, string nombres, string apellidos, int rol, string codigoAbogado)
@@ -93,6 +164,26 @@ namespace MonitorJudicial.Views
                     }
                     return Convert.ToBase64String(ms.ToArray());
                 }
+            }
+        }
+
+        private void ValidatePage()
+        {
+            // Ejecuta todas las validaciones del lado del servidor
+            Page.Validate();
+
+            // Verifica si todas las validaciones del lado del cliente y del servidor son válidas
+            if (Page.IsValid)
+            {
+                // Todas las validaciones se cumplieron
+                // Aquí puedes colocar el código que deseas ejecutar cuando todas las validaciones son exitosas
+                Response.Write("Todas las validaciones se cumplieron correctamente.");
+            }
+            else
+            {
+                // Al menos una validación falló
+                // Aquí puedes colocar el código que deseas ejecutar cuando alguna validación falla
+                Response.Write("Al menos una validación falló. Por favor revise los errores.");
             }
         }
     }

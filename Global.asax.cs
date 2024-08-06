@@ -17,5 +17,13 @@ namespace MonitorJudicial
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+        protected void Application_BeginRequest(Object sender, EventArgs e)
+        {
+            // Redirige a la página de inicio específica si la URL es solo el nombre del sitio
+            if (HttpContext.Current.Request.Url.AbsolutePath == "/")
+            {
+                HttpContext.Current.Response.Redirect("~/Views/Login.aspx");
+            }
+        }
     }
 }

@@ -47,13 +47,25 @@ namespace MonitorJudicial
 
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            string rol = (string)(Session["Rol"]);
             if (!IsPostBack)
             {
                 PorcentajeCasos();
                 LlenarGridAbogados();
                 LlenarGridAbogadosPorcentajes();
             }
+        }
+        protected void btnLogout_Click(object sender, EventArgs e)
+        {
+            // Limpiar las variables de sesión
+            Session["Nombres"] = null;
+            Session["Rol"] = null;
+
+            // O puedes usar Session.Clear() para limpiar todas las variables de sesión
+            // Session.Clear();
+
+            // Redirigir a la página de inicio de sesión
+            Response.Redirect("Views/Login.aspx");
         }
         public void LlenarGridAbogados()
         {
