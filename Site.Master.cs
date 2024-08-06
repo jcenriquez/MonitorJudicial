@@ -32,8 +32,8 @@ namespace MonitorJudicial
             }
             else
             {
-                admin1.Visible = false;
-                admin2.Visible = false;
+                admin1.Visible = true;
+                admin2.Visible = true;
                 //Response.Redirect("~/Views/ConsultaPorCliente.aspx");
             }
         }

@@ -170,6 +170,7 @@ namespace MonitorJudicial
             // Limpiar las variables de sesión
             Session["Nombres"] = null;
             Session["Rol"] = null;
+            Session["CodigoAbogado"] = null;
 
             // O puedes usar Session.Clear() para limpiar todas las variables de sesión
             // Session.Clear();
