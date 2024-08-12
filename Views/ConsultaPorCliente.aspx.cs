@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
@@ -324,8 +325,9 @@ namespace MonitorJudicial
             }
         }
 
-        protected void LlenarGridViewCaso(string numeroCedula)
+        protected void LlenarGridViewCaso(string numeroCaso)
         {
+            string soloNumeros = Regex.Replace(numeroCaso, @"\D", "");
             txtNombresDiv.Visible = true;
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
 
@@ -350,7 +352,7 @@ JOIN [FBS_CLIENTES].[CLIENTE] cli ON per.[SECUENCIAL] = cli.[SECUENCIALPERSONA]
 JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] pa ON pa.SECUENCIALPRESTAMO=p.SECUENCIAL
 JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
 WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G')
-AND pai.NUMEROCAUSA='" + numeroCedula + @"'
+AND REPLACE(pai.NUMEROCAUSA, '-', '') ='" + soloNumeros + @"'
 ORDER BY p.SECUENCIAL DESC;";
             }
             else
@@ -372,7 +374,7 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] pa ON pa.SECUENCIALPRESTAMO=p.SECUENCIAL
 JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
 left JOIN [FBS_COBRANZAS].[ABOGADO] AB ON AB.CODIGO = pa.CODIGOABOGADO
 WHERE p.CODIGOESTADOPRESTAMO IN ('J','I','G')
-AND pai.NUMEROCAUSA='" + numeroCedula + @"'
+AND REPLACE(pai.NUMEROCAUSA, '-', '') ='" + soloNumeros + @"'
 AND AB.CODIGO= '" + codigoAbogado + @"'
 ORDER BY p.SECUENCIAL DESC;";
             }
@@ -386,7 +388,7 @@ ORDER BY p.SECUENCIAL DESC;";
 	JOIN [FBS_CARTERA].[PRESTAMOMAESTRO] p ON p.IDENTIFICACIONSUJETOORIGINAL=per.IDENTIFICACION
 	JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO] pa ON pa.SECUENCIALPRESTAMO=p.SECUENCIAL
 JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
-    WHERE pai.NUMEROCAUSA='" + numeroCedula + @"';";
+    WHERE REPLACE(pai.NUMEROCAUSA, '-', '') ='" + soloNumeros + @"';";
 
             // Establecer conexión y ejecutar la consulta
             using (SqlConnection connection = new SqlConnection(connectionString))
