@@ -148,6 +148,103 @@ namespace MonitorJudicial
             }
         }
 
+        protected string SaldoActualCartera(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+
+            // Definir la consulta SQL
+            string query = @"
+        SELECT FORMAT((ROUND([VALORCALCULADO], 2)), 'N2') AS SALDO_ACTUAL
+        FROM [FBS_Respaldo_DC_Produccion].[FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
+        WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo
+        AND SECUENCIALCOMPONENTECARTERA = '75';";
+
+            // Utilizar SqlConnection y SqlCommand para ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
+
+                try
+                {
+                    connection.Open();
+                    respuesta = command.ExecuteScalar()?.ToString() ?? "0.00"; // Si el resultado es nulo, devolver "0.00"
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de errores
+                    respuesta = "Error: " + ex.Message;
+                }
+            }
+
+            return respuesta;
+        }
+        protected string ExigibleInteresCartera(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+
+            // Definir la consulta SQL
+            string query = @"
+        SELECT FORMAT((ROUND([VALORCALCULADO], 2)), 'N2') AS SALDO_ACTUAL
+        FROM [FBS_Respaldo_DC_Produccion].[FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
+        WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo
+        AND SECUENCIALCOMPONENTECARTERA = '47';";
+
+            // Utilizar SqlConnection y SqlCommand para ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
+
+                try
+                {
+                    connection.Open();
+                    respuesta = command.ExecuteScalar()?.ToString() ?? "0.00"; // Si el resultado es nulo, devolver "0.00"
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de errores
+                    respuesta = "Error: " + ex.Message;
+                }
+            }
+
+            return respuesta;
+        }
+        protected string ExigibleMoraCartera(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+
+            // Definir la consulta SQL
+            string query = @"
+        SELECT FORMAT((ROUND([VALORCALCULADO], 2)), 'N2') AS SALDO_ACTUAL
+        FROM [FBS_Respaldo_DC_Produccion].[FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
+        WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo
+        AND SECUENCIALCOMPONENTECARTERA = '76';";
+
+            // Utilizar SqlConnection y SqlCommand para ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
+
+                try
+                {
+                    connection.Open();
+                    respuesta = command.ExecuteScalar()?.ToString() ?? "0.00"; // Si el resultado es nulo, devolver "0.00"
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de errores
+                    respuesta = "Error: " + ex.Message;
+                }
+            }
+
+            return respuesta;
+        }
+
         protected void LlenarGridViewCliente(string numeroCliente)
         {
             txtNombresDiv.Visible = true;
@@ -472,7 +569,7 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.S
                 string estadoTramiteV = "";
                 string secuencialPrestamoV = "";
                 string ultimoPagoV = "";
-                string numCausaV = "";
+                string numCausaV = "";                
 
                 string query = @"
                     SELECT TOP(1)
@@ -665,6 +762,13 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.S
                 CargarGridTramites(secuencialPrestamoV);
                 litDiasDesdePrestamo.Text = ObtenerDiasDesdePrestamoJudicial(secuencialPrestamoV);
 
+                string saldoActualCartera = SaldoActualCartera(secuencialPrestamoV);
+                string interesExigibleCartera = ExigibleInteresCartera(secuencialPrestamoV);
+                string moraExigibleCartera = ExigibleMoraCartera(secuencialPrestamoV);
+
+                txtSaldoActualCartera.Text = saldoActualCartera;
+                txtInteresExigibleCartera.Text = interesExigibleCartera;
+                txtMoraExigibleCartera.Text = moraExigibleCartera;
                 txtCausa.Text = numCausaV;
                 txtOficial.Text = oficialV;
                 txtOficina.Text = oficinaV;
