@@ -583,7 +583,6 @@ namespace MonitorJudicial
                 }
             }
         }
-
         protected void btnGenerateReport_Click(object sender, EventArgs e)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
@@ -611,6 +610,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+                    PT.COMENTARIO AS [COMENTARIO],
                     DIV.NOMBRE AS [OFICINA],
                     MC.NOMBRE AS [MEDIDA CAUTELAR],
                     ISNULL(DATEDIFF(DAY, PT.FECHASISTEMA, GETDATE()), '') AS [DIAS DESDE TRAMITE JUDICIAL]
@@ -655,6 +655,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+                    PT.COMENTARIO AS [COMENTARIO],
                     DIV.NOMBRE AS [OFICINA],
                     '' AS [MEDIDA CAUTELAR],
                     ISNULL(DATEDIFF(DAY, PT.FECHASISTEMA, GETDATE()), '')  AS [DIAS DESDE TRAMITE JUDICIAL]
@@ -702,6 +703,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+PT.COMENTARIO AS [COMENTARIO],
                     DIV.NOMBRE AS [OFICINA],
                     MC.NOMBRE AS [MEDIDA CAUTELAR],
                     ISNULL(DATEDIFF(DAY, PT.FECHASISTEMA, GETDATE()), '') AS [DIAS DESDE TRAMITE JUDICIAL]
@@ -745,6 +747,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
+PT.COMENTARIO AS [COMENTARIO],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
                     DIV.NOMBRE AS [OFICINA],
                     '' AS [MEDIDA CAUTELAR],

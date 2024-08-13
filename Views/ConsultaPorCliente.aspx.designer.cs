@@ -213,6 +213,33 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.TextBox txtTransferido;
 
         /// <summary>
+        /// Control txtSaldoActualCartera.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtSaldoActualCartera;
+
+        /// <summary>
+        /// Control txtInteresExigibleCartera.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtInteresExigibleCartera;
+
+        /// <summary>
+        /// Control txtMoraExigibleCartera.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtMoraExigibleCartera;
+
+        /// <summary>
         /// Control ddlAbogado.
         /// </summary>
         /// <remarks>

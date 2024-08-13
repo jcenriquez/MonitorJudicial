@@ -244,6 +244,20 @@
                                         <asp:TextBox ID="txtTransferido" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
+                                <div class="row">
+    <div class="col-md-4">
+        <label for="txtSaldoActualCartera" class="form-label">Saldo Actual Cartera:</label>
+        <asp:TextBox ID="txtSaldoActualCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
+    </div>
+    <div class="col-md-4">
+        <label for="txtInteresExigibleCartera" class="form-label">Interés Exigible:</label>
+        <asp:TextBox ID="txtInteresExigibleCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
+    </div>
+    <div class="col-md-4">
+        <label for="txtMoraExigibleCartera" class="form-label">Mora Exigible:</label>
+        <asp:TextBox ID="txtMoraExigibleCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
+    </div>
+</div>
 
                                 <div class="row">
                                     <div class="col-md-6">
