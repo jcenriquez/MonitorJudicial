@@ -584,6 +584,103 @@ namespace MonitorJudicial
             }
         }
 
+        protected string saldoActual(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+
+            // Definir la consulta SQL
+            string query = @"
+        SELECT FORMAT((ROUND([VALORCALCULADO], 2)), 'N2') AS SALDO_ACTUAL
+        FROM [FBS_Respaldo_DC_Produccion].[FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
+        WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo
+        AND SECUENCIALCOMPONENTECARTERA = '75';";
+
+            // Utilizar SqlConnection y SqlCommand para ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
+
+                try
+                {
+                    connection.Open();
+                    respuesta = command.ExecuteScalar()?.ToString() ?? "0.00"; // Si el resultado es nulo, devolver "0.00"
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de errores
+                    respuesta = "Error: " + ex.Message;
+                }
+            }
+
+            return respuesta;
+        }
+        protected string exigibleInteres(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+
+            // Definir la consulta SQL
+            string query = @"
+        SELECT FORMAT((ROUND([VALORCALCULADO], 2)), 'N2') AS SALDO_ACTUAL
+        FROM [FBS_Respaldo_DC_Produccion].[FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
+        WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo
+        AND SECUENCIALCOMPONENTECARTERA = '47';";
+
+            // Utilizar SqlConnection y SqlCommand para ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
+
+                try
+                {
+                    connection.Open();
+                    respuesta = command.ExecuteScalar()?.ToString() ?? "0.00"; // Si el resultado es nulo, devolver "0.00"
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de errores
+                    respuesta = "Error: " + ex.Message;
+                }
+            }
+
+            return respuesta;
+        }
+        protected string exigibleMora(string secuencialPrestamo)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+
+            // Definir la consulta SQL
+            string query = @"
+        SELECT FORMAT((ROUND([VALORCALCULADO], 2)), 'N2') AS SALDO_ACTUAL
+        FROM [FBS_Respaldo_DC_Produccion].[FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
+        WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo
+        AND SECUENCIALCOMPONENTECARTERA = '76';";
+
+            // Utilizar SqlConnection y SqlCommand para ejecutar la consulta
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialPrestamo);
+
+                try
+                {
+                    connection.Open();
+                    respuesta = command.ExecuteScalar()?.ToString() ?? "0.00"; // Si el resultado es nulo, devolver "0.00"
+                }
+                catch (Exception ex)
+                {
+                    // Manejo de errores
+                    respuesta = "Error: " + ex.Message;
+                }
+            }
+
+            return respuesta;
+        }
+
         protected void btnGenerateReport_Click(object sender, EventArgs e)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
@@ -611,6 +708,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+                    PT.COMENTARIO AS [COMENTARIO],
                     DIV.NOMBRE AS [OFICINA],
                     MC.NOMBRE AS [MEDIDA CAUTELAR],
                     ISNULL(DATEDIFF(DAY, PT.FECHASISTEMA, GETDATE()), '') AS [DIAS DESDE TRAMITE JUDICIAL]
@@ -655,6 +753,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+                    PT.COMENTARIO AS [COMENTARIO],
                     DIV.NOMBRE AS [OFICINA],
                     '' AS [MEDIDA CAUTELAR],
                     ISNULL(DATEDIFF(DAY, PT.FECHASISTEMA, GETDATE()), '')  AS [DIAS DESDE TRAMITE JUDICIAL]
@@ -702,6 +801,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+PT.COMENTARIO AS [COMENTARIO],
                     DIV.NOMBRE AS [OFICINA],
                     MC.NOMBRE AS [MEDIDA CAUTELAR],
                     ISNULL(DATEDIFF(DAY, PT.FECHASISTEMA, GETDATE()), '') AS [DIAS DESDE TRAMITE JUDICIAL]
@@ -745,6 +845,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
+PT.COMENTARIO AS [COMENTARIO],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
                     DIV.NOMBRE AS [OFICINA],
                     '' AS [MEDIDA CAUTELAR],

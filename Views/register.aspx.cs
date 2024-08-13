@@ -117,7 +117,7 @@ namespace MonitorJudicial.Views
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                string query = "INSERT INTO [FBS_Respaldo_DC_Produccion].[FBS_SEGURIDADES].[USUARIO_ABOGADOS] " +
+                string query = "INSERT INTO [FBS_SEGURIDADES].[USUARIO_ABOGADOS] " +
                                "([CODIGOUSUARIO], [CLAVE], [EMAIL], [NOMBRES], [APELLIDOS], [ROL], [FECHA_CREACION], [ESTADO_ACTIVO], [CODIGOABOGADO]) " +
                                "VALUES (@usuario, @password, @correo, @nombres, @apellidos, @rol, @fechaCreacion, @estadoActivo, @codigoAbogado)";
 

@@ -126,7 +126,7 @@ namespace MonitorJudicial.Views
             {
                 string query = @"SELECT [CODIGOUSUARIO], [CLAVE], [EMAIL], [NOMBRES], [APELLIDOS], [ROL], 
                                     [FECHA_CREACION], [ESTADO_ACTIVO], [CODIGOABOGADO] 
-                             FROM [FBS_Respaldo_DC_Produccion].[FBS_SEGURIDADES].[USUARIO_ABOGADOS] 
+                             FROM [FBS_SEGURIDADES].[USUARIO_ABOGADOS] 
                              WHERE [CODIGOUSUARIO] = @usuario";
 
                 using (SqlCommand command = new SqlCommand(query, connection))

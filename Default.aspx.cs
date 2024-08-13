@@ -82,7 +82,7 @@ namespace MonitorJudicial
       ,[JUDICIAL CON ACUERDO VENCIDO]
       ,[CASTIGADO]
       ,[TOTAL]
-  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
   ORDER BY TOTAL";
 
             int sumaTotal = 0;
@@ -138,23 +138,23 @@ namespace MonitorJudicial
             // Consulta SQL
             string query = @"
                 SELECT [Porcentaje]
-  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
   WHERE NOMBRE='DR. DANIEL MARCELO GUERRA PANAMA'";
             string query1 = @"
                 SELECT [Porcentaje]
-  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
   WHERE NOMBRE='DR. VASQUEZ RIVADENEIRA CARLOS GABRIEL'";
             string query2 = @"
                 SELECT [Porcentaje]
-  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
   WHERE NOMBRE='DR. EDISSON ESPINOSA VENEGAS'";
             string query3 = @"
                 SELECT [Porcentaje]
-  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
   WHERE NOMBRE='DR. LUIS EDISON CRESPO ALMEIDA'";
             string query4 = @"
                 SELECT [Porcentaje]
-  FROM [FBS_Respaldo_DC_Produccion].[FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
+  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
   WHERE NOMBRE='DR. GUARANGUAY VARGAS ROLANDO JAVIER'";
 
             // Usa 'using' para asegurar que los recursos se liberen correctamente
