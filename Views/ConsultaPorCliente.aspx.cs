@@ -140,6 +140,11 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreEstadoTramite = reader["NOMBRE"].ToString();
+                        if(nombreEstadoTramite.Equals("REMATE"))
+                        {
+                            fechaRemateDiv.Disabled = false;
+                        }
+
                         ddlAccion.Items.Add(new ListItem(nombreEstadoTramite));
                     }
 
@@ -1127,6 +1132,21 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.S
                 LlenarGridViewCaso(idConsulta.Value);
             }
         }
+
+        protected void ddlAccion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Mostrar el campo de fecha solo si se selecciona "REMATE"
+            if (ddlAccion.SelectedValue == "REMATE")
+            {
+                fechaRemateDiv.Style["display"] = "block";
+            }
+            else
+            {
+                fechaRemateDiv.Style["display"] = "none";
+                dtFechaRemate.Text = string.Empty; // Limpiar el campo de fecha si no es "REMATE"
+            }
+        }
+
         static string descripcion;
         protected void btnActualizarEstadoPrestamo_Click(object sender, EventArgs e)
         {
@@ -1173,8 +1193,9 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             ClientScript.RegisterStartupScript(this.GetType(), "HighlightFields", script);
         }
 
-        protected string GuardarEstadoPrestamo(int secuencialprestamoV, string codigoEstadoJudicialV, string codigoabogadoV, string comentarioV, bool estaactivoV, int numeroverificadorV, string codigousuarioV, DateTime fechasistemaV, DateTime fechamaquinaV)
+        protected string GuardarEstadoPrestamo(int secuencialprestamoV, string codigoEstadoJudicialV, string codigoabogadoV, string comentarioV, bool estaactivoV, int numeroverificadorV, string codigousuarioV, DateTime fechasistemaV, DateTime fechamaquinaV, DateTime fechaRemate)
         {
+            string fechaFormateada = fechaRemate.ToString("yyyy-MM-dd");
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
             string respuesta = "";
             string query = @"
@@ -1187,7 +1208,8 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             ,[NUMEROVERIFICADOR]
             ,[CODIGOUSUARIO]
             ,[FECHASISTEMA]
-            ,[FECHAMAQUINA])
+            ,[FECHAMAQUINA]
+            ,[FECHAREMATE])
             OUTPUT INSERTED.SECUENCIAL
             VALUES
             (@SecuencialPrestamo
@@ -1198,7 +1220,8 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             ,@NumeroVerificador
             ,@CodigoUsuario
             ,@FechaSistema
-            ,@FechaMaquina)";
+            ,@FechaMaquina
+            ,@FechaRemate)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -1212,6 +1235,7 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                 command.Parameters.AddWithValue("@CodigoUsuario", codigousuarioV);
                 command.Parameters.AddWithValue("@FechaSistema", fechasistemaV);
                 command.Parameters.AddWithValue("@FechaMaquina", fechamaquinaV);
+                command.Parameters.AddWithValue("@FechaRemate", fechaFormateada);
 
                 try
                 {
@@ -1305,6 +1329,19 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                 DateTime fechasistemaV = DateTime.Parse(dtFechaSistema.Value);
                 DateTime fechamaquinaV = DateTime.Parse(dtFechaIngreso.Value);
 
+                DateTime fecharemateV = DateTime.MinValue;
+
+                if (string.IsNullOrWhiteSpace(dtFechaRemate.Text))
+                {
+                    fecharemateV = DateTime.MinValue;
+                }
+                else
+                {
+                    fecharemateV = DateTime.Parse(dtFechaRemate.Text);                    
+                }
+
+                    
+
                 try
                 {
                     string actualizadoEstado = UpdatePrestamoEstado(secuencialPrestamo);
@@ -1314,7 +1351,7 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                     if (actualizadoDescripcion.Equals("OK"))
                     {
 
-                        string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV);
+                        string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV, fecharemateV);
                         if (guardado.Equals("OK"))
                         {
                             ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
