@@ -13,6 +13,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using MonitorJudicial.Controllers;
 
 namespace MonitorJudicial.Views
 {
@@ -82,20 +83,35 @@ namespace MonitorJudicial.Views
         }
         protected void btnRegister_Click(object sender, EventArgs e)
         {
-            string usuario = txtUsuario.Text;
-            string nombres = txtFirstName.Text;
-            string apellidos = txtLastName.Text;
+            string usuario = txtUsuario.Text.ToUpper();
+            string nombres = txtFirstName.Text.ToUpper();
+            string apellidos = txtLastName.Text.ToUpper();
             string email = txtEmail.Text;
+            string copiaEmail= "fpuedmag@coopsanantonio.com";
             int rol = ddlCategories.SelectedIndex;
-            string codigoAbogado = CargarCodigoAbogado(ddlAbogado.SelectedItem.ToString());
+            string nombreAbogado = ddlAbogado.SelectedItem.ToString();
+            string codigoAbogado = CargarCodigoAbogado(nombreAbogado);
             string password = txtPassword.Text;
             string repeatPassword = txtRepeatPassword.Text;
+            string asunto = "Creación Usuario - Monitor Judicial";
+            string cuerpo = $@"Estimado {nombres} {apellidos},
+
+Se ha creado un usuario para ingresar al sitio web Monitor Judicial con la siguiente información:
+
+Usuario: {usuario}
+Contraseña: {password}
+Abogado: {nombreAbogado}
+
+Mensaje Generado Desde Monitor Judicial 1.0.
+
+La información contenida en este e-mail es confidencial y solo puede ser utilizada por la persona o la institución a la cual está dirigido. Cualquier retención, difusión, distribución o copia de este mensaje está prohibida. La institución no asume responsabilidad sobre información, opiniones o criterios contenidos en este mail que no estén relacionados con negocios oficiales de nuestra institución. Si usted recibió este mensaje por error, notifique al administrador o a quien le envió inmediatamente, elimínelo sin ver su contenido o hacer copias. (Las tildes se han omitido para facilitar la lectura).";
+
             ValidatePage();
             try
             {
                 // Implementar la lógica de validación y almacenamiento de datos aquí
                 InsertarNuevoUsuario(usuario, password, email, nombres, apellidos, rol, codigoAbogado);
-
+                PrestamosController.EnviarCorreo(email,asunto,cuerpo,copiaEmail);
                 // Mostrar mensaje de éxito y redirigir a login después de mostrar el mensaje
                 string script = "alert('Usuario creado con éxito'); window.location='Login.aspx';";
                 ClientScript.RegisterStartupScript(this.GetType(), "UsuarioCreado", script, true);
@@ -106,7 +122,6 @@ namespace MonitorJudicial.Views
                 string script = "alert('Error!: No se pudo guardar el usuario');";
                 ClientScript.RegisterStartupScript(this.GetType(), "ErrorGuardarUsuario", script, true);
             }
-
         }
 
         public void InsertarNuevoUsuario(string usuario, string password, string email, string nombres, string apellidos, int rol, string codigoAbogado)

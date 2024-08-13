@@ -1,5 +1,7 @@
 ﻿<%@ Page Title="" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="ConsultaPorCliente.aspx.cs" Inherits="MonitorJudicial.ConsultaPorCliente" MaintainScrollPositionOnPostback="true" %>
 
+<%@ Register Assembly="AjaxControlToolkit" Namespace="AjaxControlToolkit" TagPrefix="ajaxToolkit" %>
+
 <asp:Content ID="Content1" ContentPlaceHolderID="MainContent" runat="server">
     <script>
         function soloNumeros(evt) {
@@ -245,19 +247,19 @@
                                     </div>
                                 </div>
                                 <div class="row">
-    <div class="col-md-4">
-        <label for="txtSaldoActualCartera" class="form-label">Saldo Actual Cartera:</label>
-        <asp:TextBox ID="txtSaldoActualCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
-    </div>
-    <div class="col-md-4">
-        <label for="txtInteresExigibleCartera" class="form-label">Interés Exigible:</label>
-        <asp:TextBox ID="txtInteresExigibleCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
-    </div>
-    <div class="col-md-4">
-        <label for="txtMoraExigibleCartera" class="form-label">Mora Exigible:</label>
-        <asp:TextBox ID="txtMoraExigibleCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
-    </div>
-</div>
+                                    <div class="col-md-4">
+                                        <label for="txtSaldoActualCartera" class="form-label">Saldo Actual Cartera:</label>
+                                        <asp:TextBox ID="txtSaldoActualCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtInteresExigibleCartera" class="form-label">Interés Exigible:</label>
+                                        <asp:TextBox ID="txtInteresExigibleCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="txtMoraExigibleCartera" class="form-label">Mora Exigible:</label>
+                                        <asp:TextBox ID="txtMoraExigibleCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
+                                    </div>
+                                </div>
 
                                 <div class="row">
                                     <div class="col-md-6">
@@ -287,7 +289,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-12">
+                                    <div class="col-md-6">
                                         <label for="ddlJudicatura" class="form-label">Judicatura:</label>
 
                                         <%-- <select class="form-control" id="" runat="server" disabled>
@@ -299,18 +301,29 @@
                                         </asp:DropDownList>
 
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <label for="ddlAccion" class="form-label">Acción Desarrollada:</label>
-                                        <asp:DropDownList ID="ddlAccion" runat="server" CssClass="form-control" Enabled="false" AutoPostBack="true">
-                                            <asp:ListItem Text="Seleccione..." Value="" Selected="false"></asp:ListItem>
-                                        </asp:DropDownList>
-                                    </div>
                                     <div class="col-md-6">
                                         <label class="form-label">Descripción:</label>
                                         <asp:TextBox ID="txtDescripcion" runat="server" CssClass="form-control" ReadOnly="true" EnableViewState="true"></asp:TextBox>
                                     </div>
+                                </div>
+
+                                <asp:ScriptManager ID="ScriptManager1" runat="server"></asp:ScriptManager>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <label for="ddlAccion" class="form-label">Acción Desarrollada:</label>
+                                        <asp:DropDownList ID="ddlAccion" runat="server" CssClass="form-control" AutoPostBack="true" Enabled="false" OnSelectedIndexChanged="ddlAccion_SelectedIndexChanged">
+                                            <asp:ListItem Text="Seleccione..." Value=""></asp:ListItem>
+                                        </asp:DropDownList>
+                                    </div>
+
+                                    <!-- Campo de selección de fecha -->
+                                    <div class="col-md-6" id="fechaRemateDiv" runat="server" style="display: none;">
+                                        <label for="dtFechaRemate" class="form-label">Fecha del Remate:</label>
+                                        <asp:TextBox ID="dtFechaRemate" runat="server" CssClass="form-control"></asp:TextBox>
+                                        <ajaxToolkit:CalendarExtender ID="ceFechaRemate" runat="server" TargetControlID="dtFechaRemate" Format="yyyy-MM-dd"></ajaxToolkit:CalendarExtender>
+                                    </div>
+
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">

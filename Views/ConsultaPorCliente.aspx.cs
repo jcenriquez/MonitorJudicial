@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using DocumentFormat.OpenXml.Spreadsheet;
 using MonitorJudicial.Controllers;
 
 namespace MonitorJudicial
@@ -140,6 +141,11 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         string nombreEstadoTramite = reader["NOMBRE"].ToString();
+                        if(nombreEstadoTramite.Equals("REMATE"))
+                        {
+                            fechaRemateDiv.Disabled = false;
+                        }
+
                         ddlAccion.Items.Add(new ListItem(nombreEstadoTramite));
                     }
 
@@ -156,7 +162,7 @@ namespace MonitorJudicial
             // Definir la consulta SQL
             string query = @"
         SELECT FORMAT((ROUND([VALORCALCULADO], 2)), 'N2') AS SALDO_ACTUAL
-        FROM [FBS_Respaldo_DC_Produccion].[FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
+        FROM [FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
         WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo
         AND SECUENCIALCOMPONENTECARTERA = '75';";
 
@@ -188,7 +194,7 @@ namespace MonitorJudicial
             // Definir la consulta SQL
             string query = @"
         SELECT FORMAT((ROUND([VALORCALCULADO], 2)), 'N2') AS SALDO_ACTUAL
-        FROM [FBS_Respaldo_DC_Produccion].[FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
+        FROM [FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
         WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo
         AND SECUENCIALCOMPONENTECARTERA = '47';";
 
@@ -220,7 +226,7 @@ namespace MonitorJudicial
             // Definir la consulta SQL
             string query = @"
         SELECT FORMAT((ROUND([VALORCALCULADO], 2)), 'N2') AS SALDO_ACTUAL
-        FROM [FBS_Respaldo_DC_Produccion].[FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
+        FROM [FBS_CARTERA].[PRESTAMOCOMPONENTE_CARTERA]
         WHERE SECUENCIALPRESTAMO = @SecuencialPrestamo
         AND SECUENCIALCOMPONENTECARTERA = '76';";
 
@@ -782,6 +788,7 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.S
                 dtUltimoPago.Text = ultimoPagoV;
                 dvTramitePrestamo.Visible = true;
                 txtNumPretamo.Text = numPretamoVar;
+                Session["NumPretamo"] = numPretamoVar;
                 txtTipo.Text = tipoVar;
                 txtDeudaInicial.Text = deudaInicialVar;
                 txtSaldoActual.Text = saldoVar;
@@ -1127,6 +1134,21 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.S
                 LlenarGridViewCaso(idConsulta.Value);
             }
         }
+
+        protected void ddlAccion_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Mostrar el campo de fecha solo si se selecciona "REMATE"
+            if (ddlAccion.SelectedValue == "REMATE")
+            {
+                fechaRemateDiv.Style["display"] = "block";
+            }
+            else
+            {
+                fechaRemateDiv.Style["display"] = "none";
+                dtFechaRemate.Text = string.Empty; // Limpiar el campo de fecha si no es "REMATE"
+            }
+        }
+
         static string descripcion;
         protected void btnActualizarEstadoPrestamo_Click(object sender, EventArgs e)
         {
@@ -1173,8 +1195,9 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             ClientScript.RegisterStartupScript(this.GetType(), "HighlightFields", script);
         }
 
-        protected string GuardarEstadoPrestamo(int secuencialprestamoV, string codigoEstadoJudicialV, string codigoabogadoV, string comentarioV, bool estaactivoV, int numeroverificadorV, string codigousuarioV, DateTime fechasistemaV, DateTime fechamaquinaV)
+        protected string GuardarEstadoPrestamo(int secuencialprestamoV, string codigoEstadoJudicialV, string codigoabogadoV, string comentarioV, bool estaactivoV, int numeroverificadorV, string codigousuarioV, DateTime fechasistemaV, DateTime fechamaquinaV, DateTime fechaRemate)
         {
+            string fechaFormateada = fechaRemate.ToString("yyyy-MM-dd");
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
             string respuesta = "";
             string query = @"
@@ -1187,7 +1210,8 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             ,[NUMEROVERIFICADOR]
             ,[CODIGOUSUARIO]
             ,[FECHASISTEMA]
-            ,[FECHAMAQUINA])
+            ,[FECHAMAQUINA]
+            ,[FECHAREMATE])
             OUTPUT INSERTED.SECUENCIAL
             VALUES
             (@SecuencialPrestamo
@@ -1198,7 +1222,8 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             ,@NumeroVerificador
             ,@CodigoUsuario
             ,@FechaSistema
-            ,@FechaMaquina)";
+            ,@FechaMaquina
+            ,@FechaRemate)";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
@@ -1212,6 +1237,7 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                 command.Parameters.AddWithValue("@CodigoUsuario", codigousuarioV);
                 command.Parameters.AddWithValue("@FechaSistema", fechasistemaV);
                 command.Parameters.AddWithValue("@FechaMaquina", fechamaquinaV);
+                command.Parameters.AddWithValue("@FechaRemate", fechaFormateada);
 
                 try
                 {
@@ -1278,8 +1304,9 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
         protected void btnGuardarEstadoPrestamo_Click(object sender, EventArgs e)
         {
             string textComentario=txtComentario.Text;
+            string numeroPrestamo= Session["NumPretamo"] as string;
 
-            if(string.IsNullOrEmpty(textComentario))
+            if (string.IsNullOrEmpty(textComentario))
             {
                 ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! Ingrese un Comentario!');", true);
                 return;
@@ -1305,6 +1332,19 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                 DateTime fechasistemaV = DateTime.Parse(dtFechaSistema.Value);
                 DateTime fechamaquinaV = DateTime.Parse(dtFechaIngreso.Value);
 
+                DateTime fecharemateV = DateTime.MinValue;
+
+                if (string.IsNullOrWhiteSpace(dtFechaRemate.Text))
+                {
+                    fecharemateV = DateTime.MinValue;
+                }
+                else
+                {
+                    fecharemateV = DateTime.Parse(dtFechaRemate.Text);                    
+                }
+
+                    
+
                 try
                 {
                     string actualizadoEstado = UpdatePrestamoEstado(secuencialPrestamo);
@@ -1314,9 +1354,26 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                     if (actualizadoDescripcion.Equals("OK"))
                     {
 
-                        string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV);
+                        string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV, fecharemateV);
                         if (guardado.Equals("OK"))
                         {
+                            string nombres = Session["Nombres"] as string;
+                            string email = Session["EmailAbogado"] as string;
+                            string copiaEmail = "fpuedmag@coopsanantonio.com";
+                            string asunto = "Actualización Trámite Judicial - Monitor Judicial";
+                            string cuerpo = $@"Estimado {nombres},
+
+Se ha actualizado el estado del préstamo con la siguiente información:
+
+N° Préstamo: {numeroPrestamo}
+Descripción: {descripcion}
+Comentario: {textComentario}
+
+Mensaje Generado Desde Monitor Judicial 1.0.
+
+La información contenida en este e-mail es confidencial y solo puede ser utilizada por la persona o la institución a la cual está dirigido. Cualquier retención, difusión, distribución o copia de este mensaje está prohibida. La institución no asume responsabilidad sobre información, opiniones o criterios contenidos en este mail que no estén relacionados con negocios oficiales de nuestra institución. Si usted recibió este mensaje por error, notifique al administrador o a quien le envió inmediatamente, elimínelo sin ver su contenido o hacer copias. (Las tildes se han omitido para facilitar la lectura).";
+
+                            PrestamosController.EnviarCorreo(email, asunto, cuerpo, copiaEmail);
                             ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Estado Judicial Actualizado!');", true);
                             VaciarGridView();
                             CargarGridTramites(secuencialPrestamo);

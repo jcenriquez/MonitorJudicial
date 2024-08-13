@@ -90,7 +90,7 @@ namespace MonitorJudicial.Views
 
         protected void btnIngresar_Click(object sender, EventArgs e)
         {
-            string usuario = txtUsuario.Text;
+            string usuario = txtUsuario.Text.ToUpper();
             string password = txtPassword.Text;
             
 
@@ -122,6 +122,7 @@ namespace MonitorJudicial.Views
             string roles;
             string nombres;
             string codigoAbogado;
+            string correoAbogado;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT [CODIGOUSUARIO], [CLAVE], [EMAIL], [NOMBRES], [APELLIDOS], [ROL], 
@@ -151,6 +152,8 @@ namespace MonitorJudicial.Views
                                     Session["Nombres"] = nombres;
                                     codigoAbogado = reader["CODIGOABOGADO"].ToString(); // Asigna el valor de la columna ROL a la variable roles
                                     Session["CodigoAbogado"] = codigoAbogado;
+                                    correoAbogado = reader["EMAIL"].ToString(); // Asigna el valor de la columna ROL a la variable roles
+                                    Session["EmailAbogado"] = correoAbogado;
                                 }
                             }
                         }

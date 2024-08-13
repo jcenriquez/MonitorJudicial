@@ -285,6 +285,24 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.DropDownList ddlJudicatura;
 
         /// <summary>
+        /// Control txtDescripcion.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtDescripcion;
+
+        /// <summary>
+        /// Control ScriptManager1.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.ScriptManager ScriptManager1;
+
+        /// <summary>
         /// Control ddlAccion.
         /// </summary>
         /// <remarks>
@@ -294,13 +312,31 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.DropDownList ddlAccion;
 
         /// <summary>
-        /// Control txtDescripcion.
+        /// Control fechaRemateDiv.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtDescripcion;
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl fechaRemateDiv;
+
+        /// <summary>
+        /// Control dtFechaRemate.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox dtFechaRemate;
+
+        /// <summary>
+        /// Control ceFechaRemate.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::AjaxControlToolkit.CalendarExtender ceFechaRemate;
 
         /// <summary>
         /// Control txtComentario.

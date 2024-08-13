@@ -610,6 +610,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+                    PT.FECHAREMATE AS [FECHA REMATE],
                     PT.COMENTARIO AS [COMENTARIO],
                     DIV.NOMBRE AS [OFICINA],
                     MC.NOMBRE AS [MEDIDA CAUTELAR],
@@ -655,6 +656,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+                    PT.FECHAREMATE AS [FECHA REMATE],
                     PT.COMENTARIO AS [COMENTARIO],
                     DIV.NOMBRE AS [OFICINA],
                     '' AS [MEDIDA CAUTELAR],
@@ -703,6 +705,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+                    PT.FECHAREMATE AS [FECHA REMATE],
 PT.COMENTARIO AS [COMENTARIO],
                     DIV.NOMBRE AS [OFICINA],
                     MC.NOMBRE AS [MEDIDA CAUTELAR],
@@ -747,8 +750,9 @@ PT.COMENTARIO AS [COMENTARIO],
                         WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
                     END AS [ESTADO JUDICIAL],
-PT.COMENTARIO AS [COMENTARIO],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+                    PT.FECHAREMATE AS [FECHA REMATE],
+PT.COMENTARIO AS [COMENTARIO],
                     DIV.NOMBRE AS [OFICINA],
                     '' AS [MEDIDA CAUTELAR],
                     ISNULL(DATEDIFF(DAY, PT.FECHASISTEMA, GETDATE()), '')  AS [DIAS DESDE TRAMITE JUDICIAL]
