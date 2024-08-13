@@ -90,7 +90,7 @@ namespace MonitorJudicial.Views
 
         protected void btnIngresar_Click(object sender, EventArgs e)
         {
-            string usuario = txtUsuario.Text;
+            string usuario = txtUsuario.Text.ToUpper();
             string password = txtPassword.Text;
             
 

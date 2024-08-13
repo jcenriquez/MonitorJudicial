@@ -82,9 +82,9 @@ namespace MonitorJudicial.Views
         }
         protected void btnRegister_Click(object sender, EventArgs e)
         {
-            string usuario = txtUsuario.Text;
-            string nombres = txtFirstName.Text;
-            string apellidos = txtLastName.Text;
+            string usuario = txtUsuario.Text.ToUpper();
+            string nombres = txtFirstName.Text.ToUpper();
+            string apellidos = txtLastName.Text.ToUpper();
             string email = txtEmail.Text;
             int rol = ddlCategories.SelectedIndex;
             string codigoAbogado = CargarCodigoAbogado(ddlAbogado.SelectedItem.ToString());
