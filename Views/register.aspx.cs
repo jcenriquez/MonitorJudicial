@@ -102,6 +102,9 @@ Usuario: {usuario}
 Contraseña: {password}
 Abogado: {nombreAbogado}
 
+Puede acceder al sitio utilizando o copiando en tu navegador el siguiente enlace:
+http://192.100.100.58:8088/
+
 Mensaje Generado Desde Monitor Judicial 1.0.
 
 La información contenida en este e-mail es confidencial y solo puede ser utilizada por la persona o la institución a la cual está dirigido. Cualquier retención, difusión, distribución o copia de este mensaje está prohibida. La institución no asume responsabilidad sobre información, opiniones o criterios contenidos en este mail que no estén relacionados con negocios oficiales de nuestra institución. Si usted recibió este mensaje por error, notifique al administrador o a quien le envió inmediatamente, elimínelo sin ver su contenido o hacer copias. (Las tildes se han omitido para facilitar la lectura).";

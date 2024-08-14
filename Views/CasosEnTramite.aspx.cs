@@ -102,7 +102,7 @@ namespace MonitorJudicial
                 [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
             WHERE 
                 PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
-                AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+                AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J') AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
         )
         UNION ALL
         (
@@ -136,7 +136,7 @@ namespace MonitorJudicial
                 [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
             WHERE 
                 PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
-                AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+                AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405') AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
         )
         ORDER BY 
             [FECHA ADJUDICACION] DESC;";
@@ -192,7 +192,7 @@ namespace MonitorJudicial
                 [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
             WHERE 
                 PA.CODIGOABOGADO = '" + codigoAbogado + @"'
-                AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+                AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J') AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
         )
         UNION ALL
         (
@@ -226,7 +226,7 @@ namespace MonitorJudicial
                 [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
             WHERE 
                 PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
-                AND PBJ.CODIGOABOGADO = '" + codigoAbogado + @"'
+                AND PBJ.CODIGOABOGADO = '" + codigoAbogado + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
         )
         ORDER BY 
             [FECHA ADJUDICACION] DESC;";
@@ -303,7 +303,7 @@ namespace MonitorJudicial
                         WHERE 
                             PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
                             AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
-                            AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
+                            AND ET.NOMBRE= '" + filtroTramiteJudicial + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                     )
                     UNION ALL
                     (
@@ -338,7 +338,7 @@ namespace MonitorJudicial
                         WHERE 
                             PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
                             AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
-                            AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
+                            AND ET.NOMBRE= '" + filtroTramiteJudicial + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                     )
                     ORDER BY 
                         [FECHA ADJUDICACION] DESC;";
@@ -394,7 +394,7 @@ namespace MonitorJudicial
                         WHERE 
                             PA.CODIGOABOGADO  = '" + codigoAbogado + @"'
                             AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
-                            AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
+                            AND ET.NOMBRE= '" + filtroTramiteJudicial + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                     )
                     UNION ALL
                     (
@@ -429,7 +429,7 @@ namespace MonitorJudicial
                         WHERE 
                             PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
                             AND PBJ.CODIGOABOGADO = '" + codigoAbogado + @"'
-                            AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
+                            AND ET.NOMBRE= '" + filtroTramiteJudicial + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                     )
                     ORDER BY 
                         [FECHA ADJUDICACION] DESC;";
@@ -637,7 +637,7 @@ namespace MonitorJudicial
                     [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON PA.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
                 WHERE 
                     PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
-                    AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+                    AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J') AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                 )
                 UNION ALL
                 (
@@ -679,7 +679,7 @@ namespace MonitorJudicial
                     [FBS_GENERALES].[DIVISION] DIV ON DIV.SECUENCIAL = PM.SECUENCIALOFICINA
                 WHERE 
                     PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
-                    AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+                    AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405') AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                 )
                 ORDER BY 
                     [FECHA ADJUDICACION] DESC;";
@@ -732,7 +732,7 @@ PT.COMENTARIO AS [COMENTARIO],
                     [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON PA.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
                 WHERE 
                     PA.CODIGOABOGADO = '" + codigoAbogado + @"'
-                    AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+                    AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J') AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                 )
                 UNION ALL
                 (
@@ -774,7 +774,7 @@ PT.COMENTARIO AS [COMENTARIO],
                     [FBS_GENERALES].[DIVISION] DIV ON DIV.SECUENCIAL = PM.SECUENCIALOFICINA
                 WHERE 
                     PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
-                    AND PBJ.CODIGOABOGADO = '" + codigoAbogado + @"'
+                    AND PBJ.CODIGOABOGADO = '" + codigoAbogado + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                 )
                 ORDER BY 
                     [FECHA ADJUDICACION] DESC;";
