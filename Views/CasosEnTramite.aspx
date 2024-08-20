@@ -18,8 +18,8 @@
                     <h1 class="h3 mb-2 text-gray-800">En Trámite</h1>
                     <%--<p class="mb-4">DataTables is a third party plugin that is used to generate the demo table below.
                         For more information about DataTables, please visit the <a target="_blank"
-                            href="https://datatables.net">official DataTables documentation</a>.</p>--%>                  
-                    
+                            href="https://datatables.net">official DataTables documentation</a>.</p>--%>
+
                     <!-- DataTables -->
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
@@ -30,15 +30,21 @@
                         <nav class="card-body">
                             <div class="container-fluid">
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
+                                        <asp:DropDownList ID="ddlEstado" runat="server" class="form-control"></asp:DropDownList>
+                                        <asp:Button ID="btnFiltrarEstado" runat="server" Text="Filtrar" OnClick="btnFiltrarEstado_Click" CssClass="btn btn-primary" />
+                                        <asp:Button ID="btnQuitarFiltroEstado" runat="server" Text="Quitar Filtro" OnClick="btnQuitarFiltroEstado_Click" CssClass="btn btn-success" />
+
+                                    </div>
+                                    <div class="col-md-4">
                                         <asp:DropDownList ID="ddlAccion" runat="server" class="form-control"></asp:DropDownList>
                                         <asp:Button ID="btnFiltrar" runat="server" Text="Filtrar" OnClick="btnFiltrar_Click" CssClass="btn btn-primary" />
                                         <asp:Button ID="btnQuitarFiltro" runat="server" Text="Quitar Filtro" OnClick="btnQuitarFiltro_Click" CssClass="btn btn-success" />
-
                                     </div>
+
                                 </div>
                                 <br />
-                                <div class="row" id="divGridPrincipal" runat="server" >
+                                <div class="row" id="divGridPrincipal" runat="server">
                                     <div class="col-md-12">
                                         <div class="table-responsive">
                                             <asp:GridView class="table table-striped table-hover"
@@ -56,24 +62,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row" id="divGridFiltrado" runat="server" >
-    <div class="col-md-12">
-        <div class="table-responsive">
-            <asp:GridView class="table table-striped table-hover"
-                ID="gvCasosJudicialFiltrado"
-                runat="server"
-                AutoGenerateColumns="true"
-                OnRowDataBound="gvCasosJudicial_RowDataBound"
-                AllowPaging="true"
-                PageSize="10"
-                OnPageIndexChanging="gvCasosJudicialFiltrado_PageIndexChanging"
-                Width="100%"
-                CellSpacing="0">
-                <PagerSettings Mode="NextPrevious" NextPageText="Siguiente" PreviousPageText="Anterior" />
-            </asp:GridView>
-        </div>
-    </div>
-</div>
+                                <div class="row" id="divGridFiltrado" runat="server">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <asp:GridView class="table table-striped table-hover"
+                                                ID="gvCasosJudicialFiltrado"
+                                                runat="server"
+                                                AutoGenerateColumns="true"
+                                                OnRowDataBound="gvCasosJudicial_RowDataBound"
+                                                AllowPaging="true"
+                                                PageSize="10"
+                                                OnPageIndexChanging="gvCasosJudicialFiltrado_PageIndexChanging"
+                                                Width="100%"
+                                                CellSpacing="0">
+                                                <PagerSettings Mode="NextPrevious" NextPageText="Siguiente" PreviousPageText="Anterior" />
+                                            </asp:GridView>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </nav>
                     </div>

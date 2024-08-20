@@ -24,10 +24,17 @@ namespace MonitorJudicial
             if (!IsPostBack)
             {
                 CargarEstados();
+                CargarEstadosJudiciales();
             }
 
         }
         protected void btnQuitarFiltro_Click(object sender, EventArgs e)
+        {
+            divGridPrincipal.Visible = true;
+            divGridFiltrado.Visible = false;
+            LlenarGridViewCasos();
+        }
+        protected void btnQuitarFiltroEstado_Click(object sender, EventArgs e)
         {
             divGridPrincipal.Visible = true;
             divGridFiltrado.Visible = false;
@@ -53,6 +60,30 @@ namespace MonitorJudicial
                     while (reader.Read())
                     {
                         ddlAccion.Items.Add(new ListItem(reader["NOMBRE"].ToString()));
+                    }
+                }
+            }
+        }
+        protected void CargarEstadosJudiciales()
+        {
+            string connectionString = WebConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string queryEstadoTramite = "SELECT DISTINCT\r\n    CASE \r\n        WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'\r\n        WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'\r\n        WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'JUDICIAL CON ACUERDO AL DIA'\r\n        WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'\r\n        WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'JUDICIAL CON ACUERDO VENCIDO'\r\n    END AS [NOMBRE]\r\nFROM [FBS_CARTERA].[PRESTAMOMAESTRO] PM\r\nWHERE PM.CODIGOESTADOPRESTAMO IS NOT NULL\r\nAND PM.CODIGOESTADOPRESTAMO NOT IN ('T','Z','M')\r\nORDER BY NOMBRE;";
+
+            ddlEstado.Items.Clear(); // Limpiar elementos previos
+
+            // Agregar opción por defecto
+            ddlEstado.Items.Add(new ListItem("...SELECCIONAR POR ESTADO JUDICIAL...", ""));
+            ddlEstado.Items.Add(new ListItem("...TODAS...", ""));
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            using (SqlCommand command = new SqlCommand(queryEstadoTramite, connection))
+            {
+                connection.Open();
+                using (SqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        ddlEstado.Items.Add(new ListItem(reader["NOMBRE"].ToString()));
                     }
                 }
             }
@@ -532,6 +563,317 @@ namespace MonitorJudicial
 
         }
 
+        public void LlenarGridViewCasosFiltradoEstado(string filtroTramiteJudicial)
+        {
+            string codigoPrestamo = "";
+
+            switch (filtroTramiteJudicial)
+            {
+                case "CASTIGADO":
+                    codigoPrestamo = "G";
+                    break;
+                case "JUDICIAL":
+                    codigoPrestamo = "J";
+                    break;
+                case "JUDICIAL CON ACUERDO AL DIA":
+                    codigoPrestamo = "A";
+                    break;
+                case "PREJUDICIAL":
+                    codigoPrestamo = "I";
+                    break;
+                case "JUDICIAL CON ACUERDO VENCIDO":
+                    codigoPrestamo = "V";
+                    break;
+                default:
+                    codigoPrestamo = ""; 
+
+                    break;
+            }
+
+
+
+
+
+            filtro = filtroTramiteJudicial;
+            divGridPrincipal.Visible = false;
+            divGridFiltrado.Visible = true;
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string query;
+            string codigoAbogado = (string)(Session["CodigoAbogado"]);
+            if (filtroTramiteJudicial == "")
+            {
+                divGridPrincipal.Visible = true;
+                divGridFiltrado.Visible = false;
+                LlenarGridViewCasos();
+            }
+            else
+            {
+                if (codigoAbogado.Equals("0"))
+                {
+                    query = @"
+                    (
+                        SELECT 
+                            PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                            PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                            PM.NUMEROPRESTAMO, 
+                            CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                            PM.DEUDAINICIAL, 
+                            PM.SALDOACTUAL,
+                            AB.NOMBRE AS [NOMBRE ABOGADO],
+                            CASE 
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                            END AS [ESTADO JUDICIAL],
+                            ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+                        FROM 
+                            [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
+                        LEFT JOIN 
+                            [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
+                        INNER JOIN 
+                            [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
+                        JOIN 
+                            [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+                        JOIN 
+                            [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+                        LEFT JOIN 
+                            [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                        LEFT JOIN 
+                            [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+                        WHERE 
+                            PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+                            AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+                            AND PM.CODIGOESTADOPRESTAMO= '" + codigoPrestamo + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
+                    )
+                    UNION ALL
+                    (
+                        SELECT 
+                            PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                            PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                            PM.NUMEROPRESTAMO, 
+                            CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                            PM.DEUDAINICIAL, 
+                            PM.SALDOACTUAL,
+                            AB.NOMBRE AS [NOMBRE ABOGADO],
+                            CASE 
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                            END AS [ESTADO JUDICIAL],
+                            ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+                        FROM 
+                            [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
+                        INNER JOIN 
+                            [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                        INNER JOIN 
+                            [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
+                        JOIN 
+                            [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+                        JOIN 
+                            [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+                        LEFT JOIN 
+                            [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                        LEFT JOIN 
+                            [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+                        WHERE 
+                            PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
+                            AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+                            AND PM.CODIGOESTADOPRESTAMO= '" + codigoPrestamo + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
+                    )
+                    ORDER BY 
+                        [FECHA ADJUDICACION] DESC;";
+
+                    // Establecer conexión y ejecutar la consulta
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        SqlCommand command = new SqlCommand(query, connection);
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        DataTable dataTable = new DataTable();
+
+                        adapter.Fill(dataTable);
+
+                        // Asignar datos a la GridView
+                        gvCasosJudicialFiltrado.DataSource = dataTable;
+                        gvCasosJudicialFiltrado.DataBind();
+                    }
+                }
+                else
+                {
+                    query = @"
+                    (
+                        SELECT 
+                            PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                            PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                            PM.NUMEROPRESTAMO, 
+                            CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                            PM.DEUDAINICIAL, 
+                            PM.SALDOACTUAL,
+                            AB.NOMBRE AS [NOMBRE ABOGADO],
+                            CASE 
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                            END AS [ESTADO JUDICIAL],
+                            ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+                        FROM 
+                            [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
+                        LEFT JOIN 
+                            [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
+                        INNER JOIN 
+                            [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
+                        JOIN 
+                            [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+                        JOIN 
+                            [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+                        LEFT JOIN 
+                            [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                        LEFT JOIN 
+                            [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+                        WHERE 
+                            PA.CODIGOABOGADO  = '" + codigoAbogado + @"'
+                            AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+                            AND PM.CODIGOESTADOPRESTAMO= '" + codigoPrestamo + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
+                    )
+                    UNION ALL
+                    (
+                        SELECT 
+                            PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                            PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                            PM.NUMEROPRESTAMO, 
+                            CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                            PM.DEUDAINICIAL, 
+                            PM.SALDOACTUAL,
+                            AB.NOMBRE AS [NOMBRE ABOGADO],
+                            CASE 
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                                WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                            END AS [ESTADO JUDICIAL],
+                            ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+                        FROM 
+                            [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
+                        INNER JOIN 
+                            [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                        INNER JOIN 
+                            [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
+                        JOIN 
+                            [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+                        JOIN 
+                            [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+                        LEFT JOIN 
+                            [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                        LEFT JOIN 
+                            [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+                        WHERE 
+                            PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
+                            AND PBJ.CODIGOABOGADO = '" + codigoAbogado + @"'
+                            AND PM.CODIGOESTADOPRESTAMO= '" + codigoPrestamo + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
+                    )
+                    ORDER BY 
+                        [FECHA ADJUDICACION] DESC;";
+
+
+
+
+                    //    // Consulta SQL
+                    //    string query = @"
+                    //                    (
+                    //    SELECT 
+                    //        PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                    //        PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                    //        PM.NUMEROPRESTAMO, 
+                    //        CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                    //        PM.DEUDAINICIAL, 
+                    //        PM.SALDOACTUAL,
+                    //        AB.NOMBRE AS [NOMBRE ABOGADO],
+                    //        CASE 
+                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
+                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
+                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                    //        END AS [ESTADO JUDICIAL],
+                    //        ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+                    //    FROM 
+                    //        [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
+                    //    LEFT JOIN 
+                    //        [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
+                    //    INNER JOIN 
+                    //        [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
+                    //    JOIN 
+                    //        [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+                    //    JOIN 
+                    //        [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+                    //    LEFT JOIN 
+                    //        [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                    //    LEFT JOIN 
+                    //        [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+                    //    WHERE 
+                    //        PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+                    //        AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
+                    //  AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
+                    //)
+                    //UNION ALL
+                    //(
+                    //    SELECT 
+                    //        PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                    //        PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                    //        PM.NUMEROPRESTAMO, 
+                    //        CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                    //        PM.DEUDAINICIAL, 
+                    //        PM.SALDOACTUAL,
+                    //        AB.NOMBRE AS [NOMBRE ABOGADO],
+                    //        CASE 
+                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+                    //        END AS [ESTADO JUDICIAL],
+                    //        ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
+                    //    FROM 
+                    //        [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
+                    //    INNER JOIN 
+                    //        [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                    //    INNER JOIN 
+                    //        [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
+                    //    JOIN 
+                    //        [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+                    //    JOIN 
+                    //        [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+                    //    LEFT JOIN 
+                    //        [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                    //    LEFT JOIN 
+                    //        [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+                    //    WHERE 
+                    //        PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
+                    //        AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+                    //  AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
+                    //)
+                    //ORDER BY 
+                    //    [FECHA ADJUDICACION] DESC;";
+
+                    // Establecer conexión y ejecutar la consulta
+                    using (SqlConnection connection = new SqlConnection(connectionString))
+                    {
+                        SqlCommand command = new SqlCommand(query, connection);
+                        SqlDataAdapter adapter = new SqlDataAdapter(command);
+                        DataTable dataTable = new DataTable();
+
+                        adapter.Fill(dataTable);
+
+                        // Asignar datos a la GridView
+                        gvCasosJudicialFiltrado.DataSource = dataTable;
+                        gvCasosJudicialFiltrado.DataBind();
+                    }
+                }
+
+            }
+
+        }
+
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             // Limpiar las variables de sesión
@@ -556,6 +898,19 @@ namespace MonitorJudicial
             else
             {
                 LlenarGridViewCasosFiltrado(ddlAccion.SelectedValue);
+            }
+        }
+        protected void btnFiltrarEstado_Click(object sender, EventArgs e)
+        {
+            if ((filtro == "...SELECCIONAR POR ESTADO JUDICIAL...") || (filtro == "...TODAS..."))
+            {
+                divGridPrincipal.Visible = true;
+                divGridFiltrado.Visible = false;
+                LlenarGridViewCasos();
+            }
+            else
+            {
+                LlenarGridViewCasosFiltradoEstado(ddlEstado.SelectedValue);
             }
         }
 
