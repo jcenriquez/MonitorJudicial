@@ -123,6 +123,7 @@ namespace MonitorJudicial.Views
             string nombres;
             string codigoAbogado;
             string correoAbogado;
+            string codigoUsuario;
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
                 string query = @"SELECT [CODIGOUSUARIO], [CLAVE], [EMAIL], [NOMBRES], [APELLIDOS], [ROL], 
@@ -154,6 +155,8 @@ namespace MonitorJudicial.Views
                                     Session["CodigoAbogado"] = codigoAbogado;
                                     correoAbogado = reader["EMAIL"].ToString(); // Asigna el valor de la columna ROL a la variable roles
                                     Session["EmailAbogado"] = correoAbogado;
+                                    codigoUsuario = reader["CODIGOUSUARIO"].ToString();
+                                    Session["CodigoUsuario"] = codigoUsuario;
                                 }
                             }
                         }

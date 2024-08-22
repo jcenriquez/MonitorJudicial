@@ -528,9 +528,12 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.S
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             // Limpiar las variables de sesión
-            Session["Nombres"] = null;
             Session["Rol"] = null;
+            Session["Nombres"] = null;
             Session["CodigoAbogado"] = null;
+            Session["NumPretamo"] = null;
+            Session["EmailAbogado"] = null;
+            Session["CodigoUsuario"] = null;
 
             // O puedes usar Session.Clear() para limpiar todas las variables de sesión
             // Session.Clear();
@@ -1257,6 +1260,63 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             }
             return respuesta;
         }
+
+        protected void GuardarHistorialEstadoPrestamo(int secuencialprestamoV, string codigoEstadoJudicialV, string codigoabogadoV, string comentarioV, bool estaactivoV, int numeroverificadorV, string codigousuarioV, DateTime fechasistemaV, DateTime fechamaquinaV, DateTime fechaRemate)
+        {
+            string fechaFormateada = fechaRemate.ToString("yyyy-MM-dd");
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string respuesta = "";
+            string query = @"
+            INSERT INTO [FBS_LOGS].[PRESTAMODEMANDAJUDICIALTRAMITE]
+            ([SECUENCIALPRESTAMO]
+            ,[CODIGOESTADOTRAMITEDEMJUD]
+            ,[CODIGOABOGADO]
+            ,[COMENTARIO]
+            ,[ESTAACTIVO]
+            ,[NUMEROVERIFICADOR]
+            ,[CODIGOUSUARIO]
+            ,[FECHASISTEMA]
+            ,[FECHAMAQUINA]
+            ,[FECHAREMATE])
+            OUTPUT INSERTED.SECUENCIAL
+            VALUES
+            (@SecuencialPrestamo
+            ,@CodigoEstadoJudicial
+            ,@CodigoAbogado
+            ,@Comentario
+            ,@EstaActivo
+            ,@NumeroVerificador
+            ,@CodigoUsuario
+            ,@FechaSistema
+            ,@FechaMaquina
+            ,@FechaRemate)";
+
+            using (SqlConnection connection = new SqlConnection(connectionString))
+            {
+                SqlCommand command = new SqlCommand(query, connection);
+                command.Parameters.AddWithValue("@SecuencialPrestamo", secuencialprestamoV);
+                command.Parameters.AddWithValue("@CodigoEstadoJudicial", codigoEstadoJudicialV);
+                command.Parameters.AddWithValue("@CodigoAbogado", codigoabogadoV);
+                command.Parameters.AddWithValue("@Comentario", comentarioV);
+                command.Parameters.AddWithValue("@EstaActivo", estaactivoV);
+                command.Parameters.AddWithValue("@NumeroVerificador", numeroverificadorV);
+                command.Parameters.AddWithValue("@CodigoUsuario", codigousuarioV);
+                command.Parameters.AddWithValue("@FechaSistema", fechasistemaV);
+                command.Parameters.AddWithValue("@FechaMaquina", fechamaquinaV);
+                command.Parameters.AddWithValue("@FechaRemate", fechaFormateada);
+
+                try
+                {
+                    connection.Open();
+                    int secuencialInsertado = (int)command.ExecuteScalar();
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error: " + ex.Message);
+                }
+            }
+        }
+
         //protected string GuardarValoresJudiciales(int secuencialprestamoV, int secuencialJudicialV, string conceptoV, double valorV, string accionJudicialV)
         //{
         //    string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
@@ -1306,9 +1366,25 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             string textComentario=txtComentario.Text;
             string numeroPrestamo= Session["NumPretamo"] as string;
 
+            if (ddlJudicatura.SelectedValue == "")
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! Por favor, seleccione una JUDICATURA.');", true);
+                return;
+            }
+            if (ddlMedidaCautelar.SelectedValue == "")
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! Por favor, seleccione una MEDIDA CAUTELAR.');", true);
+                return;
+            }
+            if (ddlAccion.SelectedValue == "")
+            {
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! Por favor, seleccione una ACCIÓN DESARROLLADA.');", true);
+                return;
+            }
+
             if (string.IsNullOrEmpty(textComentario))
             {
-                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! Ingrese un Comentario!');", true);
+                ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! Ingrese un COMENTARIO');", true);
                 return;
             }
             else
@@ -1328,15 +1404,17 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                 string comentarioV = txtComentario.Text.Trim().ToUpper();
                 bool estaactivoV = true;
                 int numeroverificadorV = 1;//int.Parse(numeroverificador);
-                string codigousuarioV = codigousuario;
+                string codigousuarioV = "FPUEDMAG.SANANTONIO";//Session["CodigoUsuario"].ToString();
+                string codigousuarioAudit = Session["CodigoUsuario"].ToString();
                 DateTime fechasistemaV = DateTime.Parse(dtFechaSistema.Value);
                 DateTime fechamaquinaV = DateTime.Parse(dtFechaIngreso.Value);
 
-                DateTime fecharemateV = DateTime.MinValue;
+                DateTime fecharemateV = new DateTime(1900, 1, 1);
+
 
                 if (string.IsNullOrWhiteSpace(dtFechaRemate.Text))
                 {
-                    fecharemateV = DateTime.MinValue;
+                    fecharemateV = new DateTime(1900, 1, 1);
                 }
                 else
                 {
@@ -1355,6 +1433,7 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
                     {
 
                         string guardado = GuardarEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioV, fechasistemaV, fechamaquinaV, fecharemateV);
+                        GuardarHistorialEstadoPrestamo(secuencialprestamoV, codigoEstadoJudicialV, codigoabogadoV, comentarioV, estaactivoV, numeroverificadorV, codigousuarioAudit, fechasistemaV, fechamaquinaV, fecharemateV);
                         if (guardado.Equals("OK"))
                         {
                             string nombres = Session["Nombres"] as string;
@@ -1400,13 +1479,13 @@ La información contenida en este e-mail es confidencial y solo puede ser utiliz
                         }
                         else
                         {
-                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                            ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar1!');", true);
                             return;
                         }
                     }
                     else
                     {
-                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                        ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar2!');", true);
                         return;
                     }
                     //}
@@ -1418,7 +1497,7 @@ La información contenida en este e-mail es confidencial y solo puede ser utiliz
                 }
                 catch (Exception ex)
                 {
-                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar!');", true);
+                    ClientScript.RegisterStartupScript(this.GetType(), "alert", "alert('Error! No se pudo actualizar3!');", true);
                     return;
                 }
             }
