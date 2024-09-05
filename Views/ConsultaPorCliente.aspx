@@ -59,7 +59,7 @@
 
                                 <div class="row">
                                     <div class="col-md-4">
-                                        <input type="search" id="idConsulta" class="form-control" placeholder="N° de Cédula o de Cliente" aria-label="Buscar" maxlength="20" validationgroup="grupoNumeroEntero" onkeypress="return soloNumeros(event);" runat="server">
+                                        <input type="search" id="idConsulta" class="form-control" placeholder="N° de Cédula o de Cliente" aria-label="Buscar" maxlength="20" runat="server">
                                     </div>
                                     <div class="col-md-2">
                                         <div class="form-check">

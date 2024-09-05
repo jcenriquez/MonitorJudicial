@@ -115,6 +115,7 @@ namespace MonitorJudicial
                     WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                     WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                     WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                 END AS [ESTADO JUDICIAL],
                 ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
             FROM 
@@ -149,6 +150,7 @@ namespace MonitorJudicial
                     WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                     WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                     WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                 END AS [ESTADO JUDICIAL],
                 ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
             FROM 
@@ -205,6 +207,7 @@ namespace MonitorJudicial
                     WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                     WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                     WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                 END AS [ESTADO JUDICIAL],
                 ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
             FROM 
@@ -239,6 +242,7 @@ namespace MonitorJudicial
                     WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                     WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                     WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                 END AS [ESTADO JUDICIAL],
                 ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
             FROM 
@@ -315,6 +319,7 @@ namespace MonitorJudicial
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             END AS [ESTADO JUDICIAL],
                             ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
                         FROM 
@@ -350,6 +355,7 @@ namespace MonitorJudicial
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             END AS [ESTADO JUDICIAL],
                             ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
                         FROM 
@@ -406,6 +412,7 @@ namespace MonitorJudicial
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             END AS [ESTADO JUDICIAL],
                             ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
                         FROM 
@@ -441,6 +448,7 @@ namespace MonitorJudicial
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             END AS [ESTADO JUDICIAL],
                             ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
                         FROM 
@@ -626,6 +634,7 @@ namespace MonitorJudicial
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             END AS [ESTADO JUDICIAL],
                             ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
                         FROM 
@@ -661,6 +670,7 @@ namespace MonitorJudicial
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             END AS [ESTADO JUDICIAL],
                             ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
                         FROM 
@@ -717,6 +727,7 @@ namespace MonitorJudicial
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             END AS [ESTADO JUDICIAL],
                             ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
                         FROM 
@@ -752,6 +763,7 @@ namespace MonitorJudicial
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                                 WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             END AS [ESTADO JUDICIAL],
                             ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
                         FROM 
@@ -966,6 +978,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
                     PT.FECHAREMATE AS [FECHA REMATE],
@@ -1012,6 +1025,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
                     PT.FECHAREMATE AS [FECHA REMATE],
@@ -1061,6 +1075,7 @@ namespace MonitorJudicial
                         WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
                     PT.FECHAREMATE AS [FECHA REMATE],
@@ -1107,6 +1122,7 @@ PT.COMENTARIO AS [COMENTARIO],
                         WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
                         WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     END AS [ESTADO JUDICIAL],
                     ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
                     PT.FECHAREMATE AS [FECHA REMATE],
