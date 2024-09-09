@@ -172,7 +172,7 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                 AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405') AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
         )
         ORDER BY 
-            [FECHA ADJUDICACION] DESC;";
+            [NOMBRE SOCIO];";
 
                 // Establecer conexión y ejecutar la consulta
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -264,7 +264,7 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                 AND PBJ.CODIGOABOGADO = '" + codigoAbogado + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
         )
         ORDER BY 
-            [FECHA ADJUDICACION] DESC;";
+            [NOMBRE SOCIO];";
 
                 // Establecer conexión y ejecutar la consulta
                 using (SqlConnection connection = new SqlConnection(connectionString))
@@ -378,7 +378,7 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             AND ET.NOMBRE= '" + filtroTramiteJudicial + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                     )
                     ORDER BY 
-                        [FECHA ADJUDICACION] DESC;";
+                        [NOMBRE SOCIO];";
 
                     // Establecer conexión y ejecutar la consulta
                     using (SqlConnection connection = new SqlConnection(connectionString))
@@ -471,7 +471,7 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             AND ET.NOMBRE= '" + filtroTramiteJudicial + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                     )
                     ORDER BY 
-                        [FECHA ADJUDICACION] DESC;";
+                        [NOMBRE SOCIO];";
 
 
 
@@ -693,7 +693,7 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             AND PM.CODIGOESTADOPRESTAMO= '" + codigoPrestamo + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                     )
                     ORDER BY 
-                        [FECHA ADJUDICACION] DESC;";
+                        [NOMBRE SOCIO];";
 
                     // Establecer conexión y ejecutar la consulta
                     using (SqlConnection connection = new SqlConnection(connectionString))
@@ -786,7 +786,7 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                             AND PM.CODIGOESTADOPRESTAMO= '" + codigoPrestamo + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                     )
                     ORDER BY 
-                        [FECHA ADJUDICACION] DESC;";
+                        [NOMBRE SOCIO];";
 
 
 
@@ -1054,7 +1054,7 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405') AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                 )
                 ORDER BY 
-                    [FECHA ADJUDICACION] DESC;";
+                    [NOMBRE SOCIO];";
             }
             else
             {
@@ -1151,7 +1151,7 @@ PT.COMENTARIO AS [COMENTARIO],
                     AND PBJ.CODIGOABOGADO = '" + codigoAbogado + @"' AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
                 )
                 ORDER BY 
-                    [FECHA ADJUDICACION] DESC;";
+                    [NOMBRE SOCIO];";
             }
 
 

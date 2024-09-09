@@ -53,11 +53,16 @@
                                                 AutoGenerateColumns="true"
                                                 OnRowDataBound="gvCasosJudicial_RowDataBound"
                                                 AllowPaging="true"
-                                                PageSize="10"
+                                                PageSize="15"
                                                 OnPageIndexChanging="gvCasosJudicial_PageIndexChanging"
                                                 Width="100%"
                                                 CellSpacing="0">
-                                                <PagerSettings Mode="NextPrevious" NextPageText="Siguiente" PreviousPageText="Anterior" />
+                                                <PagerSettings Mode="NumericFirstLast"
+                                                    NextPageText="Siguiente"
+                                                    PreviousPageText="Anterior"
+                                                    FirstPageText="Primera"
+                                                    LastPageText="Última" />
+                                                <PagerStyle CssClass="pagination" />
                                             </asp:GridView>
                                         </div>
                                     </div>
