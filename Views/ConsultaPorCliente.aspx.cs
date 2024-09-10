@@ -544,6 +544,7 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.S
 
         protected void gvPrestamos_RowCommand(object sender, GridViewCommandEventArgs e)
         {
+            dvTramitePrestamo.Visible = true;
             CargarFormulario();
             btnActualizarEstadoPrestamo.Visible = true;
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
