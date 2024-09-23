@@ -266,7 +266,7 @@ namespace MonitorJudicial
                 SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
                 tp.NOMBRE AS [TIPO],
                 p.DEUDAINICIAL AS [DEUDA INICIAL],
-                p.SALDOACTUAL AS [SALDO],
+
                 CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
                 CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
                 e.NOMBRE AS [ESTADO]
@@ -284,7 +284,7 @@ namespace MonitorJudicial
                 SELECT  p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
                 tp.NOMBRE AS [TIPO],
                 p.DEUDAINICIAL AS [DEUDA INICIAL],
-                p.SALDOACTUAL AS [SALDO],
+                
                 CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
                 CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
                 e.NOMBRE AS [ESTADO]
@@ -354,7 +354,7 @@ namespace MonitorJudicial
                 SELECT TOP (100) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
                 tp.NOMBRE AS [TIPO],
                 p.DEUDAINICIAL AS [DEUDA INICIAL],
-                p.SALDOACTUAL AS [SALDO],
+                
                 CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
                 CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
                 e.NOMBRE AS [ESTADO]
@@ -372,7 +372,7 @@ namespace MonitorJudicial
                 SELECT TOP(100) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
                 tp.NOMBRE AS [TIPO],
                 p.DEUDAINICIAL AS [DEUDA INICIAL],
-                p.SALDOACTUAL AS [SALDO],
+                
                 CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
                 CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
                 e.NOMBRE AS [ESTADO]
@@ -443,7 +443,7 @@ namespace MonitorJudicial
         SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
 tp.NOMBRE AS [TIPO],
 p.DEUDAINICIAL AS [DEUDA INICIAL],
-p.SALDOACTUAL AS [SALDO],
+
 CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
 CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
 e.NOMBRE AS [ESTADO]
@@ -464,7 +464,7 @@ ORDER BY p.SECUENCIAL DESC;";
         SELECT TOP (1000) p.NUMEROPRESTAMO AS [N° PRÉSTAMO],
 tp.NOMBRE AS [TIPO],
 p.DEUDAINICIAL AS [DEUDA INICIAL],
-p.SALDOACTUAL AS [SALDO],
+
 CONVERT(VARCHAR, p.FECHAADJUDICACION, 23) AS [ADJUDICADO],
 CONVERT(VARCHAR, p.FECHAVENCIMIENTO, 23) AS [VENCIMIENTO],
 e.NOMBRE AS [ESTADO]
@@ -560,7 +560,7 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.S
                 string saldoVar = gvPrestamos.Rows[index].Cells[4].Text;
                 string adjudicadoPretamoVar = gvPrestamos.Rows[index].Cells[5].Text;
                 string vencimientoVar = gvPrestamos.Rows[index].Cells[6].Text;
-                string estadoVar = gvPrestamos.Rows[index].Cells[7].Text;
+                //string estadoVar = gvPrestamos.Rows[index].Cells[7].Text;
                 string abogado = ""; // Inicializar la variable abogado
                 //string codigoAbogado = "";
                 string oficinaV = "";

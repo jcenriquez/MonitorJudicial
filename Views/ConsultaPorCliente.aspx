@@ -188,120 +188,101 @@
                                     </div>
                                 </div>--%>
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="txtNumPretamo" class="form-label">N° Préstamo:</label>
                                         <asp:TextBox ID="txtNumPretamo" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="txtCausa" class="form-label">N° Causa:</label>
                                         <asp:TextBox ID="txtCausa" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="txtOficina" class="form-label">Oficina:</label>
                                         <asp:TextBox ID="txtOficina" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="txtOficial" class="form-label">Oficial:</label>
                                         <asp:TextBox ID="txtOficial" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
-
                                 <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="txtTipo" class="form-label">Tipo:</label>
                                         <asp:TextBox ID="txtTipo" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="dtAdjudicado" class="form-label">Fecha Adjudicado:</label>
                                         <asp:TextBox ID="dtAdjudicado" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="dtUltimoPago" class="form-label">Fecha Último Pago:</label>
                                         <asp:TextBox ID="dtUltimoPago" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="dtProxVencimiento" class="form-label">Fecha Vencimiento:</label>
                                         <asp:TextBox ID="dtProxVencimiento" runat="server" CssClass="form-control" ReadOnly="true"></asp:TextBox>
                                     </div>
                                 </div>
-
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="txtDeudaInicial" class="form-label">Deuda Inicial:</label>
                                         <asp:TextBox ID="txtDeudaInicial" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3" hidden>
                                         <label for="txtSaldoActual" class="form-label">Saldo Actual:</label>
                                         <asp:TextBox ID="txtSaldoActual" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="txtTransferido" class="form-label">Saldo Transferido a Judicial:</label>
                                         <%--<input type="text" class="form-control" id="txtTransferido" runat="server" readonly>--%>
                                         <asp:TextBox ID="txtTransferido" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="txtSaldoActualCartera" class="form-label">Saldo Actual Cartera:</label>
-                                        <asp:TextBox ID="txtSaldoActualCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
+                                        <asp:TextBox ID="txtSaldoActualCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true" Style="font-weight: bold;"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-3">
                                         <label for="txtInteresExigibleCartera" class="form-label">Interés Exigible:</label>
                                         <asp:TextBox ID="txtInteresExigibleCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                    <div class="col-md-4">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
                                         <label for="txtMoraExigibleCartera" class="form-label">Mora Exigible:</label>
                                         <asp:TextBox ID="txtMoraExigibleCartera" runat="server" CssClass="form-control" inputmode="decimal" ReadOnly="true"></asp:TextBox>
                                     </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="ddlAbogado" class="form-label">Abogado:</label>
                                         <select class="form-control" id="ddlAbogado" runat="server" disabled>
                                             <option selected>Seleccione...</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="ddlTramite" class="form-label">Trámite:</label>
                                         <asp:DropDownList ID="ddlTramite" runat="server" CssClass="form-control" Enabled="false">
                                         </asp:DropDownList>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label for="ddlMateria" class="form-label">Materia:</label>
                                         <select class="form-control" id="ddlMateria" runat="server" disabled>
                                             <option selected>Seleccione...</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-6">
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-3">
                                         <label for="ddlMedidaCautelar" class="form-label">Medida Cautelar:</label>
                                         <asp:DropDownList ID="ddlMedidaCautelar" runat="server" CssClass="form-control" Enabled="false">
                                             <asp:ListItem Text="Seleccione..." Value="" Selected="false"></asp:ListItem>
                                         </asp:DropDownList>
                                     </div>
-                                </div>
-                                <div class="row">
                                     <div class="col-md-6">
                                         <label for="ddlJudicatura" class="form-label">Judicatura:</label>
-
-                                        <%-- <select class="form-control" id="" runat="server" disabled>
-                                            <option selected>Seleccione...</option>
-                                        </select>--%>
-
                                         <asp:DropDownList ID="ddlJudicatura" runat="server" CssClass="form-control" Enabled="false">
                                             <asp:ListItem Text="Seleccione..." Value="" Selected="false"></asp:ListItem>
                                         </asp:DropDownList>
-
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-3">
                                         <label class="form-label">Descripción:</label>
                                         <asp:TextBox ID="txtDescripcion" runat="server" CssClass="form-control" ReadOnly="true" EnableViewState="true"></asp:TextBox>
                                     </div>

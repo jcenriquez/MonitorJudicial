@@ -78,6 +78,33 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.Button btnQuitarFiltro;
 
         /// <summary>
+        /// Control ddlFiltroAbogado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.DropDownList ddlFiltroAbogado;
+
+        /// <summary>
+        /// Control btnFiltrarAbogado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnFiltrarAbogado;
+
+        /// <summary>
+        /// Control btnQuitarFiltroAbogado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.Button btnQuitarFiltroAbogado;
+
+        /// <summary>
         /// Control divGridPrincipal.
         /// </summary>
         /// <remarks>
@@ -330,13 +357,13 @@ namespace MonitorJudicial
         protected global::System.Web.UI.ScriptManager ScriptManager1;
 
         /// <summary>
-        /// Control DropDownList1.
+        /// Control ddlAccionD.
         /// </summary>
         /// <remarks>
         /// Campo generado automáticamente.
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
-        protected global::System.Web.UI.WebControls.DropDownList DropDownList1;
+        protected global::System.Web.UI.WebControls.DropDownList ddlAccionD;
 
         /// <summary>
         /// Control fechaRemateDiv.
@@ -366,15 +393,6 @@ namespace MonitorJudicial
         protected global::AjaxControlToolkit.CalendarExtender ceFechaRemate;
 
         /// <summary>
-        /// Control txtComentario.
-        /// </summary>
-        /// <remarks>
-        /// Campo generado automáticamente.
-        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
-        /// </remarks>
-        protected global::System.Web.UI.WebControls.TextBox txtComentario;
-
-        /// <summary>
         /// Control dtFechaIngreso.
         /// </summary>
         /// <remarks>
@@ -382,6 +400,15 @@ namespace MonitorJudicial
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.HtmlControls.HtmlInputGenericControl dtFechaIngreso;
+
+        /// <summary>
+        /// Control txtComentario.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.TextBox txtComentario;
 
         /// <summary>
         /// Control dtFechaSistema.
