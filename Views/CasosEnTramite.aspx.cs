@@ -40,6 +40,12 @@ namespace MonitorJudicial
                 CargarEstados();
                 CargarEstadosJudiciales();
                 CargarAbogados();
+                string codigoAbogado = (string)(Session["CodigoAbogado"]);
+                if (codigoAbogado.Equals("0"))
+                {
+                    divFiltroAbogado.Visible = true;
+                }
+
             }
 
         }
@@ -879,18 +885,21 @@ namespace MonitorJudicial
         {
             divGridPrincipal.Visible = true;
             divGridFiltrado.Visible = false;
+            gvFiltradoAbogado.Visible = false;
             LlenarGridViewCasos();
         }
         protected void btnQuitarFiltroAbogado_Click(object sender, EventArgs e)
         {
             divGridPrincipal.Visible = true;
             divGridFiltrado.Visible = false;
+            gvFiltradoAbogado.Visible = false;
             LlenarGridViewCasos();
         }
         protected void btnQuitarFiltroEstado_Click(object sender, EventArgs e)
         {
             divGridPrincipal.Visible = true;
             divGridFiltrado.Visible = false;
+            gvFiltradoAbogado.Visible = false;
             LlenarGridViewCasos();
         }
         protected void CargarAbogados()
@@ -1452,7 +1461,8 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
         {
             filtro = filtroTramiteJudicial;
             divGridPrincipal.Visible = false;
-            divGridFiltrado.Visible = true;
+            divGridFiltrado.Visible = false;
+            gvFiltradoAbogado.Visible = true;
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
             string query;
             string codigoAbogado = (string)(Session["CodigoAbogado"]);
@@ -1461,6 +1471,7 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
             {
                 divGridPrincipal.Visible = true;
                 divGridFiltrado.Visible = false;
+                divGridAbogado.Visible = false;
                 LlenarGridViewCasos();
             }
             else
@@ -1556,8 +1567,8 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                         adapter.Fill(dataTable);
 
                         // Asignar datos a la GridView
-                        gvCasosJudicialFiltrado.DataSource = dataTable;
-                        gvCasosJudicialFiltrado.DataBind();
+                        gvFiltradoAbogado.DataSource = dataTable;
+                        gvFiltradoAbogado.DataBind();
                     }
                 }
                 else
@@ -1649,8 +1660,8 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                         adapter.Fill(dataTable);
 
                         // Asignar datos a la GridView
-                        gvCasosJudicialFiltrado.DataSource = dataTable;
-                        gvCasosJudicialFiltrado.DataBind();
+                        gvFiltradoAbogado.DataSource = dataTable;
+                        gvFiltradoAbogado.DataBind();
                     }
                 }
 
@@ -2039,6 +2050,12 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
             gvCasosJudicialFiltrado.PageIndex = e.NewPageIndex;
             LlenarGridViewCasosFiltrado(ddlAccion.SelectedValue);
         }
+        protected void gvCasosJudicialAbogado_PageIndexChanging(object sender, GridViewPageEventArgs e)
+        {
+            gvFiltradoAbogado.PageIndex = e.NewPageIndex;
+            LlenarGridViewCasosFiltradoAbogado(ddlFiltroAbogado.SelectedValue);
+        }
+
 
 
         protected void gvCasosJudicial_RowDataBound(object sender, GridViewRowEventArgs e)

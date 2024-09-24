@@ -36,7 +36,7 @@
                                         <asp:Button ID="btnFiltrar" runat="server" Text="Filtrar" OnClick="btnFiltrar_Click" CssClass="btn btn-primary" />
                                         <asp:Button ID="btnQuitarFiltro" runat="server" Text="Quitar Filtro" OnClick="btnQuitarFiltro_Click" CssClass="btn btn-success" />
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-4" id="divFiltroAbogado" runat="server" visible="false">
                                         <asp:DropDownList ID="ddlFiltroAbogado" runat="server" class="form-control"></asp:DropDownList>
                                         <asp:Button ID="btnFiltrarAbogado" runat="server" Text="Filtrar" OnClick="btnFiltrarAbogado_Click" CssClass="btn btn-primary" />
                                         <asp:Button ID="btnQuitarFiltroAbogado" runat="server" Text="Quitar Filtro" OnClick="btnQuitarFiltroAbogado_Click" CssClass="btn btn-success" />
@@ -72,6 +72,23 @@
                                                 AllowPaging="true"
                                                 PageSize="6"
                                                 OnPageIndexChanging="gvCasosJudicialFiltrado_PageIndexChanging"
+                                                OnRowCommand="gvCasosJudicial_RowCommandFiltrado">
+                                            </asp:GridView>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" id="divGridAbogado" runat="server">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <asp:GridView
+                                                class="table table-striped table-hover border-left-primary border-bottom-primary"
+                                                ID="gvFiltradoAbogado"
+                                                runat="server"
+                                                AutoGenerateColumns="true"
+                                                AutoGenerateSelectButton="true"
+                                                AllowPaging="true"
+                                                PageSize="6"
+                                                OnPageIndexChanging="gvCasosJudicialAbogado_PageIndexChanging"
                                                 OnRowCommand="gvCasosJudicial_RowCommandFiltrado">
                                             </asp:GridView>
                                         </div>

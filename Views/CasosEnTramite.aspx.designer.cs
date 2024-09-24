@@ -78,6 +78,15 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.Button btnQuitarFiltro;
 
         /// <summary>
+        /// Control divFiltroAbogado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divFiltroAbogado;
+
+        /// <summary>
         /// Control ddlFiltroAbogado.
         /// </summary>
         /// <remarks>
@@ -139,6 +148,24 @@ namespace MonitorJudicial
         /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
         /// </remarks>
         protected global::System.Web.UI.WebControls.GridView gvCasosJudicialFiltrado;
+
+        /// <summary>
+        /// Control divGridAbogado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.HtmlControls.HtmlGenericControl divGridAbogado;
+
+        /// <summary>
+        /// Control gvFiltradoAbogado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.GridView gvFiltradoAbogado;
 
         /// <summary>
         /// Control dvTramitePrestamo.
