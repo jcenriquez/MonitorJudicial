@@ -58,9 +58,12 @@ namespace MonitorJudicial
         protected void btnLogout_Click(object sender, EventArgs e)
         {
             // Limpiar las variables de sesión
-            Session["Nombres"] = null;
             Session["Rol"] = null;
+            Session["Nombres"] = null;
             Session["CodigoAbogado"] = null;
+            Session["NumPretamo"] = null;
+            Session["EmailAbogado"] = null;
+            Session["CodigoUsuario"] = null;
 
             // O puedes usar Session.Clear() para limpiar todas las variables de sesión
             // Session.Clear();
