@@ -144,6 +144,8 @@ namespace MonitorJudicial.Views
                             if (!string.IsNullOrEmpty(encryptedPassword))
                             {
                                 string decryptedPassword = DecryptString(encryptedPassword);
+                                string temp = decryptedPassword;
+                                string temp2 = "";
                                 if (decryptedPassword == password)
                                 {
                                     isValid = true;

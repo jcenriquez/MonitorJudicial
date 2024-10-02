@@ -24,6 +24,24 @@ namespace MonitorJudicial
         protected global::System.Web.UI.WebControls.LinkButton btnGenerarReporte;
 
         /// <summary>
+        /// Control btnReporteDetallado.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnReporteDetallado;
+
+        /// <summary>
+        /// Control btnGenerarReporteDetalle.
+        /// </summary>
+        /// <remarks>
+        /// Campo generado automáticamente.
+        /// Para modificarlo, mueva la declaración del campo del archivo del diseñador al archivo de código subyacente.
+        /// </remarks>
+        protected global::System.Web.UI.WebControls.LinkButton btnGenerarReporteDetalle;
+
+        /// <summary>
         /// Control litPrestamoJudicial.
         /// </summary>
         /// <remarks>

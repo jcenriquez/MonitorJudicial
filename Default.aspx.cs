@@ -10,6 +10,7 @@ using System.Security.Cryptography;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using ClosedXML.Excel;
 using OfficeOpenXml;
 
 namespace MonitorJudicial
@@ -290,6 +291,198 @@ namespace MonitorJudicial
                     memoryStream.WriteTo(Response.OutputStream);
                     Response.Flush();
                     Response.End();
+                }
+            }
+        }
+
+
+
+        protected void btnGenerarReporteDetalle_Click(object sender, EventArgs e)
+        {
+            // Cadena de conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+            // Consulta SQL
+            string query = @"SELECT  
+                            PM.NUMEROPRESTAMO AS NUMERO_PRESTAMO,
+                            CONCAT(UA.NOMBRES, ' ', UA.APELLIDOS) AS NOMBRE_ABOGADO,
+                            PD.COMENTARIO,
+                            CONVERT(VARCHAR(10), PD.FECHASISTEMA, 23) AS FECHA_ACTUALIZACION 
+                         FROM 
+                            [FBS_LOGS].[PRESTAMODEMANDAJUDICIALTRAMITE] PD
+                            JOIN [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PD.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                            JOIN [FBS_SEGURIDADES].[USUARIO_ABOGADOS] UA ON UA.CODIGOABOGADO = PD.CODIGOABOGADO
+                         ORDER BY 
+                            PD.FECHASISTEMA DESC;";
+
+            // Crear un DataTable para almacenar los datos de la consulta
+            DataTable dt = new DataTable();
+
+            // Conectar a la base de datos y ejecutar la consulta
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, con))
+                {
+                    con.Open();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+
+            // Crear el archivo Excel en memoria usando ClosedXML
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                // Agregar el DataTable a una hoja de Excel
+                wb.Worksheets.Add(dt, "Reporte");
+
+                // Configurar la respuesta para descargar el archivo
+                HttpResponse response = HttpContext.Current.Response;
+                response.Clear();
+                response.Buffer = true;
+                response.Charset = "";
+                response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                response.AddHeader("content-disposition", "attachment;filename=ReporteCasosActualizados.xlsx");
+
+                // Guardar el archivo en la respuesta
+                using (System.IO.MemoryStream memoryStream = new System.IO.MemoryStream())
+                {
+                    wb.SaveAs(memoryStream);
+                    memoryStream.WriteTo(response.OutputStream);
+                    response.Flush();
+                    response.End();
+                }
+            }
+        }
+
+        protected void btnGenerateReportDetalle_Click(object sender, EventArgs e)
+        {
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+            string query;
+            string codigoAbogado = (string)(Session["CodigoAbogado"]);
+
+            query = @"
+                            (
+                SELECT 
+                    PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                    PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                    PM.NUMEROPRESTAMO, 
+                    pai.NUMEROCAUSA AS [N CAUSA],
+                    CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                    PM.DEUDAINICIAL, 
+                    CLI.NUMEROCLIENTE [NUM CLIENTE],
+                    AB.NOMBRE AS [NOMBRE ABOGADO],
+                    CASE 
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
+                    END AS [ESTADO JUDICIAL],
+                    ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+                    PT.FECHAREMATE AS [FECHA REMATE],
+                    PT.COMENTARIO AS [COMENTARIO],
+                    DIV.NOMBRE AS [OFICINA],
+                    MC.NOMBRE AS [MEDIDA CAUTELAR],
+                    ISNULL(DATEDIFF(DAY, PT.FECHASISTEMA, GETDATE()), '') AS [DIAS DESDE TRAMITE JUDICIAL]
+                FROM 
+                    [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
+                LEFT JOIN 
+                    [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
+                INNER JOIN 
+                    [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
+                JOIN 
+                    [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+                JOIN 
+                    [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+                LEFT JOIN 
+                    [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                LEFT JOIN 
+                    [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+                JOIN 
+                    [FBS_GENERALES].[DIVISION] DIV ON DIV.SECUENCIAL = PM.SECUENCIALOFICINA
+                JOIN 
+                    [FBS_COBRANZAS].[TIPOMEDIDACAUTELAR] MC ON MC.CODIGO = PA.CODIGOTIPOMEDCAUTELAR
+                JOIN 
+                    [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON PA.SECUENCIAL=pai.SECUENCIALPRESTAMOABOGADO
+                WHERE 
+                    PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
+                    AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J') AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
+                )
+                UNION ALL
+                (
+                SELECT 
+                    PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
+                    PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
+                    PM.NUMEROPRESTAMO, 
+                    '' AS [N CAUSA],
+                    CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
+                    PM.DEUDAINICIAL, 
+                    CLI.NUMEROCLIENTE [NUM CLIENTE],
+                    AB.NOMBRE AS [NOMBRE ABOGADO],
+                    CASE 
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
+                        WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
+WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
+                    END AS [ESTADO JUDICIAL],
+                    ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL],
+                    PT.FECHAREMATE AS [FECHA REMATE],
+                    PT.COMENTARIO AS [COMENTARIO],
+                    DIV.NOMBRE AS [OFICINA],
+                    '' AS [MEDIDA CAUTELAR],
+                    ISNULL(DATEDIFF(DAY, PT.FECHASISTEMA, GETDATE()), '')  AS [DIAS DESDE TRAMITE JUDICIAL]
+                FROM 
+                    [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
+                INNER JOIN 
+                    [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                INNER JOIN 
+                    [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
+                JOIN 
+                    [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
+                JOIN 
+                    [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
+                LEFT JOIN 
+                    [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
+                LEFT JOIN 
+                    [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
+                JOIN 
+                    [FBS_GENERALES].[DIVISION] DIV ON DIV.SECUENCIAL = PM.SECUENCIALOFICINA
+                WHERE 
+                    PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
+                    AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405') AND PM.CODIGOUSUARIOOFICIAL NOT LIKE '%FPUEDMAGDEV.%'
+                )
+                ORDER BY 
+                    [NOMBRE SOCIO];";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                    {
+                        DataTable dt = new DataTable();
+                        sda.Fill(dt);
+
+                        using (XLWorkbook wb = new XLWorkbook())
+                        {
+                            wb.Worksheets.Add(dt, "Reporte");
+
+                            Response.Clear();
+                            Response.Buffer = true;
+                            Response.Charset = "";
+                            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                            Response.AddHeader("content-disposition", "attachment;filename=ReporteDetallado.xlsx");
+
+                            using (MemoryStream MyMemoryStream = new MemoryStream())
+                            {
+                                wb.SaveAs(MyMemoryStream);
+                                MyMemoryStream.WriteTo(Response.OutputStream);
+                                Response.Flush();
+                                Response.End();
+                            }
+                        }
+                    }
                 }
             }
         }
