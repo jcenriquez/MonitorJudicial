@@ -1157,6 +1157,7 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.S
         protected void btnActualizarEstadoPrestamo_Click(object sender, EventArgs e)
         {
             ddlAccion.Enabled = true;
+            dtFechaIngreso.Disabled = false;
             ddlAccion.SelectedIndex = 0;
             ddlMedidaCautelar.Enabled = true;
             ddlJudicatura.Enabled = true;
@@ -1177,6 +1178,7 @@ JOIN [FBS_COBRANZAS].[PRESTAMOABOGADO_INFORADICIONAL] pai ON pa.SECUENCIAL=pai.S
             var highlightColor = '#FEF0BD';
             document.getElementById('" + txtComentario.ClientID + @"').style.backgroundColor = highlightColor;
             document.getElementById('" + ddlAccion.ClientID + @"').style.backgroundColor = highlightColor;
+document.getElementById('" + dtFechaIngreso.ClientID + @"').style.backgroundColor = highlightColor;
             document.getElementById('" + txtComentario.ClientID + @"').addEventListener('focus', function() {
                 this.style.backgroundColor = '';
             });
@@ -1191,6 +1193,10 @@ document.getElementById('" + ddlMedidaCautelar.ClientID + @"').style.backgroundC
             });
 
             document.getElementById('" + ddlJudicatura.ClientID + @"').addEventListener('focus', function() {
+                this.style.backgroundColor = '';
+            });
+
+document.getElementById('" + dtFechaIngreso.ClientID + @"').addEventListener('focus', function() {
                 this.style.backgroundColor = '';
             });
 
@@ -1466,6 +1472,7 @@ La información contenida en este e-mail es confidencial y solo puede ser utiliz
                             btnActualizarEstadoPrestamo.Visible = true;
                             btnGuardarEstadoPrestamo.Visible = false;
                             btnCancelarEstadoPrestamo.Visible = false;
+                            dtFechaIngreso.Disabled = true;
                             //CargarFormulario();
                             ///
                             //Response.Redirect(Request.RawUrl);
@@ -1510,6 +1517,8 @@ La información contenida en este e-mail es confidencial y solo puede ser utiliz
             CargarGridTramites(secuencialPrestamo);
             //Cuando se h confirmdo el guardado
             ddlAccion.Enabled = false;
+            dtFechaIngreso.Disabled = true;
+            dtFechaIngreso.Disabled = false;
             ddlMedidaCautelar.Enabled = false;
             ddlJudicatura.Enabled = false;
             ddlAccion.SelectedIndex = 0;

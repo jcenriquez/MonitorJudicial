@@ -14,6 +14,13 @@
 
     </script>
     <script type="text/javascript">
+
+        document.getElementById('<%= txtComentario.ClientID %>').addEventListener('input', function () {
+            if (this.value.length > 499) {
+                this.value = this.value.substring(0, 499);
+            }
+        });
+
         function isNumberKey(evt) {
             var charCode = (evt.which) ? evt.which : event.keyCode;
             var value = evt.target.value;
@@ -309,9 +316,9 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-floating">
-                                            <label for="floatingTextarea">Comentario:</label>
-                                            <asp:TextBox ID="txtComentario" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" ReadOnly="true"></asp:TextBox>
-                                        </div>
+    <label for="floatingTextarea">Comentario:</label>
+    <asp:TextBox ID="txtComentario" runat="server" CssClass="form-control" TextMode="MultiLine" Rows="3" ReadOnly="true"></asp:TextBox>
+</div>
                                     </div>
                                 </div>
                                 <div class="row">
