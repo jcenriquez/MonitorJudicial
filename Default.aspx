@@ -66,6 +66,11 @@
             <i class="fas fa-download"></i> Reporte Casos Actualizados
                             </asp:LinkButton>
                         </div>
+                                    <div class="col-md-2">
+                <asp:LinkButton ID="btnReporteGarantia" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm" runat="server" OnClick="btnGenerarReporteExtendido_Click">
+<i class="fas fa-download"></i> Reporte Extendido
+                </asp:LinkButton>
+            </div>
                     </div>
                     <br />
 

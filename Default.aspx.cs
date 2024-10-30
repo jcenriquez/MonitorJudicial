@@ -295,7 +295,49 @@ namespace MonitorJudicial
             }
         }
 
+        protected void btnGenerarReporteExtendido_Click(object sender, EventArgs e)
+        {
+            // Cadena de conexión a la base de datos
+            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
 
+            // Crear un DataTable para almacenar los datos de la consulta
+            DataTable dt = new DataTable();
+
+            // Ejecutar el procedimiento almacenado
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("EXEC [FBS_REPORTES].[CONSULTARPRESTAMOS];", con))
+                {
+                    con.Open();
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    da.Fill(dt);
+                }
+            }
+
+            // Crear el archivo Excel en memoria usando ClosedXML
+            using (XLWorkbook wb = new XLWorkbook())
+            {
+                // Agregar el DataTable a una hoja de Excel
+                wb.Worksheets.Add(dt, "Prestamos");
+
+                // Configurar la respuesta para descargar el archivo
+                HttpResponse response = HttpContext.Current.Response;
+                response.Clear();
+                response.Buffer = true;
+                response.Charset = "";
+                response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                response.AddHeader("content-disposition", "attachment;filename=Prestamos.xlsx");
+
+                // Guardar el archivo en la respuesta
+                using (System.IO.MemoryStream memoryStream = new System.IO.MemoryStream())
+                {
+                    wb.SaveAs(memoryStream);
+                    memoryStream.WriteTo(response.OutputStream);
+                    response.Flush();
+                    response.End();
+                }
+            }
+        }
 
         protected void btnGenerarReporteDetalle_Click(object sender, EventArgs e)
         {
