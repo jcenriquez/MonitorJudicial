@@ -201,6 +201,7 @@
     <Content Include="About.aspx" />
     <Content Include="Content\img\items-judges.svg" />
     <Content Include="Content\img\logoJudicial.svg" />
+    <Content Include="Content\img\password-laptop.jpg" />
     <Content Include="Content\img\register.svg" />
     <Content Include="Tests\FichaCliente.aspx" />
     <Content Include="Views\CasosEnTramite.aspx" />
@@ -2186,6 +2187,7 @@
     <Content Include="Site.Master" />
     <Content Include="ViewSwitcher.ascx" />
     <Content Include="Views\Login.aspx" />
+    <Content Include="Views\RecordarContrasena.aspx" />
     <Content Include="Views\register.aspx" />
     <Content Include="Web.config" />
     <Content Include="Bundle.config" />
@@ -2278,6 +2280,13 @@
     </Compile>
     <Compile Include="Views\Login.aspx.designer.cs">
       <DependentUpon>Login.aspx</DependentUpon>
+    </Compile>
+    <Compile Include="Views\RecordarContrasena.aspx.cs">
+      <DependentUpon>RecordarContrasena.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Views\RecordarContrasena.aspx.designer.cs">
+      <DependentUpon>RecordarContrasena.aspx</DependentUpon>
     </Compile>
     <Compile Include="Views\register.aspx.cs">
       <DependentUpon>register.aspx</DependentUpon>

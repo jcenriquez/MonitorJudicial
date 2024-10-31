@@ -17,7 +17,22 @@ namespace MonitorJudicial.Views
     {
         protected void Page_Load(object sender, EventArgs e)
         {
-
+            if (!IsPostBack)
+            {
+                // Cargar cookies si existen
+                if (Request.Cookies["Usuario"] != null)
+                {
+                    txtUsuario.Text = Request.Cookies["Usuario"].Value;
+                }
+                if (Request.Cookies["Password"] != null)
+                {
+                    txtPassword.Attributes["value"] = Request.Cookies["Password"].Value;
+                }
+                if (Request.Cookies["Recordarme"] != null)
+                {
+                    chkRecordarme.Checked = Request.Cookies["Recordarme"].Value == "true";
+                }
+            }
         }
 
         public static string GenerateAESKey(int keySize)
@@ -90,15 +105,75 @@ namespace MonitorJudicial.Views
 
         protected void btnIngresar_Click(object sender, EventArgs e)
         {
+            //string usuario = txtUsuario.Text.ToUpper();
+            //string password = txtPassword.Text;
+
+
+            //string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+            //if (ValidarUsuario(usuario, password, connectionString))
+            //{
+            //    string role = (string)(Session["Rol"]);
+            //    if (role.Equals("1"))
+            //    {
+            //        Response.Redirect("/Default.aspx");
+            //    }
+            //    else
+            //    {
+            //        Response.Redirect("~/Views/ConsultaPorCliente.aspx");
+            //    }
+
+            //}
+            //else
+            //{
+            //    Response.Write("<script>alert('Usuario o contraseña incorrectos');</script>");
+            //}
+
             string usuario = txtUsuario.Text.ToUpper();
             string password = txtPassword.Text;
-            
-
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
 
+            // Llama al método para validar usuario
             if (ValidarUsuario(usuario, password, connectionString))
             {
+                // Almacena el rol en la sesión
                 string role = (string)(Session["Rol"]);
+
+                // Si el checkbox de "Recuérdame" está activado, almacena las cookies
+                if (chkRecordarme.Checked)
+                {
+                    HttpCookie usuarioCookie = new HttpCookie("Usuario", usuario);
+                    HttpCookie passwordCookie = new HttpCookie("Password", password);
+                    HttpCookie recordarCookie = new HttpCookie("Recordarme", "true");
+
+                    // Configura la duración de las cookies (ej. 30 días)
+                    usuarioCookie.Expires = DateTime.Now.AddDays(30);
+                    passwordCookie.Expires = DateTime.Now.AddDays(30);
+                    recordarCookie.Expires = DateTime.Now.AddDays(30);
+
+                    // Agrega las cookies a la respuesta
+                    Response.Cookies.Add(usuarioCookie);
+                    Response.Cookies.Add(passwordCookie);
+                    Response.Cookies.Add(recordarCookie);
+                }
+                else
+                {
+                    // Borra las cookies si el checkbox no está seleccionado
+                    if (Request.Cookies["Usuario"] != null)
+                    {
+                        Response.Cookies["Usuario"].Expires = DateTime.Now.AddDays(-1);
+                    }
+                    if (Request.Cookies["Password"] != null)
+                    {
+                        Response.Cookies["Password"].Expires = DateTime.Now.AddDays(-1);
+                    }
+                    if (Request.Cookies["Recordarme"] != null)
+                    {
+                        Response.Cookies["Recordarme"].Expires = DateTime.Now.AddDays(-1);
+                    }
+                }
+
+                // Redirección según el rol
                 if (role.Equals("1"))
                 {
                     Response.Redirect("/Default.aspx");
@@ -107,10 +182,10 @@ namespace MonitorJudicial.Views
                 {
                     Response.Redirect("~/Views/ConsultaPorCliente.aspx");
                 }
-                
             }
             else
             {
+                // Mensaje de error si la autenticación falla
                 Response.Write("<script>alert('Usuario o contraseña incorrectos');</script>");
             }
         }
