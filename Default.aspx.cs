@@ -197,7 +197,7 @@ namespace MonitorJudicial
                 object result = command.ExecuteScalar();
                 porcentajesRolandoCarnguay = result.ToString();
             }
-            
+
         }
 
         static string sumaTotales;
@@ -238,7 +238,7 @@ namespace MonitorJudicial
 
                 // Añadir encabezados
                 workSheet.Cells[2, 1].Value = "TOTAL CASOS";
-                workSheet.Cells[2, 2].Value = "PREJUDICIAL"; 
+                workSheet.Cells[2, 2].Value = "PREJUDICIAL";
                 workSheet.Cells[2, 3].Value = "JUDICIAL";
                 workSheet.Cells[2, 4].Value = "JUDICIAL CON ACUERDO AL DIA";
                 workSheet.Cells[2, 5].Value = "JUDICIAL CON ACUERDO VENCIDO";
@@ -246,7 +246,7 @@ namespace MonitorJudicial
 
                 // Añadir datos
                 workSheet.Cells[3, 1].Value = totalCasos;
-                workSheet.Cells[3, 2].Value = prejudicial; 
+                workSheet.Cells[3, 2].Value = prejudicial;
                 workSheet.Cells[3, 3].Value = judicial;
                 workSheet.Cells[3, 4].Value = alDia;
                 workSheet.Cells[3, 5].Value = vencidos;
@@ -402,7 +402,9 @@ namespace MonitorJudicial
             string query;
             string codigoAbogado = (string)(Session["CodigoAbogado"]);
 
-            query = @"
+            if (!string.IsNullOrEmpty(codigoAbogado))
+            {
+                query = @"
                             (
                 SELECT 
                     PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -497,35 +499,48 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                 ORDER BY 
                     [NOMBRE SOCIO];";
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        DataTable dt = new DataTable();
-                        sda.Fill(dt);
-
-                        using (XLWorkbook wb = new XLWorkbook())
+                        using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
                         {
-                            wb.Worksheets.Add(dt, "Reporte");
+                            DataTable dt = new DataTable();
+                            sda.Fill(dt);
 
-                            Response.Clear();
-                            Response.Buffer = true;
-                            Response.Charset = "";
-                            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                            Response.AddHeader("content-disposition", "attachment;filename=ReporteDetallado.xlsx");
-
-                            using (MemoryStream MyMemoryStream = new MemoryStream())
+                            using (XLWorkbook wb = new XLWorkbook())
                             {
-                                wb.SaveAs(MyMemoryStream);
-                                MyMemoryStream.WriteTo(Response.OutputStream);
-                                Response.Flush();
-                                Response.End();
+                                wb.Worksheets.Add(dt, "Reporte");
+
+                                Response.Clear();
+                                Response.Buffer = true;
+                                Response.Charset = "";
+                                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                                Response.AddHeader("content-disposition", "attachment;filename=ReporteDetallado.xlsx");
+
+                                using (MemoryStream MyMemoryStream = new MemoryStream())
+                                {
+                                    wb.SaveAs(MyMemoryStream);
+                                    MyMemoryStream.WriteTo(Response.OutputStream);
+                                    Response.Flush();
+                                    Response.End();
+                                }
                             }
                         }
                     }
                 }
+            }
+            else
+            {
+                // Si la sesión ha expirado, muestra el popup y redirige.
+                string script = @"
+                <script type='text/javascript'>
+                    alert('La sesión ha expirado. Será redirigido a la página de inicio de sesión.');
+                    window.location.href = 'Views/Login.aspx';
+                </script>";
+
+                // Registramos el script para ejecutarse en el cliente.
+                ClientScript.RegisterStartupScript(this.GetType(), "SessionExpired", script);
             }
         }
 

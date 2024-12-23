@@ -190,7 +190,7 @@
                                             runat="server" />
                                     </div>
                                 </div>
-                                <asp:Button ID="btnRegister" CssClass="btn btn-primary btn-user btn-block" Text="Registrar Usuario" OnClick="btnRegister_Click" runat="server" />
+                                <asp:Button ID="btnRegister" CssClass="btn btn-secondary btn-user btn-block" Text="Registrar Usuario" OnClick="btnRegister_Click" runat="server" />
                                 <%--<hr />
                                 <a href="Views/Login.aspx" class="btn btn-primary btn-user btn-block">Register Account</a>
                                 <hr />

@@ -41,13 +41,26 @@ namespace MonitorJudicial
                 CargarEstadosJudiciales();
                 CargarAbogados();
                 string codigoAbogado = (string)(Session["CodigoAbogado"]);
-                if (codigoAbogado.Equals("0"))
+                if (!string.IsNullOrEmpty(codigoAbogado))
                 {
-                    divFiltroAbogado.Visible = true;
+                    if (codigoAbogado.Equals("0"))
+                    {
+                        divFiltroAbogado.Visible = true;
+                    }
                 }
+                else
+                {
+                    // Si la sesión ha expirado, muestra el popup y redirige.
+                    string script = @"
+                    <script type='text/javascript'>
+                        alert('La sesión ha expirado. Será redirigido a la página de inicio de sesión.');
+                        window.location.href = 'Login.aspx';
+                    </script>";
 
+                    // Registramos el script para ejecutarse en el cliente.
+                    ClientScript.RegisterStartupScript(this.GetType(), "SessionExpired", script);
+                }
             }
-
         }
 
         protected void gvCasosJudicial_RowCommand(object sender, GridViewCommandEventArgs e)
@@ -982,10 +995,14 @@ namespace MonitorJudicial
             string query;
             string codigoAbogado = (string)(Session["CodigoAbogado"]);
 
-            if (codigoAbogado.Equals("0"))
+            if (!string.IsNullOrEmpty(codigoAbogado))
             {
-                // Consulta SQL
-                query = @"
+                if (!string.IsNullOrEmpty(codigoAbogado))
+                {
+                    if (codigoAbogado.Equals("0"))
+                    {
+                        // Consulta SQL
+                        query = @"
                     (
             SELECT 
                 PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -1060,24 +1077,24 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
         ORDER BY 
             [NOMBRE SOCIO];";
 
-                // Establecer conexión y ejecutar la consulta
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
+                        // Establecer conexión y ejecutar la consulta
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            SqlCommand command = new SqlCommand(query, connection);
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            DataTable dataTable = new DataTable();
 
-                    adapter.Fill(dataTable);
+                            adapter.Fill(dataTable);
 
-                    // Asignar datos a la GridView
-                    gvCasosJudicial.DataSource = dataTable;
-                    gvCasosJudicial.DataBind();
-                }
-            }
-            else
-            {
-                // Consulta SQL
-                query = @"
+                            // Asignar datos a la GridView
+                            gvCasosJudicial.DataSource = dataTable;
+                            gvCasosJudicial.DataBind();
+                        }
+                    }
+                    else
+                    {
+                        // Consulta SQL
+                        query = @"
                     (
             SELECT 
                 PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -1152,19 +1169,45 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
         ORDER BY 
             [NOMBRE SOCIO];";
 
-                // Establecer conexión y ejecutar la consulta
-                using (SqlConnection connection = new SqlConnection(connectionString))
-                {
-                    SqlCommand command = new SqlCommand(query, connection);
-                    SqlDataAdapter adapter = new SqlDataAdapter(command);
-                    DataTable dataTable = new DataTable();
+                        // Establecer conexión y ejecutar la consulta
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            SqlCommand command = new SqlCommand(query, connection);
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            DataTable dataTable = new DataTable();
 
-                    adapter.Fill(dataTable);
+                            adapter.Fill(dataTable);
 
-                    // Asignar datos a la GridView
-                    gvCasosJudicial.DataSource = dataTable;
-                    gvCasosJudicial.DataBind();
+                            // Asignar datos a la GridView
+                            gvCasosJudicial.DataSource = dataTable;
+                            gvCasosJudicial.DataBind();
+                        }
+                    }
                 }
+                else
+                {
+                    // Si la sesión ha expirado, muestra el popup y redirige.
+                    string script = @"
+                <script type='text/javascript'>
+                    alert('La sesión ha expirado. Será redirigido a la página de inicio de sesión.');
+                    window.location.href = 'Login.aspx';
+                </script>";
+
+                    // Registramos el script para ejecutarse en el cliente.
+                    ClientScript.RegisterStartupScript(this.GetType(), "SessionExpired", script);
+                }
+            }
+            else
+            {
+                // Si la sesión ha expirado, muestra el popup y redirige.
+                string script = @"
+                <script type='text/javascript'>
+                    alert('La sesión ha expirado. Será redirigido a la página de inicio de sesión.');
+                    window.location.href = 'Login.aspx';
+                </script>";
+
+                // Registramos el script para ejecutarse en el cliente.
+                ClientScript.RegisterStartupScript(this.GetType(), "SessionExpired", script);
             }
         }
         static string filtro = "";
@@ -1176,20 +1219,23 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
             string query;
             string codigoAbogado = (string)(Session["CodigoAbogado"]);
-            if (filtroTramiteJudicial == "")
-            {
-                divGridPrincipal.Visible = true;
-                divGridFiltrado.Visible = false;
-                LlenarGridViewCasos();
-            }
-            else
-            {
-                // Cadena de conexión a la base de datos
 
-
-                if (codigoAbogado.Equals("0"))
+            if (!string.IsNullOrEmpty(codigoAbogado))
+            {
+                if (filtroTramiteJudicial == "")
                 {
-                    query = @"
+                    divGridPrincipal.Visible = true;
+                    divGridFiltrado.Visible = false;
+                    LlenarGridViewCasos();
+                }
+                else
+                {
+                    // Cadena de conexión a la base de datos
+
+
+                    if (codigoAbogado.Equals("0"))
+                    {
+                        query = @"
                     (
                         SELECT 
                             PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -1266,23 +1312,23 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     ORDER BY 
                         [NOMBRE SOCIO];";
 
-                    // Establecer conexión y ejecutar la consulta
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        SqlCommand command = new SqlCommand(query, connection);
-                        SqlDataAdapter adapter = new SqlDataAdapter(command);
-                        DataTable dataTable = new DataTable();
+                        // Establecer conexión y ejecutar la consulta
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            SqlCommand command = new SqlCommand(query, connection);
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            DataTable dataTable = new DataTable();
 
-                        adapter.Fill(dataTable);
+                            adapter.Fill(dataTable);
 
-                        // Asignar datos a la GridView
-                        gvCasosJudicialFiltrado.DataSource = dataTable;
-                        gvCasosJudicialFiltrado.DataBind();
+                            // Asignar datos a la GridView
+                            gvCasosJudicialFiltrado.DataSource = dataTable;
+                            gvCasosJudicialFiltrado.DataBind();
+                        }
                     }
-                }
-                else
-                {
-                    query = @"
+                    else
+                    {
+                        query = @"
                     (
                         SELECT 
                             PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -1360,101 +1406,35 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                         [NOMBRE SOCIO];";
 
 
+                        // Establecer conexión y ejecutar la consulta
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            SqlCommand command = new SqlCommand(query, connection);
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            DataTable dataTable = new DataTable();
 
+                            adapter.Fill(dataTable);
 
-                    //    // Consulta SQL
-                    //    string query = @"
-                    //                    (
-                    //    SELECT 
-                    //        PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
-                    //        PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
-                    //        PM.NUMEROPRESTAMO, 
-                    //        CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
-                    //        PM.DEUDAINICIAL, 
-                    //        CLI.NUMEROCLIENTE [NUM CLIENTE],
-                    //        AB.NOMBRE AS [NOMBRE ABOGADO],
-                    //        CASE 
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
-                    //        END AS [ESTADO JUDICIAL],
-                    //        ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
-                    //    FROM 
-                    //        [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
-                    //    LEFT JOIN 
-                    //        [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
-                    //    INNER JOIN 
-                    //        [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
-                    //    JOIN 
-                    //        [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
-                    //    JOIN 
-                    //        [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
-                    //    LEFT JOIN 
-                    //        [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
-                    //    LEFT JOIN 
-                    //        [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
-                    //    WHERE 
-                    //        PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
-                    //        AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
-                    //  AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
-                    //)
-                    //UNION ALL
-                    //(
-                    //    SELECT 
-                    //        PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
-                    //        PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
-                    //        PM.NUMEROPRESTAMO, 
-                    //        CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
-                    //        PM.DEUDAINICIAL, 
-                    //        CLI.NUMEROCLIENTE [NUM CLIENTE],
-                    //        AB.NOMBRE AS [NOMBRE ABOGADO],
-                    //        CASE 
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
-                    //        END AS [ESTADO JUDICIAL],
-                    //        ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
-                    //    FROM 
-                    //        [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
-                    //    INNER JOIN 
-                    //        [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
-                    //    INNER JOIN 
-                    //        [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
-                    //    JOIN 
-                    //        [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
-                    //    JOIN 
-                    //        [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
-                    //    LEFT JOIN 
-                    //        [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
-                    //    LEFT JOIN 
-                    //        [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
-                    //    WHERE 
-                    //        PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
-                    //        AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
-                    //  AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
-                    //)
-                    //ORDER BY 
-                    //    [FECHA ADJUDICACION] DESC;";
-
-                    // Establecer conexión y ejecutar la consulta
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        SqlCommand command = new SqlCommand(query, connection);
-                        SqlDataAdapter adapter = new SqlDataAdapter(command);
-                        DataTable dataTable = new DataTable();
-
-                        adapter.Fill(dataTable);
-
-                        // Asignar datos a la GridView
-                        gvCasosJudicialFiltrado.DataSource = dataTable;
-                        gvCasosJudicialFiltrado.DataBind();
+                            // Asignar datos a la GridView
+                            gvCasosJudicialFiltrado.DataSource = dataTable;
+                            gvCasosJudicialFiltrado.DataBind();
+                        }
                     }
+
                 }
-
             }
+            else
+            {
+                // Si la sesión ha expirado, muestra el popup y redirige.
+                string script = @"
+                <script type='text/javascript'>
+                    alert('La sesión ha expirado. Será redirigido a la página de inicio de sesión.');
+                    window.location.href = 'Login.aspx';
+                </script>";
 
+                // Registramos el script para ejecutarse en el cliente.
+                ClientScript.RegisterStartupScript(this.GetType(), "SessionExpired", script);
+            }
         }
 
         public void LlenarGridViewCasosFiltradoAbogado(string filtroTramiteJudicial)
@@ -1466,22 +1446,25 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
             string query;
             string codigoAbogado = (string)(Session["CodigoAbogado"]);
-            string codigoAbogadoFiltrado = ddlFiltroAbogado.SelectedValue;
-            if (filtroTramiteJudicial == "")
-            {
-                divGridPrincipal.Visible = true;
-                divGridFiltrado.Visible = false;
-                divGridAbogado.Visible = false;
-                LlenarGridViewCasos();
-            }
-            else
-            {
-                // Cadena de conexión a la base de datos
 
-
-                if (codigoAbogado.Equals("0"))
+            if (!string.IsNullOrEmpty(codigoAbogado))
+            {
+                string codigoAbogadoFiltrado = ddlFiltroAbogado.SelectedValue;
+                if (filtroTramiteJudicial == "")
                 {
-                    query = @"
+                    divGridPrincipal.Visible = true;
+                    divGridFiltrado.Visible = false;
+                    divGridAbogado.Visible = false;
+                    LlenarGridViewCasos();
+                }
+                else
+                {
+                    // Cadena de conexión a la base de datos
+
+
+                    if (codigoAbogado.Equals("0"))
+                    {
+                        query = @"
                     (
                         SELECT 
                             PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -1557,23 +1540,23 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     ORDER BY 
                         [NOMBRE SOCIO];";
 
-                    // Establecer conexión y ejecutar la consulta
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        SqlCommand command = new SqlCommand(query, connection);
-                        SqlDataAdapter adapter = new SqlDataAdapter(command);
-                        DataTable dataTable = new DataTable();
+                        // Establecer conexión y ejecutar la consulta
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            SqlCommand command = new SqlCommand(query, connection);
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            DataTable dataTable = new DataTable();
 
-                        adapter.Fill(dataTable);
+                            adapter.Fill(dataTable);
 
-                        // Asignar datos a la GridView
-                        gvFiltradoAbogado.DataSource = dataTable;
-                        gvFiltradoAbogado.DataBind();
+                            // Asignar datos a la GridView
+                            gvFiltradoAbogado.DataSource = dataTable;
+                            gvFiltradoAbogado.DataBind();
+                        }
                     }
-                }
-                else
-                {
-                    query = @"
+                    else
+                    {
+                        query = @"
                     (
                         SELECT 
                             PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -1650,23 +1633,35 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     ORDER BY 
                         [NOMBRE SOCIO];";
 
-                    // Establecer conexión y ejecutar la consulta
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        SqlCommand command = new SqlCommand(query, connection);
-                        SqlDataAdapter adapter = new SqlDataAdapter(command);
-                        DataTable dataTable = new DataTable();
+                        // Establecer conexión y ejecutar la consulta
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            SqlCommand command = new SqlCommand(query, connection);
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            DataTable dataTable = new DataTable();
 
-                        adapter.Fill(dataTable);
+                            adapter.Fill(dataTable);
 
-                        // Asignar datos a la GridView
-                        gvFiltradoAbogado.DataSource = dataTable;
-                        gvFiltradoAbogado.DataBind();
+                            // Asignar datos a la GridView
+                            gvFiltradoAbogado.DataSource = dataTable;
+                            gvFiltradoAbogado.DataBind();
+                        }
                     }
+
                 }
-
             }
+            else
+            {
+                // Si la sesión ha expirado, muestra el popup y redirige.
+                string script = @"
+                <script type='text/javascript'>
+                    alert('La sesión ha expirado. Será redirigido a la página de inicio de sesión.');
+                    window.location.href = 'Login.aspx';
+                </script>";
 
+                // Registramos el script para ejecutarse en el cliente.
+                ClientScript.RegisterStartupScript(this.GetType(), "SessionExpired", script);
+            }
         }
 
         public void LlenarGridViewCasosFiltradoEstado(string filtroTramiteJudicial)
@@ -1691,7 +1686,7 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     codigoPrestamo = "V";
                     break;
                 default:
-                    codigoPrestamo = ""; 
+                    codigoPrestamo = "";
 
                     break;
             }
@@ -1706,17 +1701,20 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
             string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
             string query;
             string codigoAbogado = (string)(Session["CodigoAbogado"]);
-            if (filtroTramiteJudicial == "")
+
+            if (!string.IsNullOrEmpty(codigoAbogado))
             {
-                divGridPrincipal.Visible = true;
-                divGridFiltrado.Visible = false;
-                LlenarGridViewCasos();
-            }
-            else
-            {
-                if (codigoAbogado.Equals("0"))
+                if (filtroTramiteJudicial == "")
                 {
-                    query = @"
+                    divGridPrincipal.Visible = true;
+                    divGridFiltrado.Visible = false;
+                    LlenarGridViewCasos();
+                }
+                else
+                {
+                    if (codigoAbogado.Equals("0"))
+                    {
+                        query = @"
                     (
                         SELECT 
                             PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -1793,23 +1791,23 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     ORDER BY 
                         [NOMBRE SOCIO];";
 
-                    // Establecer conexión y ejecutar la consulta
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        SqlCommand command = new SqlCommand(query, connection);
-                        SqlDataAdapter adapter = new SqlDataAdapter(command);
-                        DataTable dataTable = new DataTable();
+                        // Establecer conexión y ejecutar la consulta
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            SqlCommand command = new SqlCommand(query, connection);
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            DataTable dataTable = new DataTable();
 
-                        adapter.Fill(dataTable);
+                            adapter.Fill(dataTable);
 
-                        // Asignar datos a la GridView
-                        gvCasosJudicialFiltrado.DataSource = dataTable;
-                        gvCasosJudicialFiltrado.DataBind();
+                            // Asignar datos a la GridView
+                            gvCasosJudicialFiltrado.DataSource = dataTable;
+                            gvCasosJudicialFiltrado.DataBind();
+                        }
                     }
-                }
-                else
-                {
-                    query = @"
+                    else
+                    {
+                        query = @"
                     (
                         SELECT 
                             PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -1886,102 +1884,35 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                     ORDER BY 
                         [NOMBRE SOCIO];";
 
+                        // Establecer conexión y ejecutar la consulta
+                        using (SqlConnection connection = new SqlConnection(connectionString))
+                        {
+                            SqlCommand command = new SqlCommand(query, connection);
+                            SqlDataAdapter adapter = new SqlDataAdapter(command);
+                            DataTable dataTable = new DataTable();
 
+                            adapter.Fill(dataTable);
 
-
-                    //    // Consulta SQL
-                    //    string query = @"
-                    //                    (
-                    //    SELECT 
-                    //        PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
-                    //        PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
-                    //        PM.NUMEROPRESTAMO, 
-                    //        CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
-                    //        PM.DEUDAINICIAL, 
-                    //        CLI.NUMEROCLIENTE [NUM CLIENTE],
-                    //        AB.NOMBRE AS [NOMBRE ABOGADO],
-                    //        CASE 
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'G' THEN 'CASTIGADO'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'J' THEN 'JUDICIAL'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
-                    //        END AS [ESTADO JUDICIAL],
-                    //        ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
-                    //    FROM 
-                    //        [FBS_CARTERA].[PRESTAMOMAESTRO] PM 
-                    //    LEFT JOIN 
-                    //        [FBS_COBRANZAS].[PRESTAMOABOGADO] PA ON PM.SECUENCIAL = PA.SECUENCIALPRESTAMO
-                    //    INNER JOIN 
-                    //        [FBS_COBRANZAS].[ABOGADO] AB ON PA.CODIGOABOGADO = AB.CODIGO
-                    //    JOIN 
-                    //        [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
-                    //    JOIN 
-                    //        [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
-                    //    LEFT JOIN 
-                    //        [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
-                    //    LEFT JOIN 
-                    //        [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
-                    //    WHERE 
-                    //        PA.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
-                    //        AND PM.CODIGOESTADOPRESTAMO IN ('G', 'J')
-                    //  AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
-                    //)
-                    //UNION ALL
-                    //(
-                    //    SELECT 
-                    //        PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
-                    //        PM.IDENTIFICACIONSUJETOORIGINAL AS [IDENTIDAD], 
-                    //        PM.NUMEROPRESTAMO, 
-                    //        CONVERT(VARCHAR, PM.FECHAADJUDICACION, 23) AS [FECHA ADJUDICACION], 
-                    //        PM.DEUDAINICIAL, 
-                    //        CLI.NUMEROCLIENTE [NUM CLIENTE],
-                    //        AB.NOMBRE AS [NOMBRE ABOGADO],
-                    //        CASE 
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'A' THEN 'AL DIA'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'I' THEN 'PREJUDICIAL'
-                    //            WHEN PM.CODIGOESTADOPRESTAMO = 'V' THEN 'VENCIDO'
-                    //        END AS [ESTADO JUDICIAL],
-                    //        ISNULL(ET.NOMBRE, '') AS [TRAMITE JUDICIAL]
-                    //    FROM 
-                    //        [FBS_COBRANZAS].[PRESTAMOABOGADOPREJUDICIAL] PBJ
-                    //    INNER JOIN 
-                    //        [FBS_CARTERA].[PRESTAMOMAESTRO] PM ON PBJ.SECUENCIALPRESTAMO = PM.SECUENCIAL
-                    //    INNER JOIN 
-                    //        [FBS_COBRANZAS].[ABOGADO] AB ON PBJ.CODIGOABOGADO = AB.CODIGO
-                    //    JOIN 
-                    //        [FBS_PERSONAS].[PERSONA] PER ON PM.IDENTIFICACIONSUJETOORIGINAL = PER.IDENTIFICACION
-                    //    JOIN 
-                    //        [FBS_CLIENTES].[CLIENTE] CLI ON PER.[SECUENCIAL] = CLI.[SECUENCIALPERSONA]
-                    //    LEFT JOIN 
-                    //        [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = PM.SECUENCIAL
-                    //    LEFT JOIN 
-                    //        [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
-                    //    WHERE 
-                    //        PM.CODIGOESTADOPRESTAMO IN ('A', 'I', 'V')
-                    //        AND PBJ.CODIGOABOGADO IN ('1003372438', '1001715265', '1002739819', '1001623519', '1001669405')
-                    //  AND ET.NOMBRE= '" + filtroTramiteJudicial + @"'
-                    //)
-                    //ORDER BY 
-                    //    [FECHA ADJUDICACION] DESC;";
-
-                    // Establecer conexión y ejecutar la consulta
-                    using (SqlConnection connection = new SqlConnection(connectionString))
-                    {
-                        SqlCommand command = new SqlCommand(query, connection);
-                        SqlDataAdapter adapter = new SqlDataAdapter(command);
-                        DataTable dataTable = new DataTable();
-
-                        adapter.Fill(dataTable);
-
-                        // Asignar datos a la GridView
-                        gvCasosJudicialFiltrado.DataSource = dataTable;
-                        gvCasosJudicialFiltrado.DataBind();
+                            // Asignar datos a la GridView
+                            gvCasosJudicialFiltrado.DataSource = dataTable;
+                            gvCasosJudicialFiltrado.DataBind();
+                        }
                     }
+
                 }
-
             }
+            else
+            {
+                // Si la sesión ha expirado, muestra el popup y redirige.
+                string script = @"
+                <script type='text/javascript'>
+                    alert('La sesión ha expirado. Será redirigido a la página de inicio de sesión.');
+                    window.location.href = 'Login.aspx';
+                </script>";
 
+                // Registramos el script para ejecutarse en el cliente.
+                ClientScript.RegisterStartupScript(this.GetType(), "SessionExpired", script);
+            }
         }
 
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -2076,9 +2007,11 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
             string query;
             string codigoAbogado = (string)(Session["CodigoAbogado"]);
 
-            if (codigoAbogado.Equals("0"))
+            if (!string.IsNullOrEmpty(codigoAbogado))
             {
-                query = @"
+                if (codigoAbogado.Equals("0"))
+                {
+                    query = @"
                             (
                 SELECT 
                     PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -2172,10 +2105,10 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                 )
                 ORDER BY 
                     [NOMBRE SOCIO];";
-            }
-            else
-            {
-                query = @"
+                }
+                else
+                {
+                    query = @"
                             (
                 SELECT 
                     PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -2269,40 +2202,53 @@ PT.COMENTARIO AS [COMENTARIO],
                 )
                 ORDER BY 
                     [NOMBRE SOCIO];";
-            }
+                }
 
 
 
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        DataTable dt = new DataTable();
-                        sda.Fill(dt);
-
-                        using (XLWorkbook wb = new XLWorkbook())
+                        using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
                         {
-                            wb.Worksheets.Add(dt, "Reporte");
+                            DataTable dt = new DataTable();
+                            sda.Fill(dt);
 
-                            Response.Clear();
-                            Response.Buffer = true;
-                            Response.Charset = "";
-                            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                            Response.AddHeader("content-disposition", "attachment;filename=Reporte.xlsx");
-
-                            using (MemoryStream MyMemoryStream = new MemoryStream())
+                            using (XLWorkbook wb = new XLWorkbook())
                             {
-                                wb.SaveAs(MyMemoryStream);
-                                MyMemoryStream.WriteTo(Response.OutputStream);
-                                Response.Flush();
-                                Response.End();
+                                wb.Worksheets.Add(dt, "Reporte");
+
+                                Response.Clear();
+                                Response.Buffer = true;
+                                Response.Charset = "";
+                                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                                Response.AddHeader("content-disposition", "attachment;filename=Reporte.xlsx");
+
+                                using (MemoryStream MyMemoryStream = new MemoryStream())
+                                {
+                                    wb.SaveAs(MyMemoryStream);
+                                    MyMemoryStream.WriteTo(Response.OutputStream);
+                                    Response.Flush();
+                                    Response.End();
+                                }
                             }
                         }
                     }
                 }
+            }
+            else
+            {
+                // Si la sesión ha expirado, muestra el popup y redirige.
+                string script = @"
+                <script type='text/javascript'>
+                    alert('La sesión ha expirado. Será redirigido a la página de inicio de sesión.');
+                    window.location.href = 'Login.aspx';
+                </script>";
+
+                // Registramos el script para ejecutarse en el cliente.
+                ClientScript.RegisterStartupScript(this.GetType(), "SessionExpired", script);
             }
         }
 
