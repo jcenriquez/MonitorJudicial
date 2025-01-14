@@ -2213,7 +2213,9 @@
       <DependentUpon>About.aspx</DependentUpon>
     </Compile>
     <Compile Include="App_Start\RouteConfig.cs" />
+    <Compile Include="Context\ApplicationDbContext.cs" />
     <Compile Include="Controllers\PrestamosController.cs" />
+    <Compile Include="Models\EstadoPrestamosConPorcentaje.cs" />
     <Compile Include="Tests\FichaCliente.aspx.cs">
       <DependentUpon>FichaCliente.aspx</DependentUpon>
       <SubType>ASPXCodeBehind</SubType>
@@ -2298,8 +2300,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Context\" />
-    <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

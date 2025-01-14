@@ -12,48 +12,20 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using ClosedXML.Excel;
 using OfficeOpenXml;
+using MonitorJudicial.Context;
 
 namespace MonitorJudicial
 {
     public partial class _Default : Page
-    {
-        protected double abandono { get; set; }
-        protected double abstencionTrmiteParteJuez { get; set; }
-        protected double adjudicacion { get; set; }
-        protected double alegatos { get; set; }
-        protected double apelacion { get; set; }
-        protected double avaluoBienes { get; set; }
-        protected double calificacionDemanda { get; set; }
-        protected double cambioCasilleroJudicial { get; set; }
-        protected double citacionDemandados { get; set; }
-        protected double contestacionDemanda { get; set; }
-        protected double desistimiento { get; set; }
-        protected double embargo { get; set; }
-        protected double juntaConciliacion { get; set; }
-        protected double liquidacion { get; set; }
-        protected double mandamientoEjecucion { get; set; }
-        protected double ninguno { get; set; }
-        protected double noContestaDemanda { get; set; }
-        protected double otros { get; set; }
-        protected double presentacionDemanda { get; set; }
-        protected double prueba { get; set; }
-        protected double remate { get; set; }
-        protected double sentencia { get; set; }
-        protected double suspendidoAcuerdo { get; set; }
-        protected double terminadoAcuerdoPagoObligaciones { get; set; }
-        protected double aprehencionVehicular { get; set; }
-        protected double audiencia { get; set; }
-        protected double razonNoPago { get; set; }
-        protected double audienciaEjecucion { get; set; }
-
+    {      
         protected void Page_Load(object sender, EventArgs e)
         {
             string rol = (string)(Session["Rol"]);
             if (!IsPostBack)
             {
-                PorcentajeCasos();
+                //PorcentajeCasos();
                 LlenarGridAbogados();
-                LlenarGridAbogadosPorcentajes();
+                //LlenarGridAbogadosPorcentajes();
             }
         }
         protected void btnLogout_Click(object sender, EventArgs e)
@@ -72,145 +44,48 @@ namespace MonitorJudicial
             // Redirigir a la página de inicio de sesión
             Response.Redirect("Views/Login.aspx");
         }
+
+
         public void LlenarGridAbogados()
         {
-            // Cadena de conexión a la base de datos
-            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-
-            // Consulta SQL
-            string query = @"
-                SELECT TOP (1000) [NOMBRE]
-      ,[PREJUDICIAL]
-      ,[JUDICIAL]
-      ,[JUDICIAL CON ACUERDO AL DÍA] AS [JUDICIAL CON ACUERDO AL DIA]
-      ,[JUDICIAL CON ACUERDO VENCIDO]
-      ,[CASTIGADO]
-      ,[TOTAL]
-  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
-  ORDER BY TOTAL";
-
-            int sumaTotal = 0;
-            // Contadores para cada tipo de préstamo
-            int totalCastigado = 0;
-            int totalJudicial = 0;
-            int totalAlDia = 0;
-            int totalPrejudicial = 0;
-            int totalVencido = 0;
-
-            // Establecer conexión y ejecutar la consulta
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            try
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                SqlDataAdapter adapter = new SqlDataAdapter(command);
-                DataTable dataTable = new DataTable();
-
-                adapter.Fill(dataTable);
-
-
-
-                // Iterar sobre las filas del DataTable y contar los distintos tipos
-                foreach (DataRow row in dataTable.Rows)
+                using (var context = new ApplicationDbContext())
                 {
-                    totalPrejudicial += Convert.ToInt32(row["PREJUDICIAL"]);
-                    totalJudicial += Convert.ToInt32(row["JUDICIAL"]);
-                    totalAlDia += Convert.ToInt32(row["JUDICIAL CON ACUERDO AL DIA"]);
-                    totalVencido += Convert.ToInt32(row["JUDICIAL CON ACUERDO VENCIDO"]);
-                    totalCastigado += Convert.ToInt32(row["CASTIGADO"]);
+                    // Consulta utilizando LINQ para obtener los datos
+                    var datos = context.EstadoPrestamos
+                        .OrderByDescending(e => e.TOTAL) // Ordenar por TOTAL en orden descendente
+                        .ToList();
+
+                    // Cálculo de totales
+                    int totalCastigado = datos.Sum(e => e.CASTIGADO);
+                    int totalJudicial = datos.Sum(e => e.JUDICIAL);
+                    int totalAlDia = datos.Sum(e => e.JUDICIAL_CON_ACUERDO_AL_DIA);
+                    int totalVencido = datos.Sum(e => e.JUDICIAL_CON_ACUERDO_VENCIDO);
+                    int totalPrejudicial = datos.Sum(e => e.PREJUDICIAL);
+                    int sumaTotal = totalCastigado + totalJudicial + totalAlDia + totalPrejudicial + totalVencido;
+
+                    // Asignar datos al GridView
+                    gvCasosAbogado.DataSource = datos;
+                    gvCasosAbogado.DataBind();
+
+                    // Actualizar los literales con los totales
+                    litPrestamoJudicial.Text = sumaTotal.ToString();
+                    litotalCastigado.Text = totalCastigado.ToString();
+                    litotalJudicial.Text = totalJudicial.ToString();
+                    litotalAlDia.Text = totalAlDia.ToString();
+                    litotalPrejudicial.Text = totalPrejudicial.ToString();
+                    litotalVencido.Text = totalVencido.ToString();
                 }
-
-
-                // Asignar datos a la GridView
-                gvCasosAbogado.DataSource = dataTable;
-                gvCasosAbogado.DataBind();
-
-                sumaTotal = totalCastigado + totalJudicial + totalAlDia + totalPrejudicial + totalVencido;
             }
-
-            litPrestamoJudicial.Text = sumaTotal.ToString();
-            litotalCastigado.Text = totalCastigado.ToString();
-            litotalJudicial.Text = totalJudicial.ToString();
-            litotalAlDia.Text = totalAlDia.ToString();
-            litotalPrejudicial.Text = totalPrejudicial.ToString();
-            litotalVencido.Text = totalVencido.ToString();
-        }
-
-        public void LlenarGridAbogadosPorcentajes()
-        {
-            // Cadena de conexión a la base de datos
-            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-
-            // Consulta SQL
-            string query = @"
-                SELECT [Porcentaje]
-  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
-  WHERE NOMBRE='DR. DANIEL MARCELO GUERRA PANAMA'";
-            string query1 = @"
-                SELECT [Porcentaje]
-  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
-  WHERE NOMBRE='DR. VASQUEZ RIVADENEIRA CARLOS GABRIEL'";
-            string query2 = @"
-                SELECT [Porcentaje]
-  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
-  WHERE NOMBRE='DR. EDISSON ESPINOSA VENEGAS'";
-            string query3 = @"
-                SELECT [Porcentaje]
-  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
-  WHERE NOMBRE='DR. LUIS EDISON CRESPO ALMEIDA'";
-            string query4 = @"
-                SELECT [Porcentaje]
-  FROM [FBS_COBRANZAS].[EstadoPrestamosConPorcentaje_Vista]
-  WHERE NOMBRE='DR. GUARANGUAY VARGAS ROLANDO JAVIER'";
-
-            // Usa 'using' para asegurar que los recursos se liberen correctamente
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            catch (Exception ex)
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                connection.Open();
-                object result = command.ExecuteScalar();
-                porcentajesDanielGuerra = result.ToString();
+                // Manejo de errores
+                //litError.Text = "Ocurrió un error al cargar los datos. Por favor, intente nuevamente.";
+                // Registrar el error para depuración
+                Console.WriteLine(ex.Message);
             }
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query1, connection);
-                connection.Open();
-                object result = command.ExecuteScalar();
-                porcentajesCarlosVasquez = result.ToString();
-            }
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query2, connection);
-                connection.Open();
-                object result = command.ExecuteScalar();
-                porcentajesEdissonVenegas = result.ToString();
-            }
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query3, connection);
-                connection.Open();
-                object result = command.ExecuteScalar();
-                porcentajesLuisCrespo = result.ToString();
-            }
-            using (SqlConnection connection = new SqlConnection(connectionString))
-            {
-                SqlCommand command = new SqlCommand(query4, connection);
-                connection.Open();
-                object result = command.ExecuteScalar();
-                porcentajesRolandoCarnguay = result.ToString();
-            }
-            
-        }
-
-        static string sumaTotales;
-        static string totalCastigados;
-        static string totalJudiciales;
-        static string totalAlDias;
-        static string totalVencidos;
-        static string totalPrejudiciales;
-        public static string porcentajesDanielGuerra;
-        public static string porcentajesCarlosVasquez;
-        public static string porcentajesEdissonVenegas;
-        public static string porcentajesLuisCrespo;
-        public static string porcentajesRolandoCarnguay;
+        }     
 
         protected void btnGenerarReporte_Click(object sender, EventArgs e)
         {
@@ -238,7 +113,7 @@ namespace MonitorJudicial
 
                 // Añadir encabezados
                 workSheet.Cells[2, 1].Value = "TOTAL CASOS";
-                workSheet.Cells[2, 2].Value = "PREJUDICIAL"; 
+                workSheet.Cells[2, 2].Value = "PREJUDICIAL";
                 workSheet.Cells[2, 3].Value = "JUDICIAL";
                 workSheet.Cells[2, 4].Value = "JUDICIAL CON ACUERDO AL DIA";
                 workSheet.Cells[2, 5].Value = "JUDICIAL CON ACUERDO VENCIDO";
@@ -246,7 +121,7 @@ namespace MonitorJudicial
 
                 // Añadir datos
                 workSheet.Cells[3, 1].Value = totalCasos;
-                workSheet.Cells[3, 2].Value = prejudicial; 
+                workSheet.Cells[3, 2].Value = prejudicial;
                 workSheet.Cells[3, 3].Value = judicial;
                 workSheet.Cells[3, 4].Value = alDia;
                 workSheet.Cells[3, 5].Value = vencidos;
@@ -295,46 +170,120 @@ namespace MonitorJudicial
             }
         }
 
+        //protected void btnGenerarReporteExtendido_Click(object sender, EventArgs e)
+        //{
+        //    // Cadena de conexión a la base de datos
+        //    string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
+
+        //    // Crear un DataTable para almacenar los datos de la consulta
+        //    DataTable dt = new DataTable();
+
+        //    // Ejecutar el procedimiento almacenado
+        //    using (SqlConnection con = new SqlConnection(connectionString))
+        //    {
+        //        using (SqlCommand cmd = new SqlCommand("EXEC [FBS_REPORTES].[CONSULTARPRESTAMOS];", con))
+        //        {
+        //            con.Open();
+        //            SqlDataAdapter da = new SqlDataAdapter(cmd);
+        //            da.Fill(dt);
+        //        }
+        //    }
+
+        //    // Crear el archivo Excel en memoria usando ClosedXML
+        //    using (XLWorkbook wb = new XLWorkbook())
+        //    {
+        //        // Agregar el DataTable a una hoja de Excel
+        //        wb.Worksheets.Add(dt, "Prestamos");
+
+        //        // Configurar la respuesta para descargar el archivo
+        //        HttpResponse response = HttpContext.Current.Response;
+        //        response.Clear();
+        //        response.Buffer = true;
+        //        response.Charset = "";
+        //        response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        //        response.AddHeader("content-disposition", "attachment;filename=Prestamos.xlsx");
+
+        //        // Guardar el archivo en la respuesta
+        //        using (System.IO.MemoryStream memoryStream = new System.IO.MemoryStream())
+        //        {
+        //            wb.SaveAs(memoryStream);
+        //            memoryStream.WriteTo(response.OutputStream);
+        //            response.Flush();
+        //            response.End();
+        //        }
+        //    }
+        //}
+
         protected void btnGenerarReporteExtendido_Click(object sender, EventArgs e)
         {
-            // Cadena de conexión a la base de datos
-            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-
-            // Crear un DataTable para almacenar los datos de la consulta
-            DataTable dt = new DataTable();
-
-            // Ejecutar el procedimiento almacenado
-            using (SqlConnection con = new SqlConnection(connectionString))
+            // Crear el contexto de EF
+            using (var context = new AppDbContext())
             {
-                using (SqlCommand cmd = new SqlCommand("EXEC [FBS_REPORTES].[CONSULTARPRESTAMOS];", con))
+                // Obtener los datos desde el procedimiento almacenado
+                var prestamos = context.GetPrestamos().ToList();
+
+                // Crear un DataTable para convertir los resultados
+                var dt = new System.Data.DataTable();
+                dt.Columns.Add("AGENCIA");
+                dt.Columns.Add("NOMBRE_SOCIO");
+                dt.Columns.Add("IDENTIDAD");
+                dt.Columns.Add("NUMEROPRESTAMO");
+                dt.Columns.Add("NUM_JUICIO");
+                dt.Columns.Add("FECHA_ADJUDICACION");
+                dt.Columns.Add("FECHA_INICIO_DEMANDA");
+                dt.Columns.Add("DEUDAINICIAL", typeof(decimal));
+                dt.Columns.Add("SALDO_ACTUAL", typeof(decimal));
+                dt.Columns.Add("SALDO_TRANSFERIDO", typeof(decimal));
+                dt.Columns.Add("NUM_CLIENTE");
+                dt.Columns.Add("NOMBRE_ABOGADO");
+                dt.Columns.Add("ESTADO_JUDICIAL");
+                dt.Columns.Add("GARANTIA");
+                dt.Columns.Add("JUZGADO");
+                dt.Columns.Add("TRAMITE_JUDICIAL");
+
+                foreach (var prestamo in prestamos)
                 {
-                    con.Open();
-                    SqlDataAdapter da = new SqlDataAdapter(cmd);
-                    da.Fill(dt);
+                    dt.Rows.Add(
+                        prestamo.AGENCIA,
+                        prestamo.NOMBRE_SOCIO,
+                        prestamo.IDENTIDAD,
+                        prestamo.NUMEROPRESTAMO,
+                        prestamo.NUM_JUICIO,
+                        prestamo.FECHA_ADJUDICACION,
+                        prestamo.FECHA_INICIO_DEMANDA,
+                        prestamo.DEUDAINICIAL,
+                        prestamo.SALDO_ACTUAL,
+                        prestamo.SALDO_TRANSFERIDO,
+                        prestamo.NUM_CLIENTE,
+                        prestamo.NOMBRE_ABOGADO,
+                        prestamo.ESTADO_JUDICIAL,
+                        prestamo.GARANTIA,
+                        prestamo.JUZGADO,
+                        prestamo.TRAMITE_JUDICIAL
+                    );
                 }
-            }
 
-            // Crear el archivo Excel en memoria usando ClosedXML
-            using (XLWorkbook wb = new XLWorkbook())
-            {
-                // Agregar el DataTable a una hoja de Excel
-                wb.Worksheets.Add(dt, "Prestamos");
-
-                // Configurar la respuesta para descargar el archivo
-                HttpResponse response = HttpContext.Current.Response;
-                response.Clear();
-                response.Buffer = true;
-                response.Charset = "";
-                response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                response.AddHeader("content-disposition", "attachment;filename=Prestamos.xlsx");
-
-                // Guardar el archivo en la respuesta
-                using (System.IO.MemoryStream memoryStream = new System.IO.MemoryStream())
+                // Crear el archivo Excel
+                using (XLWorkbook wb = new XLWorkbook())
                 {
-                    wb.SaveAs(memoryStream);
-                    memoryStream.WriteTo(response.OutputStream);
-                    response.Flush();
-                    response.End();
+                    wb.Worksheets.Add(dt, "Prestamos");
+
+                    // Configurar la respuesta para descargar el archivo
+                    HttpResponse response = HttpContext.Current.Response;
+                    response.Clear();
+                    response.Buffer = true;
+                    response.Charset = "";
+                    response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                    response.AddHeader("content-disposition", "attachment;filename=Prestamos.xlsx");
+
+                    // Guardar el archivo en la respuesta
+                    using (System.IO.MemoryStream memoryStream = new System.IO.MemoryStream())
+                    {
+                        wb.SaveAs(memoryStream);
+                        memoryStream.WriteTo(response.OutputStream);
+                        response.Flush();
+                        response.End();
+                    }
                 }
             }
         }
@@ -402,7 +351,9 @@ namespace MonitorJudicial
             string query;
             string codigoAbogado = (string)(Session["CodigoAbogado"]);
 
-            query = @"
+            if (!string.IsNullOrEmpty(codigoAbogado))
+            {
+                query = @"
                             (
                 SELECT 
                     PER.NOMBREUNIDO AS [NOMBRE SOCIO], 
@@ -497,117 +448,50 @@ WHEN PM.CODIGOESTADOPRESTAMO = 'M' THEN 'MOROSO'
                 ORDER BY 
                     [NOMBRE SOCIO];";
 
-            using (SqlConnection conn = new SqlConnection(connectionString))
-            {
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+                using (SqlConnection conn = new SqlConnection(connectionString))
                 {
-                    using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
-                        DataTable dt = new DataTable();
-                        sda.Fill(dt);
-
-                        using (XLWorkbook wb = new XLWorkbook())
+                        using (SqlDataAdapter sda = new SqlDataAdapter(cmd))
                         {
-                            wb.Worksheets.Add(dt, "Reporte");
+                            DataTable dt = new DataTable();
+                            sda.Fill(dt);
 
-                            Response.Clear();
-                            Response.Buffer = true;
-                            Response.Charset = "";
-                            Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                            Response.AddHeader("content-disposition", "attachment;filename=ReporteDetallado.xlsx");
-
-                            using (MemoryStream MyMemoryStream = new MemoryStream())
+                            using (XLWorkbook wb = new XLWorkbook())
                             {
-                                wb.SaveAs(MyMemoryStream);
-                                MyMemoryStream.WriteTo(Response.OutputStream);
-                                Response.Flush();
-                                Response.End();
+                                wb.Worksheets.Add(dt, "Reporte");
+
+                                Response.Clear();
+                                Response.Buffer = true;
+                                Response.Charset = "";
+                                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+                                Response.AddHeader("content-disposition", "attachment;filename=ReporteDetallado.xlsx");
+
+                                using (MemoryStream MyMemoryStream = new MemoryStream())
+                                {
+                                    wb.SaveAs(MyMemoryStream);
+                                    MyMemoryStream.WriteTo(Response.OutputStream);
+                                    Response.Flush();
+                                    Response.End();
+                                }
                             }
                         }
                     }
                 }
             }
-        }
-
-        public void PorcentajeCasos()
-        {
-            string connectionString = ConfigurationManager.ConnectionStrings["SQLConnectionString"].ConnectionString;
-
-            string query = @"
-                SELECT 
-                    ISNULL(ET.NOMBRE, 'NINGUNO') AS [ESTADO],
-                    COUNT(*) AS [TOTAL_REGISTROS],
-                    COUNT(*) * 100.0 / (SELECT COUNT(*) 
-                                        FROM [FBS_CARTERA].[PRESTAMOMAESTRO] P
-                                        LEFT JOIN [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = P.SECUENCIAL
-                                        LEFT JOIN [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
-                                        WHERE P.CODIGOESTADOPRESTAMO IN ('J','I','G')) AS [PORCENTAJE]
-                FROM 
-                    [FBS_CARTERA].[PRESTAMOMAESTRO] P
-                LEFT JOIN 
-                    [FBS_COBRANZAS].[PRESTAMODEMANDAJUDICIALTRAMITE] PT ON PT.SECUENCIALPRESTAMO = P.SECUENCIAL
-                LEFT JOIN 
-                    [FBS_COBRANZAS].[ESTADOTRAMITEDEMANDAJUDICIAL] ET ON ET.CODIGO = PT.CODIGOESTADOTRAMITEDEMJUD
-                WHERE 
-                    P.CODIGOESTADOPRESTAMO IN ('J','I','G')
-                GROUP BY 
-                    ISNULL(ET.NOMBRE, 'NINGUNO');";
-
-
-            Dictionary<string, double> porcentajes = new Dictionary<string, double>();
-
-            using (SqlConnection connection = new SqlConnection(connectionString))
+            else
             {
-                SqlCommand command = new SqlCommand(query, connection);
-                connection.Open();
-                SqlDataReader reader = command.ExecuteReader();
+                // Si la sesión ha expirado, muestra el popup y redirige.
+                string script = @"
+                <script type='text/javascript'>
+                    alert('La sesión ha expirado. Será redirigido a la página de inicio de sesión.');
+                    window.location.href = 'Views/Login.aspx';
+                </script>";
 
-                while (reader.Read())
-                {
-                    string estado = reader["ESTADO"].ToString();
-                    //double porcentaje = Math.Round(Convert.ToDouble(reader["PORCENTAJE"]), 2);
-                    double porcentaje = Math.Round(Convert.ToDouble(reader["TOTAL_REGISTROS"]), 2);
-
-                    // Agregamos el porcentaje al diccionario utilizando el estado como clave
-                    porcentajes.Add(estado, porcentaje);
-                }
-
-                reader.Close();
+                // Registramos el script para ejecutarse en el cliente.
+                ClientScript.RegisterStartupScript(this.GetType(), "SessionExpired", script);
             }
-
-            // Ahora, puedes acceder a cada porcentaje utilizando el nombre del estado como clave en el diccionario
-            // Ahora, los porcentajes están almacenados en el arreglo 'porcentajes' en el mismo orden que los estados.
-            // Puedes acceder a cada porcentaje por su índice en el arreglo.
-
-            abandono = porcentajes.ContainsKey("ABANDONO") ? porcentajes["ABANDONO"] : 0;
-            abstencionTrmiteParteJuez = porcentajes.ContainsKey("ABSTENCIÓN DE TRÁMITE POR PARTE DEL JUEZ") ? porcentajes["ABSTENCIÓN DE TRÁMITE POR PARTE DEL JUEZ"] : 0;
-            adjudicacion = porcentajes.ContainsKey("ADJUDICACIÓN ") ? porcentajes["ADJUDICACIÓN "] : 0;
-            alegatos = porcentajes.ContainsKey("ALEGATOS") ? porcentajes["ALEGATOS"] : 0;
-            apelacion = porcentajes.ContainsKey("APELACIÓN ") ? porcentajes["APELACIÓN "] : 0;
-            avaluoBienes = porcentajes.ContainsKey("AVALUÓ DE BIENES") ? (int)porcentajes["AVALUÓ DE BIENES"] : 0;
-            calificacionDemanda = porcentajes.ContainsKey("CALIFICACIÓN DEMANDA") ? porcentajes["CALIFICACIÓN DEMANDA"] : 0;
-            cambioCasilleroJudicial = porcentajes.ContainsKey("CAMBIO DE CASILLERO JUDICIAL") ? porcentajes["CAMBIO DE CASILLERO JUDICIAL"] : 0;
-            citacionDemandados = porcentajes.ContainsKey("CITACIÓN A LOS DEMANDADOS ") ? porcentajes["CITACIÓN A LOS DEMANDADOS "] : 0;
-            contestacionDemanda = porcentajes.ContainsKey("CONTESTACIÓN DEMANDA") ? porcentajes["CONTESTACIÓN DEMANDA"] : 0;
-            desistimiento = porcentajes.ContainsKey("DESISTIMIENTO") ? porcentajes["DESISTIMIENTO"] : 0;
-            embargo = porcentajes.ContainsKey("EMBARGO") ? porcentajes["EMBARGO"] : 0;
-            juntaConciliacion = porcentajes.ContainsKey("JUNTA DE CONCILIACIÓN ") ? porcentajes["JUNTA DE CONCILIACIÓN "] : 0;
-            liquidacion = porcentajes.ContainsKey("LIQUIDACIÓN ") ? porcentajes["LIQUIDACIÓN "] : 0;
-            mandamientoEjecucion = porcentajes.ContainsKey("MANDAMIENTO DE EJECUCIÓN ") ? porcentajes["MANDAMIENTO DE EJECUCIÓN "] : 0;
-            ninguno = porcentajes.ContainsKey("NINGUNO") ? porcentajes["NINGUNO"] : 0;
-            noContestaDemanda = porcentajes.ContainsKey("NO CONTESTA DEMANDA") ? porcentajes["NO CONTESTA DEMANDA"] : 0;
-            otros = porcentajes.ContainsKey("OTROS") ? porcentajes["OTROS"] : 0;
-            presentacionDemanda = porcentajes.ContainsKey("PRESENTACIÓN DEMANDA") ? porcentajes["PRESENTACIÓN DEMANDA"] : 0;
-            prueba = porcentajes.ContainsKey("PRUEBA") ? porcentajes["PRUEBA"] : 0;
-            remate = porcentajes.ContainsKey("REMATE") ? porcentajes["REMATE"] : 0;
-            sentencia = porcentajes.ContainsKey("SENTENCIA") ? porcentajes["SENTENCIA"] : 0;
-            suspendidoAcuerdo = porcentajes.ContainsKey("SUSPENDIDO POR ACUERDO") ? porcentajes["SUSPENDIDO POR ACUERDO"] : 0;
-            terminadoAcuerdoPagoObligaciones = porcentajes.ContainsKey("TERMINADO POR ACUERDO O PAGO DE OBLIGACIONES") ? porcentajes["TERMINADO POR ACUERDO O PAGO DE OBLIGACIONES"] : 0;
-            aprehencionVehicular = porcentajes.ContainsKey("APREHENCION VEHICULAR") ? porcentajes["APREHENCION VEHICULAR"] : 0;
-            audiencia = porcentajes.ContainsKey("AUDIENCIA") ? porcentajes["AUDIENCIA"] : 0;
-            razonNoPago = porcentajes.ContainsKey("RAZÓN DE NO PAGO") ? porcentajes["RAZÓN DE NO PAGO"] : 0;
-            audienciaEjecucion = porcentajes.ContainsKey("AUDIENCIA EJECUCIÓN") ? porcentajes["AUDIENCIA EJECUCIÓN"] : 0;
-
         }
+
     }
 }
